@@ -1,0 +1,1049 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/18/angular-if-else-statement-in-template/</loc>
+    <lastmod>2015-03-18T06:26:49.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/18/continuous-deployment-of-node-js-applications/</loc>
+    <lastmod>2015-03-18T06:20:12.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/12/ejabberd-performance-turning/</loc>
+    <lastmod>2015-03-17T16:58:15.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/02/26/ejabberd-joins-the-elixir-revolution/</loc>
+    <lastmod>2015-03-17T16:53:19.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/17/erlang-pooler/</loc>
+    <lastmod>2015-03-17T16:06:05.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/18/ejabberd-http-module/</loc>
+    <lastmod>2015-03-17T14:43:42.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/18/ejabberd-modules-presence-storms/</loc>
+    <lastmod>2015-03-17T14:27:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/16/ejabberd-configuration-summary/</loc>
+    <lastmod>2015-03-17T14:24:57.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/15/tsung-user-manual/</loc>
+    <lastmod>2015-03-17T13:51:54.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/12/ejabberd-benchmark-with-tsung/</loc>
+    <lastmod>2015-03-17T13:44:17.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/</loc>
+    <lastmod>2015-03-17T05:27:03.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/13/xmpp-boah/</loc>
+    <lastmod>2015-03-16T16:30:01.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/assets/ejabberd/graph.html</loc>
+    <lastmod>2015-03-13T14:18:50.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/assets/ejabberd/report.html</loc>
+    <lastmod>2015-03-13T14:18:50.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/xmpp-definitive-guide/xmpp-definitive-guide-ch-09-jingle-jabber-does-multimedia.html</loc>
+    <lastmod>2015-03-12T19:39:25.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/06/ejabberd-code-analysis-translate-auxiliary-tool/</loc>
+    <lastmod>2015-03-12T19:29:08.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/23/ejabberd-clustering/</loc>
+    <lastmod>2015-03-12T19:28:50.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/03/xmpp-xep-0198-stream-management/</loc>
+    <lastmod>2015-03-12T19:28:20.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/03/xmpp-xep-0198-stream-management-2/</loc>
+    <lastmod>2015-03-12T19:28:13.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/01/xmpp-xep-0184-message-delivery-receipts/</loc>
+    <lastmod>2015-03-12T19:28:09.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/24/xmpp-xep-0096-si-file-transfer/</loc>
+    <lastmod>2015-03-12T19:28:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/21/xmpp-xep-0133-service-administration/</loc>
+    <lastmod>2015-03-12T19:27:56.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/15/xmpp-addressing/</loc>
+    <lastmod>2015-03-12T19:27:44.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/22/xmpp-xep-0065-socks5-bytestreams/</loc>
+    <lastmod>2015-03-12T19:27:44.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/20/xmpp-xep-0085-chat-status/</loc>
+    <lastmod>2015-03-12T19:27:44.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/24/xmpp-xep-0095-stream-initiation/</loc>
+    <lastmod>2015-03-12T19:27:44.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/18/xmpp-connection-manager-node-xmpp-bosh/</loc>
+    <lastmod>2015-03-12T19:26:44.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/25/ejabberd-compile-issues/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/29/ejabberd-route-table/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/22/xmpp-xep-0047-in-bind-bytestreams/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/21/ejabberd-reload-modified-modules-dynamically/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/15/xmpp-basic/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/16/xmpp-connection-managers/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/07/ejabberd-muc/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/26/ejabberd-modules-quickstart/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/03/strophejs-plugins-register/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/25/ejabberd-modules-a-simple-echo-service/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/14/xmpp-client-libraries/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/23/ejabberd-debugging/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/24/ejabberd-socket-infrastructure/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/02/13/ejabberd-escalus/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/29/ejabberd-modules-pitfalls/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/18/ejabberd-stream-management-for-mobile-3g-network/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/29/ejabberd-important-records/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/08/ejabberd-integrate-with-emysql/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/28/ejabberd-iq-handlers/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/28/ejabberd-jiffy/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/27/ejabberd-c2s-basic/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/30/ejabberd-modules-get-room-member-list/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/24/ejabberd-client-disconnect-by-kill/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/26/ejabberd-modules-development-deep/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/29/ejabberd-using-mix-to-compile-ejabberd-module/</loc>
+    <lastmod>2015-03-12T19:26:37.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/02/ejabberd-pubsub/</loc>
+    <lastmod>2015-03-12T19:26:37.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/15/ejabberd-mod-logxml/</loc>
+    <lastmod>2015-03-12T19:26:37.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/13/ejabberd-howto-20150312/</loc>
+    <lastmod>2015-03-12T19:24:21.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/11/thrift-ex/</loc>
+    <lastmod>2015-03-11T05:38:42.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/02/25/http2-h2o-get-started/</loc>
+    <lastmod>2015-02-25T09:34:27.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/02/12/erlang-refactoring-your-erlang-module-and-application-with-refactorerl/</loc>
+    <lastmod>2015-02-17T12:05:23.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/links/erlang.html</loc>
+    <lastmod>2015-02-12T18:47:05.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/02/07/nodejs-how-to-use-pm2-to-deploy-a-project/</loc>
+    <lastmod>2015-02-07T17:25:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/02/07/copy-ssh-id/</loc>
+    <lastmod>2015-02-07T15:01:36.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/02/01/elixir-etco-intro/</loc>
+    <lastmod>2015-02-02T04:56:36.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/18/elixir-understanding-macro-part-2/</loc>
+    <lastmod>2015-01-30T06:08:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/18/elixir-understanding-macro-part-3/</loc>
+    <lastmod>2015-01-30T05:13:58.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/18/elixir-understanding-macro-part-1/</loc>
+    <lastmod>2015-01-30T03:50:54.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/15/nodejs-npm-disable-spinner-and-show-http-log/</loc>
+    <lastmod>2015-01-29T17:12:24.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/08/nodejs-loopback-model-relations/</loc>
+    <lastmod>2015-01-29T17:12:24.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/22/nodejs-loopback-getstarted/</loc>
+    <lastmod>2015-01-29T17:12:24.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/08/nodejs-loopback-database-connector-example/</loc>
+    <lastmod>2015-01-29T17:12:24.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/13/erlang-resource-pool/</loc>
+    <lastmod>2015-01-29T17:02:10.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/14/erlang-design-your-own-behaviour/</loc>
+    <lastmod>2015-01-29T17:02:10.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/01/erlang-application/</loc>
+    <lastmod>2015-01-29T17:02:10.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/24/elixir-learn-in-n-minutes/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/20/elixir-failover-and-takeover/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/25/elixir-collect-user-input/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/14/elixir-first/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/14/elixir-doc/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/20/elixir-connect-nodes-on-the-same-lan/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/13/elixir-httpclient-httpotion/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/13/elixir-build-an-irc-logger/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/13/elixir-encoding/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/05/elixir-i18n-linguist/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/02/elixir-create-command-line-utility-with-elixir-and-mix/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/10/elixir-anonymous-function/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/04/elixir-create-custom-mix-tasks/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/23/elixir-base64/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/05/elixir-introduce-mix/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/30/elixir-defdelegate/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/19/elixir-bit-syntax-and-id3/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/13/elixir-using-model-in-phoenix-console/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/13/elixir-deploy-phoenix-application-to-a-ubuntu-server/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/01/elixir-deps/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/20/elixir-distributed-tasks-and-configuration/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/04/elixir-umbrella-project/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/31/elixir-mix-and-otp-ch6-ets/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/21/elixir-tasks/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/31/elixir-mix-and-otp-ch8-task-and-gen-tcp/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/10/elixir-quote-and-unquote/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/13/elixir-book-listing-app-with-phoenix-postgresql-and-ecto/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/15/make-app-icns-images-using-iconutil-command-line/</loc>
+    <lastmod>2015-01-16T03:47:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/14/erlang-ranch-listeners/</loc>
+    <lastmod>2015-01-14T02:28:58.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/06/elixir-mix-test/</loc>
+    <lastmod>2015-01-09T09:22:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/08/elixir-sublime-autocomplete-issue/</loc>
+    <lastmod>2015-01-08T08:21:01.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/08/elixir-hex-certificate-not-trusted/</loc>
+    <lastmod>2015-01-08T07:44:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/05/erlang-build-release-with-erlang-mk-and-relx/</loc>
+    <lastmod>2015-01-06T16:18:33.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/05/erlang-hipe-help-options/</loc>
+    <lastmod>2015-01-05T14:18:48.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/05/elixir-converting-erlang-code-to-elixir/</loc>
+    <lastmod>2015-01-05T12:06:34.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/01/elixir-how-to-parsing-xml/</loc>
+    <lastmod>2015-01-05T09:44:07.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/04/elixir-building-otp-apps-with-mix/</loc>
+    <lastmod>2015-01-04T18:52:30.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/05/elixir-tips-001/</loc>
+    <lastmod>2015-01-04T18:48:48.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/05/elixir-release-manager/</loc>
+    <lastmod>2015-01-04T18:48:34.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/01/02/elixir-regex/</loc>
+    <lastmod>2015-01-04T18:48:28.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/05/elixir-iot-1/</loc>
+    <lastmod>2015-01-04T18:48:09.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/links/elixir.html</loc>
+    <lastmod>2015-01-02T19:44:59.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/links/node.html</loc>
+    <lastmod>2015-01-02T09:11:10.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/links/index.html</loc>
+    <lastmod>2015-01-02T06:38:39.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/24/javascript-osm-building/</loc>
+    <lastmod>2014-12-29T12:49:10.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/29/sequelize-create-index-in-v2/</loc>
+    <lastmod>2014-12-29T07:24:45.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/20/semantic-ui-get-started/</loc>
+    <lastmod>2014-12-20T18:06:57.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/14/songs-wangfei-fleet-of-time/</loc>
+    <lastmod>2014-12-15T01:47:50.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/13/erlang-100-questions/</loc>
+    <lastmod>2014-12-13T06:13:53.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/05/11/restful-api-tools/</loc>
+    <lastmod>2014-12-10T14:43:00.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/30/opencart-memcache-vqmod/</loc>
+    <lastmod>2014-11-30T11:36:40.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/26/opencart-vqmod/</loc>
+    <lastmod>2014-11-30T11:16:05.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/21/semver-libraries/</loc>
+    <lastmod>2014-11-21T18:57:40.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/links/smack-file-transfer.html</loc>
+    <lastmod>2014-11-14T03:42:55.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/12/postgresql-install-configuration/</loc>
+    <lastmod>2014-11-12T07:59:39.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/assets/css/toc.css</loc>
+    <lastmod>2014-11-06T04:07:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/23/erlang-emysql-execute-prepared-statement/</loc>
+    <lastmod>2014-10-23T08:22:01.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/21/programming-erlang-2nd-ch11/</loc>
+    <lastmod>2014-10-21T02:42:53.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/17/erlang-stdlib-lists/</loc>
+    <lastmod>2014-10-17T04:30:06.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/05/xmpp-xep-iot-relate/</loc>
+    <lastmod>2014-10-11T06:04:06.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/09/mysql-database-protocol-packet-analysis/</loc>
+    <lastmod>2014-10-08T18:30:30.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/16/mariadb-cluster-config/</loc>
+    <lastmod>2014-10-08T18:24:48.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/xmpp-definitive-guide/xmpp-definitive-guide-ch-11-remote-commands.html</loc>
+    <lastmod>2014-10-08T09:12:30.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/23/xsd-to-json-schema-hero-command-line-tool/</loc>
+    <lastmod>2014-10-07T09:27:28.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/09/docker-image-dependencies-graphic/</loc>
+    <lastmod>2014-10-07T09:26:57.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/08/docker-tls/</loc>
+    <lastmod>2014-10-07T09:26:57.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/27/docker-install-on-ubuntu-14.04-lts-server/</loc>
+    <lastmod>2014-10-07T09:26:57.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/05/docker-manage-data-in-containers/</loc>
+    <lastmod>2014-10-07T09:26:57.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/31/docker-manage-images/</loc>
+    <lastmod>2014-10-07T09:26:57.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/04/docker-slimming-down-container/</loc>
+    <lastmod>2014-10-07T09:26:57.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/07/docker-how-to-enter-a-container/</loc>
+    <lastmod>2014-10-07T09:26:40.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/04/docker-dockerfile-faq/</loc>
+    <lastmod>2014-10-07T09:26:36.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/04/docker-communicate-with-containers/</loc>
+    <lastmod>2014-10-07T09:26:32.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/15/json-schema-tiny-validator/</loc>
+    <lastmod>2014-10-07T09:24:46.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/01/javascript-blockies/</loc>
+    <lastmod>2014-10-07T09:24:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/26/creating-asynchronous-alerts-prompts-and-confirms-in-angularjs/</loc>
+    <lastmod>2014-10-07T09:24:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/16/polymer-ng-polymer-elements/</loc>
+    <lastmod>2014-10-07T09:23:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/12/ubuntu-cups-403/</loc>
+    <lastmod>2014-10-07T09:23:07.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/02/nodejs-nodemailer/</loc>
+    <lastmod>2014-10-07T09:22:23.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/05/13/nodejs-grunt-gui-tools/</loc>
+    <lastmod>2014-10-07T09:22:16.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/16/node-webkit-package/</loc>
+    <lastmod>2014-10-07T09:22:05.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/16/node-webkit-manifest/</loc>
+    <lastmod>2014-10-07T09:21:56.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/16/node-webkit-get-gpu-infomration/</loc>
+    <lastmod>2014-10-07T09:21:49.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/18/request-module-as-proxy-in-nodes/</loc>
+    <lastmod>2014-10-07T09:21:40.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/15/node-sequelize-query/</loc>
+    <lastmod>2014-10-07T09:21:40.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/16/node-webkit-clipboard/</loc>
+    <lastmod>2014-10-07T09:21:40.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/14/node-reggie/</loc>
+    <lastmod>2014-10-07T09:21:40.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/16/node-cmd-npm/</loc>
+    <lastmod>2014-10-07T09:20:17.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/25/upstart-node-forever/</loc>
+    <lastmod>2014-10-07T09:19:30.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/15/hubspot-messaging-library-as-a-angular-service/</loc>
+    <lastmod>2014-10-07T09:17:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/16/offline-app/</loc>
+    <lastmod>2014-10-07T09:17:08.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/15/angular-swagger-client/</loc>
+    <lastmod>2014-10-07T09:15:41.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/12/angular-ngactivityindicator/</loc>
+    <lastmod>2014-10-07T09:14:55.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/16/angular-gettext-i18n/</loc>
+    <lastmod>2014-10-07T09:14:46.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/28/angular-best-practice/</loc>
+    <lastmod>2014-10-07T09:14:27.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/22/angular-authentication-with-cookies-vs-token/</loc>
+    <lastmod>2014-10-07T09:14:17.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/11/angular-and-polymer-data-binding/</loc>
+    <lastmod>2014-10-07T09:14:01.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/04/erlang-universal-binary-format/</loc>
+    <lastmod>2014-10-04T10:55:55.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/07/30/ad-statistics-metics/</loc>
+    <lastmod>2014-10-03T16:24:12.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/02/erlang-mysql-driver/</loc>
+    <lastmod>2014-10-02T09:15:12.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/05/02/web-performance-test/</loc>
+    <lastmod>2014-09-29T05:41:51.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2012/06/30/erlang-reading-the-register-with-win32reg/</loc>
+    <lastmod>2014-09-29T05:39:01.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2011/05/31/erlang-distribution-basic/</loc>
+    <lastmod>2014-09-29T05:34:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2011/05/30/erlang-regexp/</loc>
+    <lastmod>2014-09-25T17:02:06.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/26/erlang-tail-recursion/</loc>
+    <lastmod>2014-09-25T16:44:56.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2011/05/17/erlang-build-tool-rebar/</loc>
+    <lastmod>2014-09-25T15:49:59.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2011/05/16/erlang-use-log4erl/</loc>
+    <lastmod>2014-09-25T15:49:12.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2011/06/29/varnish-load-balance/</loc>
+    <lastmod>2014-09-25T14:34:34.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/02/custom-bootstrap-3/</loc>
+    <lastmod>2014-09-24T01:54:33.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/16/static-site-generators/</loc>
+    <lastmod>2014-09-23T03:13:06.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/02/overlay-caption/</loc>
+    <lastmod>2014-09-23T03:12:32.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/svg-sprite/menu.html</loc>
+    <lastmod>2014-09-22T11:41:30.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/22/svg-sprite/</loc>
+    <lastmod>2014-09-22T09:33:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/07/android-ci-server/</loc>
+    <lastmod>2014-09-22T04:41:25.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/19/ssh-shortcut/</loc>
+    <lastmod>2014-09-22T04:39:19.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/21/git-init/</loc>
+    <lastmod>2014-09-22T03:43:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/17/git-flow/</loc>
+    <lastmod>2014-09-22T03:43:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/22/gerrit-workflow/</loc>
+    <lastmod>2014-09-22T03:43:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/21/gerrit-installation/</loc>
+    <lastmod>2014-09-22T03:43:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/22/git-common-aliases/</loc>
+    <lastmod>2014-09-22T03:43:02.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/16/tools-screen/</loc>
+    <lastmod>2014-09-16T04:01:11.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/02/chrome-devtools-terminal/</loc>
+    <lastmod>2014-09-16T04:00:55.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/08/15/about-oral-english-taining/</loc>
+    <lastmod>2014-08-30T20:20:11.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/shadow-dom/index.html</loc>
+    <lastmod>2014-08-20T04:59:36.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/gettext/angular.min.js</loc>
+    <lastmod>2014-08-15T18:53:58.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/gettext/gettext.html</loc>
+    <lastmod>2014-08-15T18:50:31.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/gettext/translations.js</loc>
+    <lastmod>2014-08-15T17:55:47.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/07/30/use-swagger-codegen/</loc>
+    <lastmod>2014-08-14T18:44:15.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/gettext/angular-gettext.min.js</loc>
+    <lastmod>2014-08-11T09:15:12.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/assets/js/octocard.js</loc>
+    <lastmod>2014-08-01T08:02:37.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/06/28/markdown-chat/</loc>
+    <lastmod>2014-08-01T07:54:41.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/blockies/index.html</loc>
+    <lastmod>2014-08-01T04:59:45.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/blockies/blockies.min.js</loc>
+    <lastmod>2014-08-01T03:43:53.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/07/30/use-osprey-to-generate-api/</loc>
+    <lastmod>2014-07-30T18:24:08.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/07/30/ad-specs-and-implements/</loc>
+    <lastmod>2014-07-30T18:22:22.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/gettext/bootstrap-theme.min.css</loc>
+    <lastmod>2014-02-13T17:24:59.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/code/gettext/bootstrap.min.css</loc>
+    <lastmod>2014-02-13T17:24:59.000Z</lastmod>
+  </url>
+  
+</urlset>

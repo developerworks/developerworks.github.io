@@ -1,0 +1,442 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Etco 简介 | 元气糯米团子的Coding Blog</title>
+  <meta name="author" content="zhiqiang he">
+  
+  <meta name="description" content="Ecto 简介Ecto是一种领域语言(DSL), 用于在Elixir中编写数据库查询,和其他数据库操作. Ecto是用Elixir语言开发的一个关系型数据库工具.
+本章主要介绍如何在Elixir项目中使用Ecto
+主要组件Ecto有三个主要组件: 库(Repositories), 模型(Models">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Etco 简介"/>
+  <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="元气糯米团子的Coding Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/assets/css/toc.css"/>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>-->
+  <script type="text/javascript" src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-1.8.3.min.js"></script>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon-76x76.png" />
+  <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <!--
+  <SCRIPT type=text/javascript src="/js/scrolltop.js"></SCRIPT>
+   -->
+  <!--howiefh calendar begin-->
+  <SCRIPT type=text/javascript src="/js/calendar.js"></SCRIPT>
+  <!--howiefh calendar end-->
+  
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</head>
+
+
+<body>
+<header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">元气糯米团子的Coding Blog</a></h1>
+  <h2><a href="/">Tansform information as knowledges, extract and purify as thoughts</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">树根</a></li>
+    
+      <li><a href="/archives">泡菜坛子</a></li>
+    
+      <li><a href="/links">连接</a></li>
+    
+      <li><a href="/atom.xml">粽子</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+
+<div id="content" class="inner">
+    <div id="main-col" class="alignleft">
+        <div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2015-02-01T04:11:23.000Z"><a href="/2015/02/01/elixir-etco-intro/">2015-02-01</a></time>
+      
+      
+  
+    <h1 class="title">Etco 简介</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ecto_简介"><span class="toc-number">1.</span> <span class="toc-text">Ecto 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主要组件"><span class="toc-number">2.</span> <span class="toc-text">主要组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Ecto_库"><span class="toc-number">2.1.</span> <span class="toc-text">Ecto 库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ecto_模型"><span class="toc-number">2.2.</span> <span class="toc-text">Ecto 模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询(Query)"><span class="toc-number">2.3.</span> <span class="toc-text">查询(Query)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#移植(Migration)"><span class="toc-number">2.4.</span> <span class="toc-text">移植(Migration)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建项目"><span class="toc-number">3.</span> <span class="toc-text">创建项目</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Ecto"><span class="toc-number">3.1.</span> <span class="toc-text">安装Ecto</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加库(Repository)"><span class="toc-number">3.2.</span> <span class="toc-text">添加库(Repository)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加模型(Models)"><span class="toc-number">3.3.</span> <span class="toc-text">添加模型(Models)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#生成移植(Migration)脚本"><span class="toc-number">3.4.</span> <span class="toc-text">生成移植(Migration)脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#移植"><span class="toc-number">3.5.</span> <span class="toc-text">移植</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实际操作"><span class="toc-number">3.6.</span> <span class="toc-text">实际操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol>
+        </div>
+        
+
+
+        <h2 id="Ecto_简介">Ecto 简介</h2><p>Ecto是一种领域语言(DSL), 用于在Elixir中编写数据库查询,和其他数据库操作. Ecto是用Elixir语言开发的一个关系型数据库工具.</p>
+<p>本章主要介绍如何在Elixir项目中使用Ecto</p>
+<h2 id="主要组件">主要组件</h2><p>Ecto有三个主要组件: 库(Repositories), 模型(Models), 和查询(Queries)</p>
+<h3 id="Ecto_库">Ecto 库</h3><p>库是一个数据库的封装, 可以通过如下方式定义一个库:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Repo</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Repo,</span> <span class="symbol">adapter:</span> <span class="constant">Ecto.Adapters.Postgres</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">conf</span> </span><span class="keyword">do</span></span><br><span class="line">        parse_url <span class="string">"ecto://username:password@localhost/ecto_simple"</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>Ecto当前仅支持Postgresql数据库, 未来会支持其他数据库.</p>
+<p>在Ecto中每个库通过定义一个<code>start_link/0</code>函数, 该函数需要在使用库(Repository)之前调用. 该函数不会直接调用, 而是通过一个<code>supervisor</code>链.<br>找到<code>supervisor.ex</code>并使用下面的<code>init/1</code>函数启动一个<code>supervisor</code>:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span>([]) </span><span class="keyword">do</span></span><br><span class="line">    tree = [worker(<span class="constant">Repo,</span> [])]</span><br><span class="line">    supervise(tree, <span class="symbol">strategy:</span> <span class="symbol">:one_for_all</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="Ecto_模型">Ecto 模型</h3><p>模型是用于定义在查询,验证和回调中使用的模式(Schema), 下面是一个模式定义的例子:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Weather</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Model</span></span><br><span class="line">    <span class="comment"># weather is the DB table</span></span><br><span class="line">    schema <span class="string">"weather"</span> <span class="keyword">do</span></span><br><span class="line">        field <span class="symbol">:city</span>,    <span class="symbol">:string</span></span><br><span class="line">        field <span class="symbol">:temp_lo</span>, <span class="symbol">:integer</span></span><br><span class="line">        field <span class="symbol">:temp_hi</span>, <span class="symbol">:integer</span></span><br><span class="line">        field <span class="symbol">:prcp</span>,    <span class="symbol">:float</span>, <span class="symbol">default:</span> <span class="number">0</span>.<span class="number">0</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>还可以定义<code>primary_key</code>, <code>foreign_key</code> <code>belongs_to</code>等. 模式的详细信息可<a href="http://elixir-lang.org/docs/ecto/Ecto.Model.Schema.html" target="_blank" rel="external">查看文档</a>.</p>
+<p>定义了模式后, Ecto自动地定义一个包含模式字段的结构:</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">weather = <span class="preprocessor">%</span>Weather&#123;temp_lo: <span class="number">30</span>&#125;</span><br><span class="line">weather.temp_lo <span class="title">#=&gt; 30</span></span><br></pre></td></tr></table></figure>
+<p>模型和数据库交互:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">weather = %Weather&#123;<span class="string">temp_lo:</span> <span class="number">0</span>, <span class="string">temp_hi:</span> <span class="number">23</span>&#125;</span><br><span class="line">Repo.insert(weather)</span><br></pre></td></tr></table></figure>
+<p>插入数据库, 返回一个<code>weather</code>的拷贝, 可以通过返回的这个值从数据库中读取一个结构:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 读取数据</span></span><br><span class="line">weather = Repo.<span class="keyword">get</span> Weather, <span class="number">1</span></span><br><span class="line"><span class="preprocessor">#=&gt; %Weather&#123;id: 1, ...&#125;</span></span><br><span class="line"><span class="preprocessor"># 更新</span></span><br><span class="line">weather = %&#123;weather | temp_lo: <span class="number">10</span>&#125;</span><br><span class="line">Repo.update(weather)</span><br><span class="line"><span class="preprocessor">#=&gt; :ok</span></span><br><span class="line"><span class="preprocessor"># 删除</span></span><br><span class="line">Repo.delete(weather)</span><br></pre></td></tr></table></figure>
+<h3 id="查询(Query)">查询(Query)</h3><p>最后一个组件让我们可以编写查询,并向Repository执行查询.</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import Ecto<span class="class">.Query</span></span><br><span class="line">query = from w <span class="keyword">in</span> Weather,</span><br><span class="line">        where w<span class="class">.prcp</span> &gt; <span class="number">0</span> or w<span class="class">.prcp</span> == nil,</span><br><span class="line">        select w</span><br><span class="line">Repo.<span class="function"><span class="title">all</span><span class="params">(query)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="移植(Migration)">移植(Migration)</h3><p>Ecto还支持数据库移植SQL脚本. 为了生成一个新的移植脚本, 需要高数ecto移植脚本在哪里(哪个目录, 相对于项目根目录).</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Repo</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Repo,</span> <span class="symbol">adapter:</span> <span class="constant">Ecto.Adapters.Postgres</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">priv</span> </span><span class="keyword">do</span></span><br><span class="line">        app_dir(<span class="symbol">:YOUR_APP_NAME</span>, <span class="string">"priv/repo"</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>然后, 可以通过<code>mix</code>工具生成移植脚本</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix ecto<span class="class">.gen</span><span class="class">.migration</span> Repo create_posts</span><br></pre></td></tr></table></figure>
+<p>该命令会在<code>priv/repo/migrations</code>目录中生成一个新的文件. 需要编写一个SQL命令来创建表结构, 已经创建一个删除表的命令.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Repo</span>.<span class="constant">CreatePosts </span></span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Ecto.Migration</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">up</span> </span><span class="keyword">do</span></span><br><span class="line">    [ <span class="string">"CREATE TABLE IF NOT EXISTS migrations_test(id serial primary key, name text)"</span>,</span><br><span class="line">      <span class="string">"INSERT INTO migrations_test (name) VALUES ('inserted')"</span> ]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">down</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="string">"DROP TABLE migrations_test"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>使用下面的命令, 运行所有PENDING状态的的移植脚本,</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix ecto<span class="class">.migrate</span> Repo</span><br></pre></td></tr></table></figure>
+<p>回滚</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mix</span> ecto.rollback Repo --<span class="built_in">all</span></span><br></pre></td></tr></table></figure>
+<p>Ecto的更多信息可以到<a href="https://github.com/elixir-lang/ecto" target="_blank" rel="external">Github上的Ecto项目</a>上获取, 或阅读<a href="http://elixir-lang.org/docs/ecto/" target="_blank" rel="external">Ecto文档</a></p>
+<h2 id="创建项目">创建项目</h2><p>简单介绍Ecto后, 是时候在项目中使用了. 下面创建一个名为 <code>elixir_jobs</code>的项目:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mix new elixir_<span class="built_in">jobs</span></span><br><span class="line"><span class="built_in">cd</span> exlixir_<span class="built_in">jobs</span></span><br></pre></td></tr></table></figure>
+<h3 id="安装Ecto">安装Ecto</h3><p>打开 <code>mix.exs</code> 文件. 需要<code>postgresql</code>驱动作为依赖, 这里我们使用<code>postgrex</code>.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">defp deps <span class="keyword">do</span></span><br><span class="line">    [&#123;<span class="symbol">:postgrex</span>, <span class="string">"0.5.2"</span>&#125;,</span><br><span class="line">     &#123;<span class="symbol">:ecto</span>, <span class="string">"0.2.0"</span>&#125;</span><br><span class="line">    ]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>更新应用程序列表包含<code>ecto</code>和<code>postgrex</code>.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">application</span> </span><span class="keyword">do</span></span><br><span class="line">    [<span class="symbol">applications:</span> [<span class="symbol">:postgrex</span>, <span class="symbol">:ecto</span>]]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>终端中运行<code>mix deps.get</code>获取依赖.</p>
+<h3 id="添加库(Repository)">添加库(Repository)</h3><p>A repo in ecto terms is the definition of a basic interface to a database,<br>in this case PostgreSQL. Open up lib/elixir_jobs/repo.ex and add the code below.<br>If the directory doesn’t exist, create it.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ElixirJobs</span>.<span class="constant">Repo </span></span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Repo,</span> <span class="symbol">adapter:</span> <span class="constant">Ecto.Adapters.Postgres</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">conf</span> </span><span class="keyword">do</span></span><br><span class="line">        parse_url <span class="string">"ecto://postgresuser:password@localhost/elixir_jobs"</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">priv</span> </span><span class="keyword">do</span></span><br><span class="line">        app_dir(<span class="symbol">:elixir_jobs</span>, <span class="string">"priv/repo"</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>我们定义了PostgreSQL连接URL.</p>
+<p>你需要替换的时<code>postgresuser</code>, <code>password</code>和<code>elixir_jobs</code>数据库名称. 我们使用了移植功能,所以<code>priv</code>函数是必须的.</p>
+<p>我们只需要告诉Ecto移植脚本放在什么位置, 这个位置是<code>priv/repo</code>.</p>
+<p>接下来, 我们应该确保Repo模块随我们的应用程序一起启动. 打开<code>lib/elixir_jobs.ex</code>:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ElixirJobs</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Application</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start</span>(<span class="constant">_type,</span> <span class="constant">_args)</span> </span><span class="keyword">do</span></span><br><span class="line">        import <span class="constant">Supervisor.Spec</span></span><br><span class="line">        tree = [worker(<span class="constant">ElixirJobs,Repo,</span> [])]</span><br><span class="line">        opts = [<span class="symbol">name:</span> <span class="constant">ElixirJobs.Sup,</span> <span class="symbol">strategy:</span> <span class="symbol">:one_for_one</span>]</span><br><span class="line">        <span class="constant">Supervisor.</span>start_link(tree, opts)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>确保一切OK, 让我们编译该项目</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mix</span> compile</span><br></pre></td></tr></table></figure>
+<p>如果没有错误消息, 然后我们需要使用<code>psql</code>工具添加数据库<code>elixir_jobs</code>.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&gt;</span> psql -<span class="constant">Upostgresuser </span>-<span class="constant">W </span>template1</span><br><span class="line"><span class="constant">Password </span><span class="keyword">for</span> user <span class="symbol">postgresuser:</span></span><br><span class="line">template1=<span class="comment"># CREATE DATABASE elixir_jobs;</span></span><br><span class="line"><span class="constant">CREATE DATABASE</span></span><br><span class="line">template1=<span class="comment"># \q</span></span><br></pre></td></tr></table></figure>
+<p>使用<code>\q</code>退出<code>psql</code>, 然后添加一个模型用于查询.</p>
+<h3 id="添加模型(Models)">添加模型(Models)</h3><p>创建一个单独的文件 <code>lib/elixir_jobs/jobs.ex</code>,并输入下面的代码, 模型名称为<code>Jobs</code>.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ElixirJobs</span>.<span class="constant">Jobs </span></span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Model</span></span><br><span class="line"></span><br><span class="line">    schema <span class="string">"jobs"</span> <span class="keyword">do</span></span><br><span class="line">        field <span class="symbol">:title</span>, <span class="symbol">:string</span></span><br><span class="line">        field <span class="symbol">:type</span>, <span class="symbol">:string</span></span><br><span class="line">        field <span class="symbol">:description</span>, <span class="symbol">:string</span></span><br><span class="line">        field <span class="symbol">:status</span>, <span class="symbol">:string</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>运行<code>mix help</code>可以看到一组用于移植的命令</p>
+<h3 id="生成移植(Migration)脚本">生成移植(Migration)脚本</h3><p>我们使用 <code>mix ecto.gen.migration</code>生成移植脚本, 首先使用下面的命令创建一个移植脚本.</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$&gt; mix ecto.<span class="keyword">gen</span>.migration ElixirJobs.Repo create_job</span><br><span class="line"><span class="comment">* creating priv/repo/migrations</span></span><br><span class="line"><span class="comment">* creating priv/repo/migrations/20140802043823_create_job.exs</span></span><br></pre></td></tr></table></figure>
+<p>打开生成的<code>priv/repo/migrations/20140802043823_create_job.exs</code>文件. 在这个文件中, 我们还必须手工编写SQL命令用于创建和删除表.</p>
+<p>文件名<code>20140802043823_create_job.exs</code>依据生成的时间变化.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ElixirJobs</span>.<span class="constant">Repo.Migrations.CreateJob </span></span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Ecto.Migration</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">up</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="string">"CREATE TABLE jobs(id serial primary key, title varchar(125), type varchar(50), description text, status varchar(50))"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">down</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="string">"DROP TABLE jobs"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>创建了移植脚本后, 我们就可以运行它了.</p>
+<h3 id="移植">移植</h3><p>运行移植非常容易, 像这样:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$&gt; mix ecto.migrate ElixirJobs.Repo</span><br><span class="line">* running UP _build<span class="regexp">/dev/</span>lib<span class="regexp">/elixir_jobs/</span>priv<span class="regexp">/repo/mig</span>rations<span class="regexp">/20140802043823_create_job.exs</span></span><br></pre></td></tr></table></figure>
+<p>就这样! 如果你打开<code>elixir_jobs</code>数据库, 你会发现一个<code>jobs</code>表, 如下:</p>
+<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> Column    |          <span class="keyword">Type</span>          |                     Modifiers</span><br><span class="line"><span class="comment">-------------+----------------------+---------------------------------------------------</span></span><br><span class="line"> id        | <span class="typename">integer</span>                | <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">default</span> nextval(<span class="attribute">'jobs_id_seq</span>'::regclass)</span><br><span class="line"> title     | <span class="typename">character</span> varying(<span class="number">125</span>) |</span><br><span class="line"> <span class="keyword">type</span>      | <span class="typename">character</span> varying(<span class="number">50</span>)  |</span><br><span class="line"> description| text                   |</span><br><span class="line"> status    | <span class="typename">character</span> varying(<span class="number">50</span>)  |</span><br></pre></td></tr></table></figure>
+<p>现在可以测试一下INSERT, UPDATE, DELETE以及SELECT操作了.</p>
+<h3 id="实际操作">实际操作</h3><p>启动<code>iex</code>测试我们的设置. 开始操作数据库之前, 需要使用<code>start_link</code>函数启动库(Repo), 否则会得到一个错误.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$&gt; iex -S mix</span><br><span class="line">Erlang/OTP <span class="number">17</span> [erts-<span class="number">6.0</span>] [<span class="built_in">source</span>] [<span class="number">64</span>-bit] [smp:<span class="number">4</span>:<span class="number">4</span>] [async-threads:<span class="number">10</span>] [hipe] [kernel-poll:<span class="literal">false</span>]</span><br><span class="line">Interactive Elixir (<span class="number">0.14</span>.<span class="number">1</span>) - press Ctrl+C to <span class="built_in">exit</span> (<span class="built_in">type</span> h() ENTER <span class="keyword">for</span> <span class="built_in">help</span>)</span><br><span class="line">iex(<span class="number">1</span>)&gt; ElixirJobs.Repo.start_link</span><br><span class="line">&#123;:ok, <span class="comment">#PID&lt;0.108.0&gt;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>如果返回<code>:ok</code>, 那么就可以使用定义模型时Ecto生成的结构插入数据了.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iex(<span class="number">2</span>)&gt; job = %ElixirJobs.Jobs&#123;<span class="string">title:</span> <span class="string">"Elixir Expert Needed"</span>, <span class="string">description:</span> <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="string">type:</span> <span class="string">"Remote"</span>, <span class="string">status:</span> <span class="string">"Part Time"</span>&#125;</span><br><span class="line">iex(<span class="number">3</span>)&gt; ElixirJobs.Repo.insert(job)</span><br><span class="line">%ElixirJobs.Jobs&#123;<span class="string">description:</span> <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="string">id:</span> <span class="number">2</span>, <span class="string">status:</span> <span class="string">"Part Time"</span>, <span class="string">title:</span> <span class="string">"Elixir Expert Needed"</span>, <span class="string">type:</span> <span class="string">"Remote"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>打开<code>jobs</code>表, 就可以看到刚刚插入的数据. 现在来读取数据:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex(<span class="number">4</span>)&gt; ejob = Repo.get(ElixirJobs.Jobs, <span class="number">1</span>)</span><br><span class="line">%ElixirJobs.Jobs&#123;<span class="string">description:</span> <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="string">id:</span> <span class="number">1</span>, <span class="string">status:</span> <span class="string">"Part Time"</span>, <span class="string">title:</span> <span class="string">"Elixir Expert Needed"</span>, <span class="string">type:</span> <span class="string">"Remote"</span>&#125;</span><br><span class="line">iex(<span class="number">5</span>)&gt; ejob.title</span><br><span class="line"><span class="string">"Elixir Expert Needed"</span></span><br></pre></td></tr></table></figure>
+<p>然后更新数据:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex(<span class="number">6</span>)&gt; ejob = %&#123;ejob | <span class="string">title:</span> <span class="string">"Elixir Writer Needed"</span>&#125;</span><br><span class="line">%ElixirJobs.Jobs&#123;<span class="string">description:</span> <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="string">id:</span> <span class="number">1</span>, <span class="string">status:</span> <span class="string">"Part Time"</span>, <span class="string">title:</span> <span class="string">"Elixir Writer Needed"</span>, <span class="string">type:</span> <span class="string">"Remote"</span>&#125;</span><br><span class="line">iex(<span class="number">7</span>)&gt; ElixirJobs.Repo.update(ejob)</span><br><span class="line">:ok</span><br></pre></td></tr></table></figure>
+<p>验证数据已经被更新:</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">iex</span>(<span class="number">8</span>)&gt; <span class="tag">ElixirJobs</span><span class="class">.Repo</span><span class="class">.get</span>(Jobs, <span class="number">1</span>)</span><br><span class="line">%<span class="tag">ElixirJobs</span><span class="class">.Jobs</span>&#123;<span class="attribute">description</span>: <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="attribute">d</span>: <span class="number">1</span>, <span class="attribute">status</span>: <span class="string">"Part Time"</span>, <span class="attribute">title</span>: <span class="string">"Elixir Writer Needed"</span>, <span class="attribute">type</span>: <span class="string">"Remote"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>现在, 删除数据:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">iex</span><span class="params">(<span class="number">9</span>)</span></span>&gt; ElixirJobs<span class="class">.Repo</span><span class="class">.delete</span>(ejob)</span><br><span class="line">:ok</span><br><span class="line"><span class="function"><span class="title">iex</span><span class="params">(<span class="number">10</span>)</span></span>&gt; ElixirJobs<span class="class">.Repo</span><span class="class">.get</span>(Jobs, <span class="number">1</span>)</span><br><span class="line">nil</span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2><p>本文涵盖了Ecto的基本使用, 用DSL编写查询,以及和数据库交互.</p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="https://github.com/elixir-lang/ecto" target="_blank" rel="external">https://github.com/elixir-lang/ecto</a></li>
+<li><a href="http://www.youtube.com/watch?v=SJRfujy9vLA" target="_blank" rel="external">http://www.youtube.com/watch?v=SJRfujy9vLA</a></li>
+<li><a href="http://elixirsips.com/episodes/024_ecto_part_1.html" target="_blank" rel="external">http://elixirsips.com/episodes/024_ecto_part_1.html</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/Elixir/">Elixir</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/Ecto/">Ecto</a>, <a href="/tags/Elixir/">Elixir</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="2015/02/01/elixir-etco-intro/" data-title="Etco 简介" data-url="http://developerworks.github.io/2015/02/01/elixir-etco-intro/"></div>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"developerworks"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+</div>
+    </div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/11/thrift-ex/">thrift_ex</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">(译) Ejabberd加入了Elixir的变革</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/25/http2-h2o-get-started/">HTTP/2 尝鲜</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/AD/">AD</a><small>2</small></li>
+  
+    <li><a href="/categories/API/">API</a><small>3</small></li>
+  
+    <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
+  
+    <li><a href="/categories/Database/">Database</a><small>1</small></li>
+  
+    <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
+  
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>32</small></li>
+  
+    <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
+  
+    <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
+  
+    <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
+  
+    <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+  
+    <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
+  
+    <li><a href="/categories/Node-js/">Node.js</a><small>17</small></li>
+  
+    <li><a href="/categories/Opencart/">Opencart</a><small>2</small></li>
+  
+    <li><a href="/categories/QA/">QA</a><small>2</small></li>
+  
+    <li><a href="/categories/RESTFul/">RESTFul</a><small>1</small></li>
+  
+    <li><a href="/categories/SCM/">SCM</a><small>5</small></li>
+  
+    <li><a href="/categories/Testing/">Testing</a><small>1</small></li>
+  
+    <li><a href="/categories/Tools/">Tools</a><small>4</small></li>
+  
+    <li><a href="/categories/Web/">Web</a><small>6</small></li>
+  
+    <li><a href="/categories/XEP/">XEP</a><small>5</small></li>
+  
+    <li><a href="/categories/XMPP/">XMPP</a><small>6</small></li>
+  
+    <li><a href="/categories/english/">english</a><small>1</small></li>
+  
+    <li><a href="/categories/杂类/">杂类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget duoshuo_recent_comments">
+    <h3 class="title">最新评论</h3>
+    <ul class="entry ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-title="1" data-show-time="1"></ul>
+</div>
+<!--多说js加载开始，一个页面只需要加载一次 -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name: "developerworks"};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = 'http://static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!--多说js加载结束，一个页面只需要加载一次 -->
+
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 10px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 18px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 17px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 16px;">docker</a><a href="/tags/ejabberd/" style="font-size: 19px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+</div>
+<footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 zhiqiang he
+  
+</div>
+<div class="clearfix"></div></footer>
+
+<!--<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>-->
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<!--<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,419 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ejabberd 性能调优(草稿) | 元气糯米团子的Coding Blog</title>
+  <meta name="author" content="zhiqiang he">
+  
+  <meta name="description" content="第一阶段目标10W并发连接
+进程打开文件数限制
+编辑 /etc/pam.d/login,取消pam_limits.so的注释
+
+123# Sets up user limits according to /etc/security/limits.conf# (Replaces the use of ">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Ejabberd 性能调优(草稿)"/>
+  <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="元气糯米团子的Coding Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/assets/css/toc.css"/>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>-->
+  <script type="text/javascript" src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-1.8.3.min.js"></script>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon-76x76.png" />
+  <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <!--
+  <SCRIPT type=text/javascript src="/js/scrolltop.js"></SCRIPT>
+   -->
+  <!--howiefh calendar begin-->
+  <SCRIPT type=text/javascript src="/js/calendar.js"></SCRIPT>
+  <!--howiefh calendar end-->
+  
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</head>
+
+
+<body>
+<header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">元气糯米团子的Coding Blog</a></h1>
+  <h2><a href="/">Tansform information as knowledges, extract and purify as thoughts</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">树根</a></li>
+    
+      <li><a href="/archives">泡菜坛子</a></li>
+    
+      <li><a href="/links">连接</a></li>
+    
+      <li><a href="/atom.xml">粽子</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+
+<div id="content" class="inner">
+    <div id="main-col" class="alignleft">
+        <div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2015-03-12T13:13:41.000Z"><a href="/2015/03/12/ejabberd-performance-turning/">2015-03-12</a></time>
+      
+      
+  
+    <h1 class="title">Ejabberd 性能调优(草稿)</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一阶段"><span class="toc-number">1.</span> <span class="toc-text">第一阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程打开文件数限制"><span class="toc-number">2.</span> <span class="toc-text">进程打开文件数限制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动参数"><span class="toc-number">3.</span> <span class="toc-text">启动参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内核参数调整"><span class="toc-number">4.</span> <span class="toc-text">内核参数调整</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#排查"><span class="toc-number">5.</span> <span class="toc-text">排查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mnesia表过载"><span class="toc-number">6.</span> <span class="toc-text">Mnesia表过载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">7.</span> <span class="toc-text">参考资料</span></a></li></ol>
+        </div>
+        
+
+
+        <h2 id="第一阶段">第一阶段</h2><p>目标10W并发连接</p>
+<h2 id="进程打开文件数限制">进程打开文件数限制</h2><ol>
+<li>编辑 <code>/etc/pam.d/login</code>,取消<code>pam_limits.so</code>的注释</li>
+</ol>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Sets up user limits according <span class="keyword">to</span> /etc/security/limits.conf</span><br><span class="line"># (Replaces the <span class="keyword">use</span> <span class="keyword">of</span> /etc/limits <span class="keyword">in</span> old login)</span><br><span class="line">session    required   pam_limits.so</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>/etc/security/limits.conf</code></li>
+</ol>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">root</span>    soft    nofile  <span class="number">320000</span></span><br><span class="line"><span class="literal">root</span>    hard    nofile  <span class="number">320000</span></span><br></pre></td></tr></table></figure>
+<p>我们在root账户下测试, 如何验证该设置是否生效?</p>
+<p>exit 退出shell, 重新登录执行<code>ulimit -a</code>查看<code>open files</code>是否为<code>320000</code></p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">root<span class="annotation">@ci</span>:~# ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 127413</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 320000</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 127413</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+<h2 id="启动参数">启动参数</h2><p>Ejabberd的启动参数可以在配置文件<code>/etc/ejabberd/ejabberdctl.cfg</code>中进行调整</p>
+<ul>
+<li><p><code>ERL_MAX_PORTS</code></p>
+<p>  每个到客户端(s2c)和服务器(s2s)的连接消耗一个<code>port</code>, <code>ERL_MAX_PORTS</code>定义了Ejabberd可以支持的并发连接数. 其可以在配置文件<code>/etc/ejabberd/ejabberdctl.cfg</code>中指定, 默认值为<code>32000</code>.</p>
+<p>  大并发连接场景下的应用需要增大该参数的值.</p>
+</li>
+<li><p><code>ERL_PROCESSES</code></p>
+<p>  Erlang消耗很多轻量级进程, 如果Ejabberd比较繁忙, 可能会达到进程数上限, 这种情况会导致高延迟. 当消息延迟过高时, 需要判断是否是由于该参数引起的.</p>
+</li>
+</ul>
+<h2 id="内核参数调整">内核参数调整</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_syncookies</span> = <span class="number">1</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_tw_reuse</span> = <span class="number">1</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_tw_recycle</span> = <span class="number">0</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_timestamps</span> = <span class="number">1</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_max_syn_backlog</span> = <span class="number">65535</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_fin_timeout</span> = <span class="number">30</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_rmem</span> = <span class="number">4096</span> <span class="number">4096</span> <span class="number">16777216</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_wmem</span> = <span class="number">4096</span> <span class="number">4096</span> <span class="number">16777216</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.ip_local_port_range</span> = <span class="number">1025</span> <span class="number">65000</span></span><br><span class="line">fs<span class="class">.file-max</span> = <span class="number">65535000</span></span><br><span class="line">net<span class="class">.core</span><span class="class">.rmem_max</span> = <span class="number">16777216</span></span><br><span class="line">net<span class="class">.core</span><span class="class">.wmem_max</span> = <span class="number">16777216</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_rmem</span> = <span class="number">4096</span> <span class="number">87380</span> <span class="number">16777216</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_wmem</span> = <span class="number">4096</span> <span class="number">65536</span> <span class="number">16777216</span></span><br><span class="line">net<span class="class">.core</span><span class="class">.netdev_max_backlog</span> = <span class="number">30000</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_mtu_probing</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>内核网络参数<code>net.ipv4.ip_local_port_range</code>指定了本地程序可以打开的端口范围. <code>61000-32768=28232</code>可以最多建立28232个到Ejabberd服务器的连接, 一般比这个数字小, 系统还有其他程序需要占用端口.</p>
+<ul>
+<li><code>net.ipv4.tcp_tw_recycle = 1</code> 快速回收TCP连接, 避免TIME_WAIT时间过长</li>
+</ul>
+<p>修改端口范围<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo <span class="number">1024</span> <span class="number">65535</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/ip_local_port_range</span><br></pre></td></tr></table></figure></p>
+<h2 id="排查">排查</h2><ul>
+<li>查看ulimit</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ulimit</span> <span class="operator">-a</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>验证进程的最大可打开文件 <code>Max open files</code></li>
+</ul>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">root@scm:~# cat /<span class="keyword">proc</span>/18938/limits<span class="symbol"></span><br><span class="line">Limit</span> <span class="symbol">                    Soft</span> Limit<span class="symbol">           Hard</span> Limit<span class="symbol">           Units</span></span><br><span class="line">Max<span class="symbol"> cpu</span> time<span class="symbol">              unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           seconds</span></span><br><span class="line">Max<span class="symbol"> file</span> size<span class="symbol">             unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> data</span> size<span class="symbol">             unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> stack</span> size            8388608<span class="symbol">              unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> core</span> file<span class="symbol"> size</span>        0<span class="symbol">                    unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> resident</span> set<span class="symbol">          unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> processes</span>             127460               127460<span class="symbol">               processes</span></span><br><span class="line">Max<span class="symbol"> open</span> files            60000                60000<span class="symbol">                files</span></span><br><span class="line">Max<span class="symbol"> locked</span> memory         65536                65536<span class="symbol">                bytes</span></span><br><span class="line">Max<span class="symbol"> address</span> space<span class="symbol">         unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> file</span> locks<span class="symbol">            unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           locks</span></span><br><span class="line">Max<span class="symbol"> pending</span> signals       127460               127460<span class="symbol">               signals</span></span><br><span class="line">Max<span class="symbol"> msgqueue</span> size         819200               819200<span class="symbol">               bytes</span></span><br><span class="line">Max<span class="symbol"> nice</span> priority         0                    0<span class="symbol"></span><br><span class="line">Max</span> realtime<span class="symbol"> priority</span>     0                    0<span class="symbol"></span><br><span class="line">Max</span> realtime<span class="symbol"> timeout</span> <span class="symbol">     unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           us</span></span><br></pre></td></tr></table></figure>
+<h2 id="Mnesia表过载">Mnesia表过载</h2><p>编辑配置文件<code>/etc/ejabberd/ejabberdctl.cfg</code>, 设置选项:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">ERL_OPTIONS=<span class="value"><span class="string">"-mnesia dump_log_write_threshold 50000 -mnesia dc_dump_limit 40"</span></span></span></span><br></pre></td></tr></table></figure>
+<p>当前版本的SHELL脚本有BUG, 需要使用<code>\</code>转义, 如下:</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ERL_OPTIONS</span>=<span class="string">"-mnesia\ dump_log_write_threshold\ 50000\ -mnesia\ dc_dump_limit\ 40"</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><p>文件描述符<br><a href="http://erlangcentral.org/wiki/index.php?title=Introduction_to_Load_Testing_with_Tsung#Max_open_file_descriptor_limit" target="_blank" rel="external">http://erlangcentral.org/wiki/index.php?title=Introduction_to_Load_Testing_with_Tsung#Max_open_file_descriptor_limit</a></p>
+</li>
+<li><p>虚拟接口<br><a href="http://erlangcentral.org/wiki/index.php?title=Introduction_to_Load_Testing_with_Tsung#Virtual_interfaces" target="_blank" rel="external">http://erlangcentral.org/wiki/index.php?title=Introduction_to_Load_Testing_with_Tsung#Virtual_interfaces</a></p>
+</li>
+<li><p>Mnesia过载问题<br><a href="http://blog.include.io/archives/106" target="_blank" rel="external">http://blog.include.io/archives/106</a><br><a href="http://www.tuicool.com/articles/rIBbqa" target="_blank" rel="external">http://www.tuicool.com/articles/rIBbqa</a></p>
+</li>
+<li><p>Tsung 常见问题<br><a href="http://tsung.erlang-projects.org/user_manual/faq.html" target="_blank" rel="external">http://tsung.erlang-projects.org/user_manual/faq.html</a></p>
+</li>
+<li><p><a href="http://blog.fnil.net/index.php/archives/276/" target="_blank" rel="external">http://blog.fnil.net/index.php/archives/276/</a></p>
+</li>
+<li><p>幻灯片-安装过程(需要梯子)<br><a href="http://www.slideshare.net/ngocdaothanh/tsung-13985127?related=1" target="_blank" rel="external">http://www.slideshare.net/ngocdaothanh/tsung-13985127?related=1</a></p>
+</li>
+<li><p>Performance Tuning<br><a href="https://www.ejabberd.im/tuning" target="_blank" rel="external">https://www.ejabberd.im/tuning</a></p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/Ejabberd/">Ejabberd</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/Performance/">Performance</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="2015/03/12/ejabberd-performance-turning/" data-title="Ejabberd 性能调优(草稿)" data-url="http://developerworks.github.io/2015/03/12/ejabberd-performance-turning/"></div>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"developerworks"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+</div>
+    </div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/11/thrift-ex/">thrift_ex</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">(译) Ejabberd加入了Elixir的变革</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/25/http2-h2o-get-started/">HTTP/2 尝鲜</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/AD/">AD</a><small>2</small></li>
+  
+    <li><a href="/categories/API/">API</a><small>3</small></li>
+  
+    <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
+  
+    <li><a href="/categories/Database/">Database</a><small>1</small></li>
+  
+    <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
+  
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>32</small></li>
+  
+    <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
+  
+    <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
+  
+    <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
+  
+    <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+  
+    <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
+  
+    <li><a href="/categories/Node-js/">Node.js</a><small>17</small></li>
+  
+    <li><a href="/categories/Opencart/">Opencart</a><small>2</small></li>
+  
+    <li><a href="/categories/QA/">QA</a><small>2</small></li>
+  
+    <li><a href="/categories/RESTFul/">RESTFul</a><small>1</small></li>
+  
+    <li><a href="/categories/SCM/">SCM</a><small>5</small></li>
+  
+    <li><a href="/categories/Testing/">Testing</a><small>1</small></li>
+  
+    <li><a href="/categories/Tools/">Tools</a><small>4</small></li>
+  
+    <li><a href="/categories/Web/">Web</a><small>6</small></li>
+  
+    <li><a href="/categories/XEP/">XEP</a><small>5</small></li>
+  
+    <li><a href="/categories/XMPP/">XMPP</a><small>6</small></li>
+  
+    <li><a href="/categories/english/">english</a><small>1</small></li>
+  
+    <li><a href="/categories/杂类/">杂类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget duoshuo_recent_comments">
+    <h3 class="title">最新评论</h3>
+    <ul class="entry ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-title="1" data-show-time="1"></ul>
+</div>
+<!--多说js加载开始，一个页面只需要加载一次 -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name: "developerworks"};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = 'http://static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!--多说js加载结束，一个页面只需要加载一次 -->
+
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 10px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 18px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 17px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 16px;">docker</a><a href="/tags/ejabberd/" style="font-size: 19px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+</div>
+<footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 zhiqiang he
+  
+</div>
+<div class="clearfix"></div></footer>
+
+<!--<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>-->
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<!--<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
+
+
+

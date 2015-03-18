@@ -1,0 +1,497 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>XMPP XEP-0198流管理 - 协议 | 元气糯米团子的Coding Blog</title>
+  <meta name="author" content="zhiqiang he">
+  
+  <meta name="description" content="本文包括两个部分
+
+本规范引用自如下连接并对其修订,校对,补充http://blog.csdn.net/yuedong56/article/details/38120101.
+
+介绍XMPP Core 用XMPP定义了流的XML技术(也就是流的建立和终止,包括认证和加密).但是核心的XMPP协议并没有为管理一个灵活的XML流提供工具.
+流管理背后的基本概念是,初始化的实体(一个服务端或者客户端)和接收的实体(一个服务端)可以为更灵活的管理stream交换命令.下面两条流管理的特性被广泛的关注,因为它们可以提高网络的可靠性和终端用户的体验:
+
+Stanza确认(Stanza Acknowledgements) — 能够确认一段或者一系列Stanza是否已被某一方接收.
+流恢复(Stream Resumption) — 能够迅速的恢复(resume)一个已经被终止的流.
+
+流管理用较的短XML元素实现了这些特性,这些XML元素是在流的标准上的.这些元素并不是XMPP意义上的stanzas(也就是说,不是&amp;lt;iq/&amp;gt;,&amp;lt;message/&amp;gt;,或&amp;lt;presence/&amp;gt;这样的stanzas,stanzas在RFC 6120中有定义),它们不会在流管理中被counted或者被acked,因为它们是为管理stanzas本身而存在的.
+流管理是在XML流的标准上使用的.检查一个给定的流TCP的连通性的时候,特别推荐使用whitespace keepalives(见RFC 6120),XMPP Ping (XEP-0199)或者TCP keepalives.对比流管理,高级消息处理Advanced Message Processing (XEP-0079)和消息回执Message Delivery Receipts (XEP-0184),定义了Ack,它可以通过多个流实现端对端的传输;这些特性在一些特殊情况中是有用的,但是没必要去检查在两个xmpp实体之间直接传递的流.
+注:流管理可以用于服务端到服务端,客户端到服务端的流.但是,为了方便,本规范只讨论客户端到服务端的流.同样的原则也适用于服务器到服务器的流.(在本文档中,以C:开头的都是由客户端发送的,由S:开头的都是由服务器发送的).">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="XMPP XEP-0198流管理 - 协议"/>
+  <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="元气糯米团子的Coding Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/assets/css/toc.css"/>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>-->
+  <script type="text/javascript" src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-1.8.3.min.js"></script>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon-76x76.png" />
+  <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <!--
+  <SCRIPT type=text/javascript src="/js/scrolltop.js"></SCRIPT>
+   -->
+  <!--howiefh calendar begin-->
+  <SCRIPT type=text/javascript src="/js/calendar.js"></SCRIPT>
+  <!--howiefh calendar end-->
+  
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</head>
+
+
+<body>
+<header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">元气糯米团子的Coding Blog</a></h1>
+  <h2><a href="/">Tansform information as knowledges, extract and purify as thoughts</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">树根</a></li>
+    
+      <li><a href="/archives">泡菜坛子</a></li>
+    
+      <li><a href="/links">连接</a></li>
+    
+      <li><a href="/atom.xml">粽子</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+
+<div id="content" class="inner">
+    <div id="main-col" class="alignleft">
+        <div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-10-02T20:07:43.000Z"><a href="/2014/10/03/xmpp-xep-0198-stream-management/">2014-10-03</a></time>
+      
+      
+  
+    <h1 class="title">XMPP XEP-0198流管理 - 协议</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流特性"><span class="toc-number">2.</span> <span class="toc-text">流特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启用流管理"><span class="toc-number">3.</span> <span class="toc-text">启用流管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Acks"><span class="toc-number">4.</span> <span class="toc-text">Acks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#恢复"><span class="toc-number">5.</span> <span class="toc-text">恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#错误处理"><span class="toc-number">6.</span> <span class="toc-text">错误处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流的关闭"><span class="toc-number">7.</span> <span class="toc-text">流的关闭</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#情景(Scenarios)"><span class="toc-number">8.</span> <span class="toc-text">情景(Scenarios)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本的acking情景"><span class="toc-number">8.1.</span> <span class="toc-text">基本的acking情景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Efficient_Acking_Scenario"><span class="toc-number">8.2.</span> <span class="toc-text">Efficient Acking Scenario</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全"><span class="toc-number">9.</span> <span class="toc-text">安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IANA_Considerations"><span class="toc-number">10.</span> <span class="toc-text">IANA Considerations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XMPP_Registrar_Considerations"><span class="toc-number">11.</span> <span class="toc-text">XMPP Registrar Considerations</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Protocol_Namespaces"><span class="toc-number">11.1.</span> <span class="toc-text">Protocol Namespaces</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Protocol_Versioning"><span class="toc-number">11.2.</span> <span class="toc-text">Protocol Versioning</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stream_Features"><span class="toc-number">11.3.</span> <span class="toc-text">Stream Features</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XML_模式"><span class="toc-number">12.</span> <span class="toc-text">XML 模式</span></a></li></ol>
+        </div>
+        
+
+
+        <p>本文包括两个部分</p>
+<ul>
+<li>本规范引用自如下连接并对其<strong>修订</strong>,<strong>校对</strong>,<strong>补充</strong><br><a href="http://blog.csdn.net/yuedong56/article/details/38120101" target="_blank" rel="external">http://blog.csdn.net/yuedong56/article/details/38120101</a>.</li>
+</ul>
+<h2 id="介绍">介绍</h2><p><a href="http://wiki.jabbercn.org/RFC6120#.E5.85.A8.E5.B1.80.E5.9C.B0.E5.9D.80" target="_blank" rel="external">XMPP Core</a> 用XMPP定义了流的XML技术(也就是流的建立和终止,包括认证和加密).但是核心的XMPP协议并没有为管理一个灵活的XML流提供工具.</p>
+<p>流管理背后的基本概念是,初始化的实体(一个服务端或者客户端)和接收的实体(一个服务端)可以为更灵活的管理stream交换<code>命令</code>.下面两条流管理的特性被广泛的关注,因为它们可以提高网络的可靠性和终端用户的体验:</p>
+<ul>
+<li>Stanza确认(Stanza Acknowledgements) — 能够确认一段或者一系列Stanza是否已被某一方接收.</li>
+<li>流恢复(Stream Resumption) — 能够迅速的恢复(resume)一个已经被终止的流.</li>
+</ul>
+<p>流管理用较的短XML元素实现了这些特性,这些XML元素是在流的标准上的.这些元素并不是XMPP意义上的<code>stanzas</code>(也就是说,不是<code>&lt;iq/&gt;</code>,<code>&lt;message/&gt;</code>,或<code>&lt;presence/&gt;</code>这样的<code>stanzas</code>,<code>stanzas</code>在<strong>RFC 6120</strong>中有定义),它们不会在流管理中被<code>counted</code>或者被<code>acked</code>,因为它们是为管理stanzas本身而存在的.</p>
+<p>流管理是在XML流的标准上使用的.检查一个给定的流TCP的连通性的时候,特别推荐使用<code>whitespace keepalives</code>(见<strong>RFC 6120</strong>),<a href="http://xmpp.org/extensions/xep-0199.html" target="_blank" rel="external">XMPP Ping (XEP-0199)</a>或者<code>TCP keepalives</code>.对比流管理,高级消息处理<a href="http://xmpp.org/extensions/xep-0079.html" target="_blank" rel="external">Advanced Message Processing (XEP-0079)</a>和消息回执<a href="http://xmpp.org/extensions/xep-0184.html" target="_blank" rel="external">Message Delivery Receipts (XEP-0184)</a>,定义了<code>Ack</code>,它可以通过多个流实现端对端的传输;这些特性在一些特殊情况中是有用的,但是没必要去检查在两个xmpp实体之间直接传递的流.</p>
+<p>注:流管理可以用于服务端到服务端,客户端到服务端的流.但是,为了方便,本规范只讨论客户端到服务端的流.同样的原则也适用于服务器到服务器的流.(在本文档中,以<strong>C:</strong>开头的都是由客户端发送的,由<strong>S:</strong>开头的都是由服务器发送的).</p>
+<a id="more"></a>
+<h2 id="流特性">流特性</h2><p>服务端返回一个流的header给客户端,紧接着要发送流的features,这些features包括一个名称空间为<code>urn:xmpp:sm:3</code>的<code>&lt;sm/&gt;</code>元素(见Namespace Versioning 关于版本号增加的可能性).</p>
+<p>注:除非客户端已经通过验证并且绑定了一个资源,否则客户端不能进行流管理协商;见下面的特定的限制条件.</p>
+<p><strong>例1:服务器发送新的流的header和流的features.</strong></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">S:</span> &lt;<span class="string">stream:</span>stream</span><br><span class="line">       from=<span class="string">'example.com'</span></span><br><span class="line">       xmlns=<span class="string">'jabber:client'</span></span><br><span class="line"><span class="label">       xmlns:</span>stream=<span class="string">'http://etherx.jabber.org/streams'</span></span><br><span class="line">       version=<span class="string">'1.0'</span>&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">S: <span class="tag">&lt;<span class="title">stream:features</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="title">bind</span> <span class="attribute">xmlns</span>=<span class="value">'urn:ietf:params:xml:ns:xmpp-bind'</span>/&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="title">sm</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span>/&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="title">stream:features</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="启用流管理">启用流管理</h2><p>要启用流管理,客户端发送一个<code>&lt;enable/&gt;</code>命令给服务端.</p>
+<p><strong>例2:客户端启用流管理</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C: <span class="tag">&lt;<span class="title">enable</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果客户端想要恢复一个流,<code>&lt;enable&gt;</code>元素必须包括一个布尔类型的<code>resume</code>属性,其默认为<code>false</code>.关于恢复一个先前会话,请参考恢复一节.</p>
+<p><code>&lt;enable/&gt;</code>元素可以包含一个<code>max</code>属性,用来指定客户端最优的最大恢复时间,以秒为单位.</p>
+<p>一旦受到启用请求,服务端必须回复一个<code>&lt;enabled/&gt;</code>元素,或者一个<code>&lt;failed/&gt;</code>,注明 <code>urn:xmpp:sm:3</code> 的命名空间namespace.<code>&lt;failed/&gt;</code>元素表示在建立流管理会话中存在一个问题.<code>&lt;enabled/&gt;</code>元素表示成功的建立了流管理会话.</p>
+<p><strong>例3:服务端启用流管理</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S: <span class="tag">&lt;<span class="title">enabled</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后可以使用流管理的特性定义下面的内容.</p>
+<p>如果服务端允许会话恢复,服务端必须包括一个resume属性,值为<code>ture</code>或者<code>1</code>.</p>
+<p><strong>例4:服务端启用允许会话恢复的流管理</strong></p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S: &lt;enabled xmlns='urn:xmpp:sm:<span class="number">3</span>' <span class="property">id</span>='<span class="keyword">some</span>-long-sm-<span class="property">id</span>' resume='<span class="constant">true</span>'/&gt;</span><br></pre></td></tr></table></figure>
+<p><code>&lt;enabled/&gt;</code>元素可以包含一个<code>max</code>属性,用来指定服务端特定的最大恢复时间.</p>
+<p><code>&lt;enabled/&gt;</code>属性可以包含一个<code>location</code>属性,用来指定服务端的IP地址或者域名(端口可选)用于重连,见<strong>RFC6120</strong>的4.9.3.19部分(即,<code>domainpart:port</code>, IPv6地址在方括号里<code>[…]</code>,见<a href="http://tools.ietf.org/html/rfc5952" target="_blank" rel="external">RFC5952</a>).如果重连那个location失败了,标准的XMPP重连算法在<strong>RFC6120</strong>中有详细说明.</p>
+<p>除非通过了身份验证,客户端禁止启用流管理;也就是说客户端不能发送一个<code>&lt;enabled/&gt;</code>元素直到完成了身份验证.(例如,SASL,<a href="http://xmpp.org/extensions/xep-0078.html" target="_blank" rel="external">Non-SASL Authentication (XEP-0078)</a>或者 <a href="http://xmpp.org/extensions/xep-0220.html" target="_blank" rel="external">Server Dialback (XEP-0220)</a>已经成功完成).</p>
+<p>对于客户端到服务端的连接,在没有完成资源绑定前,客户端禁止启用流管理,除非正在恢复一个之前的会话(见Resumption).</p>
+<p>服务端应该实施这个命令,如果这个规则被违反了,要返回一个<code>&lt;failed/&gt;</code>元素.</p>
+<p><strong>例5:如果客户端试图在未绑定资源前启用流管理,服务端返回错误</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S: <span class="tag">&lt;<span class="title">failed</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="title">unexpected-request</span> <span class="attribute">xmlns</span>=<span class="value">'urn:ietf:params:xml:ns:xmpp-stanzas'</span>/&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="title">failed</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="Acks">Acks</h2><p>启用流管理(流管理)之后,客户端或者服务端可以在任意时间通过流发送ack元素.ack元素可以是:</p>
+<p><code>&lt;a/&gt;</code>元素用于回答一个确认收到的请求或者发送一个未被请求的ack.<br><code>&lt;r/&gt;</code>元素用于请求收到节(stanzas)的确认信息.</p>
+<blockquote>
+<p>(注解: 有点绕,简而言之就是一端发起<code>&lt;r/&gt;</code>请求,另一端必须以<code>&lt;a/&gt;</code>应答)</p>
+</blockquote>
+<p>属性定义如下:</p>
+<p><code>h</code>属性标识最后处理的节(即,服务器确认收到最后一节).</p>
+<p>一个<code>&lt;a/&gt;</code>元素必须具备一个<code>h</code>属性.</p>
+<p><code>&lt;r/&gt;</code>元素没有已定义属性.</p>
+<p>定义:确认一条之前收到的ack元素,节是被服务器处理后再发送出去的.对于服务端的处理,我们是指服务端接管一条或多条节(如,直接处理节,将节传给本地的一个实体,比如相同服务器下的另一个客户端,或者将节发送给其他服务器的远程实体);一个节在确认被服务端处理之前,发送方都要对节负责(例如,如果没有被服务端确认处理,客户端要重发这个节或者生成一个错误).</p>
+<p>收到一个<code>&lt;r/&gt;</code>元素的回执并不意味着新的节已经传送给对方,只有收到一个<code>&lt;a/&gt;</code>元素的回执,如果<code>h</code>属性的值已经递增过,才说明这个新的节已经被处理过.</p>
+<p><code>h</code>值在流管理中被启用或被请求启用时,是从零开始的.当第一个节被处理的时候,<code>h</code>值增加为<code>1</code>,并随着接下来新的节被处理,<code>h</code>值不断增加.在一些极端情况下,在流管理对话中被处理的节的数量,</p>
+<p>超出了无符号整型数所表示的最大数(2的32次方)<a href="http://www.w3.org/TR/xmlschema-2" target="_blank" rel="external">XML Schema Part 2</a>,<code>h</code>值应该被置为<code>0</code>,而不是2的32次方.</p>
+<p>注意:任何给定的流,都有两个<code>h</code>值,一个被客户端用于跟踪节是否被服务端处理,另一个被服务端用于跟踪节是否被处理自客户端.当客户端向服务端发送<code>&lt;enable/&gt;</code>时,客户端初始化它的<code>h</code>值为零,同样服务端发送<code>&lt;enable/&gt;</code>给客户端时,也初始化它的<code>h</code>值为零(服务端会立即回复<code>&lt;enable/&gt;</code>,同时设置它的计数器为零).初始化后,客户端根据处理的节的数目不断增加<code>h</code>值,服务端也相应不断增加<code>h</code>值.</p>
+<p>下面的带注释的例子,包括客户端发的一段消息,一个确认接收的请求,一个节的ack.</p>
+<p><strong>例6:Simple stanza acking</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C: <span class="tag">&lt;<span class="title">enable</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span>/&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Client sets outbound count to zero.(客户端设置outbound为0) --&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">C: <span class="tag">&lt;<span class="title">message</span> <span class="attribute">from</span>=<span class="value">'laurence@example.net/churchyard'</span></span><br><span class="line">            <span class="attribute">to</span>=<span class="value">'juliet@example.com'</span></span><br><span class="line">            <span class="attribute">xml:lang</span>=<span class="value">'en'</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">       I'll send a friar with speed, to Mantua,</span><br><span class="line">       with my letters to thy lord.</span><br><span class="line">     <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="title">message</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Note that client need not wait for a response.(注意客户端不需要等待回复) --&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">S: <span class="tag">&lt;<span class="title">enabled</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span>/&gt;</span></span><br><span class="line">   <span class="comment">&lt;!--</span><br><span class="line">        Server receives enable, and responds,</span><br><span class="line">        setting both inbound and outbound counts</span><br><span class="line">        to zero. (服务端接收enable,回复客户端,设置inbound和outboard数为零)</span><br><span class="line">        In addition, client sets inbound count to zero. (另外,客户端设置inbound为零)</span><br><span class="line">   --&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C: <span class="tag">&lt;<span class="title">r</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S: &lt;<span class="tag">a</span> xmlns=<span class="string">'urn:xmpp:sm:3'</span> h=<span class="string">'1'</span>/&gt;</span><br></pre></td></tr></table></figure>
+<p>当一个<code>&lt;r/&gt;</code>元素(<code>request</code>)被收到时,接收方必须通过给发送方发送一个带h值的<code>&lt;a/&gt;</code>元素的回执确认,<code>h</code>值大小为<code>&lt;r/&gt;</code>元素接受方处理的节的数量.回复必须在接收到<code>&lt;r/&gt;</code>元素后立即发送,除了超时以外的任何情况,都不能保留.例如,有时候客户端的网速比较慢,它在确认收到前可能希望在一段时间内收集很多节,服务端可能希望减少传入的节.发送方无需等待继续发送节的ack.<br>任何一方都可以在任何时间发送一条<code>&lt;a/&gt;</code>元素(如,接收完确切数目的节后,或者一个确定的时间段过后),即便是未收到对方发送的<code>&lt;r/&gt;</code>元素.<br>当一方收到一个<code>&lt;a/&gt;</code>元素,必须返回一个h值作为当前流最后处理的那条出站节(outbound stanza)的序列号.<br>如果一个流结束了,也没有在<code>&lt;enable/&gt;</code>元素中指定的时间内恢复,序列号和任何相关的状态都可以被双方丢弃.在会话状态被丢弃前,应该对任何未处理的节(即在收到最近的h值后发送的节)采取替代措施.</p>
+<ul>
+<li>服务端应该采用相同的方式处理未确认的节,对于发送到不可用资源的节,服务端应该给发送方返回一个错误,或者把该节提交给离线仓库存储.</li>
+<li>面向用户的客户端应该悄悄地(不用通知用户)通过连接重新发送节,或者通过一个合适的交互方式通知用户发送失败.</li>
+</ul>
+<p>因为未被确认收到的节可能已经被对方接收,重发有可能导致重复发送.尽管至少可以通过每个节的id协助接收方排除重复接收的节,但是该协议还无法预防这种情况的发生.</p>
+<h2 id="恢复">恢复</h2><p>XML流有可能发生意外终止(如,因为网络中断).这种情况需要迅速的恢复之前的流,而不是完成流的新建,名册的检索和状态的广播.</p>
+<p>另外,该协议会在先前的连接中交换最后收到的流的序列号,允许实体最终确定哪些节需要重发,哪些节不需要重发,通过重放消除重复.</p>
+<p>请求中流都是可恢复的,当开启流管理时,客户端必须给<code>&lt;enable/&gt;</code>元素增加一个<code>resume</code>属性,它的值可以是<code>true</code>或者<code>1</code>.</p>
+<p><strong>例7:客户端开启流管理</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C: <span class="tag">&lt;<span class="title">enable</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span> <span class="attribute">resume</span>=<span class="value">'true'</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>要允许流被恢复,服务端必须在<code>&lt;enable/&gt;</code>元素中包含一个<code>resume</code>属性,设为<code>ture</code>或者<code>1</code>;必须包含一个<code>id</code>属性,用于作为流的标识符.</p>
+<p><strong>例8:服务端允许流恢复</strong></p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">S: &lt;enabled xmlns='urn:xmpp:sm:<span class="number">3</span>' <span class="property">id</span>='<span class="keyword">some</span>-long-sm-<span class="property">id</span>' resume='<span class="constant">true</span>'/&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>定义</strong></p>
+<blockquote>
+<p><code>id</code>属性为流管理定义了一个唯一标识(<code>SM-ID</code>).SM-ID必须由服务端生成.客户端必须认定SM-ID是一个不透明的类型,因此不允许分配给SM-ID任何语义.服务端可以编码任何它认为有用的信息,如full JID<code>&lt;localpart@domain.tld/resource&gt;</code>,赋给SM-ID(如full JID拼上一个当前的属性).任何在XML中被允许的字符属性都是可用的.SM-ID不允许被当前和以后的会话重用(但是服务器不需要确保SM-ID一直是唯一的,只有在服务器继续运行的时候).SM-ID不应该超过4000个字节.</p>
+</blockquote>
+<p>如上所述,<code>&lt;enable/&gt;</code>元素可以包含一个<code>location</code>属性,用于指明重连的首选位置(如,一个为已经联网的客户端保存状态的特定的链接管理器).</p>
+<p><strong>例9:服务器会选择在一个特定的位置重新链接</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">S: <span class="tag">&lt;<span class="title">enabled</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span></span><br><span class="line">            <span class="attribute">id</span>=<span class="value">'some-long-sm-id'</span></span><br><span class="line">            <span class="attribute">location</span>=<span class="value">'[2001:41D0:1:A49b::1]:9222'</span></span><br><span class="line">            <span class="attribute">resume</span>=<span class="value">'true'</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果流意外停止了,客户端就会向服务器开一个TCP链接.所有事件的顺序如下:</p>
+<p>1.断开链接后,客户端向服务端新开一个TCP链接,选择location属性中指明的地址(如果有的话).<br>2.客户端发送初始化的流的Header.<br>3.服务端向客户端回复流的Header.<br>4.服务端发送流的Features.<br>5.客户端发送 STARTTLS 请求.<br>6.服务端通知客户端继续进行TLS协议.<br>7.双方完成一次TLS握手(注意:如果正在进行恢复会话,同时也在用TLS,建议利用TLS会话恢复<a href="http://tools.ietf.org/html/rfc5077" target="_blank" rel="external">RFC5077</a>,进一步优化XML流的恢复).<br>8.客户端发送新初始化的流的header.<br>9.服务端向客户端回复流的header.<br>10.服务端向客户端发送流的features,要求SASL协议,提供合适的SASL机制(注意:如果服务端认为在TLS会话恢复中提供的信息足够的真实可信,它可以提供SASL EXTERNAL 机制;具体的请参考<a href="http://tools.ietf.org/html/draft-cridland-sasl-tls-sessions" target="_blank" rel="external">draft-cridland-sasl-tls-sessions</a>).<br>11.双方完成SASL协议.<br>12.客户端发送新初始化的流的header.<br>13.服务端向客户端回复流的header.<br>14.服务端发送流的features,提供SM的features.<br>15.客户端请求恢复之前的流.</p>
+<p>注意:这些事件的顺序也可能以上的顺序,取决于服务端提供SM features的时间,客户端是否选择STARTTLS,等等.另外,事实上服务端到服务端的流经常没有完成SASL协议,甚至也不完成TLS协议.上面讲的并没有改变<strong>RFC6120</strong>中规定的有关流协议的任何规则.然后,因为流管理适用于xml节(不是任何其他xml元素)的交换,这使得当可能要开始向另一方发送节的时候(不是之前),服务端提供SM features变得有意义.见<a href="http://xmpp.org/extensions/xep-0170.html" target="_blank" rel="external">Recommended Order of Stream Feature Negotiation (XEP-0170)</a>.</p>
+<p>请求恢复之前已经终止的流,客户端要发送一个<code>&lt;resume/&gt;</code>元素,附上<code>urn:xmpp:sm:3</code>的命名空间.<code>&lt;resume/&gt;</code>元素必须包含一个<code>previd</code>属性,该属性的值为要恢复的流的SM-ID,还有包含一个h值,该值标识通过要恢复的流,服务端发送给客户端的最后一个被处理的节的序列号(万一客户端没有收到任何的节,它将设置h值为0).</p>
+<p>例10:流恢复请求</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C: &lt;resume xmlns='urn:xmpp:sm:<span class="number">3</span>'</span><br><span class="line">           h='<span class="keyword">some</span>-sequence-<span class="type">number</span>'</span><br><span class="line">           previd='<span class="keyword">some</span>-long-sm-<span class="property">id</span>'/&gt;</span><br></pre></td></tr></table></figure>
+<p>如果服务器能恢复之前的流,必须返回一个<code>&lt;resumed/&gt;元素,该元素必须包含一个</code>previd`属性,值为要恢复的流的SM-ID,还有必须包含一个h值,值为该值标识通过要恢复的流,客户端发送给服务端的最后一个被处理的节的序列号(万一服务端没有收到任何的节,它将设置h值为0).</p>
+<p>例11:被恢复的流</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S: <span class="tag">&lt;<span class="title">resumed</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span></span><br><span class="line">            <span class="attribute">h</span>=<span class="value">'another-sequence-number'</span></span><br><span class="line">            <span class="attribute">previd</span>=<span class="value">'some-long-sm-id'</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果服务端不支持会话恢复,必须返回一个<code>&lt;failed/&gt;</code>元素,该元素要包含一个<code>&lt;feature-not-implemented/&gt;</code>的错误条件.如果服务端没有把<code>previd</code>识别为一个更早的会话(例如,可能因为之前的会话已经超时),也必须返回一个<code>&lt;failed/&gt;</code>元素,该元素必须包含一个<code>&lt;item-not-found/&gt;</code>的错误条件.在这两种失败的情况中,服务器都应该允许客户端在这时绑定一个资源,而不是强制客户端重新开始流协议处理过程和重新认证.</p>
+<p>如果之前的流恢复了,此时服务端还依然保持着之前认证过(previously-identified)的会话开着,应该终止之前的流.</p>
+<p>当一个会话被恢复时,双方处理过程如下:</p>
+<ul>
+<li>序列值沿用了之前会话的,而且不会被新的流修改.</li>
+<li>一旦收到<code>&lt;resume/&gt;</code>或者<code>&lt;resumed/&gt;</code>元素,客户端和服务端利用h值重新发送所有因为断开连接而丢失的节.事实上,应该处理这俩元素的<code>h值</code>,就像在<code>&lt;a/&gt;</code>元素中处理它一样(即,在发出队列中标记节为已经被处理),除此之外,必须将任何仍被标记为未处理的节重新发送给对方.</li>
+<li>双方都应该重发在先前的对话中未被标记处理的节,重发时是根据对方记录的序列号.</li>
+<li>正在重连的客户端不能请求名册,因为在客户端断开连接的过程中任何名册信息的改变都会在流管理会话恢复后被发送给客户端.</li>
+<li>客户端不能在其试图恢复之前presence状态的时候发送presence节,因为这个状态可能已经被服务端保存.</li>
+<li>双方都不能试图重建状态信息(如,Service Discovery (XEP-0030) [15] information).</li>
+</ul>
+<h2 id="错误处理">错误处理</h2><p>如果对于一个<code>&lt;enable/&gt;</code>或者<code>&lt;resume/&gt;</code>元素,如果出现了错误,服务器必须返回一个<code>&lt;failed/&gt;</code>元素.这个元素要包含一个错误条件,它必须是<strong>RFC6120</strong>里定义的所有节错误条件中的一个.</p>
+<p>下面是个例子.</p>
+<p>例12:服务端返回错误</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">S: <span class="tag">&lt;<span class="title">failed</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="title">unexpected-request</span> <span class="attribute">xmlns</span>=<span class="value">'urn:ietf:params:xml:ns:xmpp-stanzas'</span>/&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="title">failed</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>流管理错误被认为是可恢复的.但是,错误的使用流管理可能会导致流的终止.</p>
+<h2 id="流的关闭">流的关闭</h2><p>一个干净的关闭的流不同于一个未完成的流.如果客户端想干净的关闭它的流,并且结束它的会话,它必须发送一个<code>&lt;/stream:stream&gt;</code>,以便服务端能够发送一个代表客户端的unavailable presence信息.</p>
+<p>如果流没有被干净的关闭,那么服务端应认为流没有完成(即使客户端关掉了跟服务端的TCP连接),要在一个有限的时间内保持代表客户端的会话.在离开一个未完成状态的流之前,客户端可以发送任何希望的presence信息.</p>
+<h2 id="情景(Scenarios)">情景(Scenarios)</h2><p>下面的几种情景列举了几种不同的流管理的使用.这些例子都是关于客户端和服务端之间的,但是流管理还可以用于服务端对对服务端的流.</p>
+<h3 id="基本的acking情景">基本的acking情景</h3><p>流管理协议可以通过acks,在没有恢复会话的能力的条件下提高可靠性.一个基本的实现将执行以下操作:</p>
+<ul>
+<li>作为一个客户端,发送不带任何属性的<code>&lt;enable/&gt;</code>,不用管在<code>&lt;enable/&gt;</code>回复中的属性.</li>
+</ul>
+<h3 id="Efficient_Acking_Scenario">Efficient Acking Scenario</h3><p>The basic acking scenario is wasteful because the client requested an ack for each stanza. A more efficient approach is to periodically request acks (e.g., every 5 stanzas). This is shown schematically in the following pseudo-XML.</p>
+<p><strong>例21: An efficient session</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">C</span>: <span class="string">&lt;enable/&gt;</span></span><br><span class="line"><span class="attribute">S</span>: <span class="string">&lt;enabled/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;r/&gt;</span></span><br><span class="line"><span class="attribute">S</span>: <span class="string">&lt;a h='5'/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;message/&gt;</span></span><br><span class="line"><span class="attribute">C</span>: <span class="string">&lt;r/&gt;</span></span><br><span class="line"><span class="attribute">S</span>: <span class="string">&lt;a h='10'/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>In particular, on mobile networks, it is advisable to only request and/or send acknowledgements when an entity has other data to send, or in lieu of a whitespace keepalive or XMPP ping (XEP-0199).</p>
+<h2 id="安全">安全</h2><p>As noted, a server MUST NOT allow an client to resume a stream management session until after the client has authenticated (for some value of “authentication”); this helps to prevent session hijacking.</p>
+<h2 id="IANA_Considerations">IANA Considerations</h2><p>This XEP requires no interaction with the Internet Assigned Numbers Authority (IANA) [16].</p>
+<h2 id="XMPP_Registrar_Considerations">XMPP Registrar Considerations</h2><h3 id="Protocol_Namespaces">Protocol Namespaces</h3><p>This specification defines the following XML namespace:</p>
+<ul>
+<li><code>urn:xmpp:sm:3</code></li>
+</ul>
+<p>The <a href="http://xmpp.org/registrar/" target="_blank" rel="external">XMPP Registrar</a> includes the foregoing namespace in its registry at<br><a href="http://xmpp.org/registrar/namespaces.html" target="_blank" rel="external">http://xmpp.org/registrar/namespaces.html</a>, as described in Section 4 of <a href="http://xmpp.org/extensions/xep-0053.html" target="_blank" rel="external">XMPP Registrar Function (XEP-0053)</a>.</p>
+<h3 id="Protocol_Versioning">Protocol Versioning</h3><p>If the protocol defined in this specification undergoes a revision that is not fully backwards-compatible with an older version, the XMPP Registrar shall increment the protocol version number found at the end of the XML namespaces defined herein, as described in Section 4 of <strong>XEP-0053</strong>.</p>
+<h3 id="Stream_Features">Stream Features</h3><p>The XMPP Registrar includes <code>urn:xmpp:sm:3</code> in its registry of stream features at<br><a href="http://xmpp.org/registrar/stream-features.html" target="_blank" rel="external">http://xmpp.org/registrar/stream-features.html</a></p>
+<h2 id="XML_模式">XML 模式</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version='1.0' encoding='UTF-8'?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">xs:schema</span></span><br><span class="line">  <span class="attribute">xmlns:xs</span>=<span class="value">'http://www.w3.org/2001/XMLSchema'</span></span><br><span class="line">  <span class="attribute">targetNamespace</span>=<span class="value">'urn:xmpp:sm:3'</span></span><br><span class="line">  <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span></span><br><span class="line">  <span class="attribute">elementFormDefault</span>=<span class="value">'qualified'</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:annotation</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">xs:documentation</span>&gt;</span></span><br><span class="line">      The protocol documented by this schema is defined in</span><br><span class="line">      XEP-0198: http://www.xmpp.org/extensions/xep-0198.html</span><br><span class="line">    <span class="tag">&lt;/<span class="title">xs:documentation</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">xs:annotation</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:import</span> <span class="attribute">namespace</span>=<span class="value">'urn:ietf:params:xml:ns:xmpp-stanzas'</span></span><br><span class="line">             <span class="attribute">schemaLocation</span>=<span class="value">'http://xmpp.org/schemas/stanzaerror.xsd'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'a'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">xs:simpleContent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">xs:extension</span> <span class="attribute">base</span>=<span class="value">'empty'</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'h'</span></span><br><span class="line">                        <span class="attribute">type</span>=<span class="value">'xs:integer'</span></span><br><span class="line">                        <span class="attribute">use</span>=<span class="value">'required'</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">xs:extension</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">xs:simpleContent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">xs:element</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'enable'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">xs:simpleContent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">xs:extension</span> <span class="attribute">base</span>=<span class="value">'empty'</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'max'</span></span><br><span class="line">                        <span class="attribute">type</span>=<span class="value">'xs:positiveInteger'</span></span><br><span class="line">                        <span class="attribute">use</span>=<span class="value">'optional'</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'resume'</span></span><br><span class="line">                        <span class="attribute">type</span>=<span class="value">'xs:boolean'</span></span><br><span class="line">                        <span class="attribute">use</span>=<span class="value">'optional'</span></span><br><span class="line">                        <span class="attribute">default</span>=<span class="value">'false'</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">xs:extension</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">xs:simpleContent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">xs:element</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'enabled'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">xs:simpleContent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">xs:extension</span> <span class="attribute">base</span>=<span class="value">'empty'</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'id'</span></span><br><span class="line">                        <span class="attribute">type</span>=<span class="value">'xs:string'</span></span><br><span class="line">                        <span class="attribute">use</span>=<span class="value">'optional'</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'location'</span></span><br><span class="line">                        <span class="attribute">type</span>=<span class="value">'xs:string'</span></span><br><span class="line">                        <span class="attribute">use</span>=<span class="value">'optional'</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'max'</span></span><br><span class="line">                        <span class="attribute">type</span>=<span class="value">'xs:positiveInteger'</span></span><br><span class="line">                        <span class="attribute">use</span>=<span class="value">'optional'</span>/&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'resume'</span></span><br><span class="line">                        <span class="attribute">type</span>=<span class="value">'xs:boolean'</span></span><br><span class="line">                        <span class="attribute">use</span>=<span class="value">'optional'</span></span><br><span class="line">                        <span class="attribute">default</span>=<span class="value">'false'</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">xs:extension</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">xs:simpleContent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">xs:element</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'failed'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">xs:sequence</span> <span class="attribute">xmlns:err</span>=<span class="value">'urn:ietf:params:xml:ns:xmpp-stanzas'</span></span><br><span class="line">                   <span class="attribute">minOccurs</span>=<span class="value">'0'</span></span><br><span class="line">                   <span class="attribute">maxOccurs</span>=<span class="value">'1'</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">xs:group</span> <span class="attribute">ref</span>=<span class="value">'err:stanzaErrorGroup'</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">xs:sequence</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">xs:element</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'r'</span> <span class="attribute">type</span>=<span class="value">'empty'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'resume'</span> <span class="attribute">type</span>=<span class="value">'resumptionElementType'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'resumed'</span> <span class="attribute">type</span>=<span class="value">'resumptionElementType'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'sm'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">xs:choice</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'optional'</span> <span class="attribute">type</span>=<span class="value">'empty'</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">xs:element</span> <span class="attribute">name</span>=<span class="value">'required'</span> <span class="attribute">type</span>=<span class="value">'empty'</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">xs:choice</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">xs:element</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:complexType</span> <span class="attribute">name</span>=<span class="value">'resumptionElementType'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">xs:simpleContent</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">xs:extension</span> <span class="attribute">base</span>=<span class="value">'empty'</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'h'</span></span><br><span class="line">                      <span class="attribute">type</span>=<span class="value">'xs:unsignedInt'</span></span><br><span class="line">                      <span class="attribute">use</span>=<span class="value">'required'</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">xs:attribute</span> <span class="attribute">name</span>=<span class="value">'previd'</span></span><br><span class="line">                      <span class="attribute">type</span>=<span class="value">'xs:string'</span></span><br><span class="line">                      <span class="attribute">use</span>=<span class="value">'required'</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="title">xs:extension</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">xs:simpleContent</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">xs:complexType</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">xs:simpleType</span> <span class="attribute">name</span>=<span class="value">'empty'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">xs:restriction</span> <span class="attribute">base</span>=<span class="value">'xs:string'</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">xs:enumeration</span> <span class="attribute">value</span>=<span class="value">''</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">xs:restriction</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">xs:simpleType</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">xs:schema</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/XMPP/">XMPP</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/XEP/">XEP</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="2014/10/03/xmpp-xep-0198-stream-management/" data-title="XMPP XEP-0198流管理 - 协议" data-url="http://developerworks.github.io/2014/10/03/xmpp-xep-0198-stream-management/"></div>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"developerworks"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+</div>
+    </div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/11/thrift-ex/">thrift_ex</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">(译) Ejabberd加入了Elixir的变革</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/25/http2-h2o-get-started/">HTTP/2 尝鲜</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/AD/">AD</a><small>2</small></li>
+  
+    <li><a href="/categories/API/">API</a><small>3</small></li>
+  
+    <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
+  
+    <li><a href="/categories/Database/">Database</a><small>1</small></li>
+  
+    <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
+  
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>32</small></li>
+  
+    <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
+  
+    <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
+  
+    <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
+  
+    <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+  
+    <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
+  
+    <li><a href="/categories/Node-js/">Node.js</a><small>17</small></li>
+  
+    <li><a href="/categories/Opencart/">Opencart</a><small>2</small></li>
+  
+    <li><a href="/categories/QA/">QA</a><small>2</small></li>
+  
+    <li><a href="/categories/RESTFul/">RESTFul</a><small>1</small></li>
+  
+    <li><a href="/categories/SCM/">SCM</a><small>5</small></li>
+  
+    <li><a href="/categories/Testing/">Testing</a><small>1</small></li>
+  
+    <li><a href="/categories/Tools/">Tools</a><small>4</small></li>
+  
+    <li><a href="/categories/Web/">Web</a><small>6</small></li>
+  
+    <li><a href="/categories/XEP/">XEP</a><small>5</small></li>
+  
+    <li><a href="/categories/XMPP/">XMPP</a><small>6</small></li>
+  
+    <li><a href="/categories/english/">english</a><small>1</small></li>
+  
+    <li><a href="/categories/杂类/">杂类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget duoshuo_recent_comments">
+    <h3 class="title">最新评论</h3>
+    <ul class="entry ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-title="1" data-show-time="1"></ul>
+</div>
+<!--多说js加载开始，一个页面只需要加载一次 -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name: "developerworks"};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = 'http://static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!--多说js加载结束，一个页面只需要加载一次 -->
+
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 10px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 18px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 17px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 16px;">docker</a><a href="/tags/ejabberd/" style="font-size: 19px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+</div>
+<footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 zhiqiang he
+  
+</div>
+<div class="clearfix"></div></footer>
+
+<!--<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>-->
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<!--<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
+
+
+

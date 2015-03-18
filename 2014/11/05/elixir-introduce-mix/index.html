@@ -1,0 +1,481 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>简介 | 元气糯米团子的Coding Blog</title>
+  <meta name="author" content="zhiqiang he">
+  
+  <meta name="description" content="Elixir自带了几个应用使得编写和部署Elixir项目更加容易,其中Mix是关键.
+Mix是一个提供了用于创建,编译,测试(很快就会有发布功能)的编译工具.Mix的灵感来自于Clojure的编译工具Leiningen,并且作者本人就是它的其中一个开发者.
+在这一章,我们将学习如何用mix来创建项目">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="简介"/>
+  <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="元气糯米团子的Coding Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/assets/css/toc.css"/>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>-->
+  <script type="text/javascript" src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-1.8.3.min.js"></script>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon-76x76.png" />
+  <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <!--
+  <SCRIPT type=text/javascript src="/js/scrolltop.js"></SCRIPT>
+   -->
+  <!--howiefh calendar begin-->
+  <SCRIPT type=text/javascript src="/js/calendar.js"></SCRIPT>
+  <!--howiefh calendar end-->
+  
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</head>
+
+
+<body>
+<header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">元气糯米团子的Coding Blog</a></h1>
+  <h2><a href="/">Tansform information as knowledges, extract and purify as thoughts</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">树根</a></li>
+    
+      <li><a href="/archives">泡菜坛子</a></li>
+    
+      <li><a href="/links">连接</a></li>
+    
+      <li><a href="/atom.xml">粽子</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+
+<div id="content" class="inner">
+    <div id="main-col" class="alignleft">
+        <div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-11-05T01:56:51.000Z"><a href="/2014/11/05/elixir-introduce-mix/">2014-11-05</a></time>
+      
+      
+  
+    <h1 class="title">简介</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Bootstrapping"><span class="toc-number">1.</span> <span class="toc-text">Bootstrapping</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mix-exs"><span class="toc-number">1.1.</span> <span class="toc-text">mix.exs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lib/my_project-ex"><span class="toc-number">1.2.</span> <span class="toc-text">lib/my_project.ex</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#test/my_project_test-exs"><span class="toc-number">1.3.</span> <span class="toc-text">test/my_project_test.exs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#test/test_helper-exs"><span class="toc-number">1.4.</span> <span class="toc-text">test/test_helper.exs</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#探索"><span class="toc-number">2.</span> <span class="toc-text">探索</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译"><span class="toc-number">3.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#依赖"><span class="toc-number">4.</span> <span class="toc-text">依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#源代码管理(scm)"><span class="toc-number">4.1.</span> <span class="toc-text">源代码管理(scm)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译依赖"><span class="toc-number">4.2.</span> <span class="toc-text">编译依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重复性"><span class="toc-number">4.3.</span> <span class="toc-text">重复性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#依赖任务"><span class="toc-number">4.4.</span> <span class="toc-text">依赖任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#依赖的依赖"><span class="toc-number">4.5.</span> <span class="toc-text">依赖的依赖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#伞形项目"><span class="toc-number">5.</span> <span class="toc-text">伞形项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境"><span class="toc-number">6.</span> <span class="toc-text">环境</span></a></li></ol>
+        </div>
+        
+
+
+        <p>Elixir自带了几个应用使得编写和部署Elixir项目更加容易,其中Mix是关键.</p>
+<p>Mix是一个提供了用于创建,编译,测试(很快就会有发布功能)的编译工具.Mix的灵感来自于Clojure的编译工具<a href="https://github.com/technomancy/leiningen" target="_blank" rel="external">Leiningen</a>,并且作者本人就是它的其中一个开发者.</p>
+<p>在这一章,我们将学习如何用mix来创建项目,安装依赖.在之后的部分,我们将雪鞋如何创建OTP应用,和定制mix的任务.</p>
+<h2 id="Bootstrapping">Bootstrapping</h2><p>要开始你的第一个项目,你只需要输入<code>mix new</code> 并把项目的路径作为参数.现在,我们将在当前目录创建一个被称为<code>my_project</code>的项目:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mix <span class="built_in">new</span> my_project <span class="comment">--bare</span></span><br></pre></td></tr></table></figure>
+<p>Mix将创建一个名为<code>my_project</code>的目录,包含一下这些内容:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.gitignore</span></span><br><span class="line">README<span class="class">.md</span></span><br><span class="line">mix<span class="class">.exs</span></span><br><span class="line">lib/my_project<span class="class">.ex</span></span><br><span class="line">test/test_helper<span class="class">.exs</span></span><br><span class="line">test/my_project_test.exs</span><br></pre></td></tr></table></figure>
+<p>让我们来简单地看一下其中的一些.</p>
+<ul>
+<li><p>注意:Mix是一个Elixir的可执行文件.这意味着为了能够运行<code>mix</code>,elixir的可执行文件许需要在你的<code>PATH</code>里面.如果不是,你可以直接把脚本作为参数传递给elixir来执行:</p>
+<p>  <code>$ bin/elixir bin/mix new ./my_project</code></p>
+</li>
+<li><p>注意你也能通过<code>-S</code>选项来让Elixir运行任何PATH里的脚本:</p>
+<p>  <code>$ bin/elixir -S mix new ./my_project</code></p>
+</li>
+</ul>
+<p>当用了<code>-S</code>, elixir会遍历PATH,寻找并运行那个脚本</p>
+<h3 id="mix-exs">mix.exs</h3><p>这是包含了你项目配置的文件.它看起来是这样的:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">MyProject</span>.<span class="constant">Mixfile </span></span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Mix.Project</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">project</span> </span><span class="keyword">do</span></span><br><span class="line">    [<span class="symbol">app:</span> <span class="symbol">:my_project</span>,</span><br><span class="line">     <span class="symbol">version:</span> <span class="string">"0.0.1"</span>,</span><br><span class="line">     <span class="symbol">deps:</span> deps]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Configuration for the OTP application</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">application</span> </span><span class="keyword">do</span></span><br><span class="line">    []</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># Returns the list of dependencies in the format:</span></span><br><span class="line">  <span class="comment"># &#123;:foobar, git: "https://github.com/elixir-lang/foobar.git", tag: "0.1"&#125;</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment"># To specify particular versions, regardless of the tag, do:</span></span><br><span class="line">  <span class="comment"># &#123;:barbat, "~&gt; 0.1", github: "elixir-lang/barbat"&#125;</span></span><br><span class="line">  defp deps <span class="keyword">do</span></span><br><span class="line">    []</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>我们的<code>mix.exs</code>定义了两个函数:</p>
+<p><code>project</code>, 用来返回项目的配置比如项目名称和版本,和<code>application</code>,用来产生一个被Erlang运行时管理的Erlang应用.在这一章,我们将谈一谈函数<code>project</code>.我们将在下一章详谈<code>application</code>函数.</p>
+<h3 id="lib/my_project-ex">lib/my_project.ex</h3><p>这个文件包含了一个简单的模块,它定义了我们代码的基本结构:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">MyProject</span> </span><span class="keyword">do</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="test/my_project_test-exs">test/my_project_test.exs</h3><p>这个文件包含了项目的一个测试用例:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">MyProjectTest</span> </span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">ExUnit.Case</span></span><br><span class="line"></span><br><span class="line">  test <span class="string">"the truth"</span> <span class="keyword">do</span></span><br><span class="line">    assert <span class="keyword">true</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>有几点请注意:</p>
+<ul>
+<li>注意这个文件是一个Elixir的脚本文件(<code>.exs</code>).作为一个约定,我们不需要在运行之前编译测试.</li>
+<li>我们定义了一个测试模块<code>MyProjectTest</code>,用<code>MyProjectTest</code>来注入默认的行为,并定义了一个简单测试.你可以在<a href="http://elixir-lang.readthedocs.org/getting_started/ex_unit/1.html" target="_blank" rel="external">ExUnit</a>那一章学习到有关测试框架的更多内容.</li>
+</ul>
+<h3 id="test/test_helper-exs">test/test_helper.exs</h3><p>我们将查看的最后一个文件是<code>test_helper.exs</code>,它的任务是启动测试框架:</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExUnit.<span class="built_in">start</span></span><br></pre></td></tr></table></figure>
+<h2 id="探索">探索</h2><p>现在我们已经创建了新项目,接下去做什么？要了解还有其他什么命令可以使用的话,运行<code>help</code>任务:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mix <span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<p>它将会打印出所有可用的任务,运行<code>mix help TASK</code>可获取更多的信息.</p>
+<p>运行其中一些命令试试,比如<code>mix compile</code>和<code>mix test</code>,在你的项目里运行看看会发生什么.</p>
+<h2 id="编译">编译</h2><p>Mix可以为我们编译项目.默认的设置是用<code>lib/</code>放源代码,<code>ebin/</code>放编译后的beam文件.你无需提供任何的编译相关的设置,但如果你决定这么做,有一些选项可以用.例如,如果你打算把你的编译后的beam文件放在<code>ebin</code>之外的文件夹里,只需要在<code>mix.exs</code>里设置<code>:compile_path</code>:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">project</span> </span><span class="keyword">do</span></span><br><span class="line">  [<span class="symbol">compile_path:</span> <span class="string">"ebin"</span>]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>总的来说,Mix会尽力表现的聪明一些,只在必须的时候编译.</p>
+<p>注意在你第一次编译之后,Mix会在你的<code>ebin</code>文件夹里产生了一个<code>my_project.app</code>文件.这个文件里定义的Erlang应用是用到了你的项目中的<code>application</code>函数里的内容.</p>
+<p>这个<code>.app</code>文件存储在和应用有关的信息,它的依赖,它所依赖的模块㩐等.每次你用mix运行命令的时候,这个应用会自动被启动,我们将在下一章学习如何配置它.</p>
+<h2 id="依赖">依赖</h2><p>Mix也能用来管理依赖.依赖应被列在项目配置中,例如:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">project</span> </span><span class="keyword">do</span></span><br><span class="line">  [<span class="symbol">app:</span> <span class="symbol">:my_project</span>,</span><br><span class="line">   <span class="symbol">version:</span> <span class="string">"0.0.1"</span>,</span><br><span class="line">   <span class="symbol">deps:</span> deps]</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">defp deps <span class="keyword">do</span></span><br><span class="line">  [&#123;<span class="symbol">:some_project</span>, <span class="string">"&gt;= 0.3.0"</span>&#125;,</span><br><span class="line">   &#123;<span class="symbol">:another_project</span>, <span class="symbol">git:</span> <span class="string">"https://example.com/another/repo.git"</span>, <span class="symbol">tag:</span> <span class="string">"v1.0.2"</span>&#125;]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p><strong>注意:</strong> 虽然并非必须,常见的做法是把依赖分散到它们自己的函数里.</p>
+<p>某个依赖有一个原子来表示,跟着是一个需求和一些选项.在默认情况下,Mix使用<a href="https://hex.pm/" target="_blank" rel="external">hex.pm</a>来获取依赖,但它也能从git库或直接从文件系统来获取.</p>
+<p>当我们使用Hex, 你必须在需求里指定所接受的依赖的版本.它支持一些基本的操作符,例如<code>&gt;=</code>,<code>&lt;=</code>,<code>&gt;</code>,<code>==</code>:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># Only version 2.0.0</span></span><br><span class="line"><span class="string">"== 2.0.0"</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># Anything later than 2.0.0</span></span><br><span class="line"><span class="string">"&gt; 2.0.0"</span></span><br></pre></td></tr></table></figure>
+<p>需求也支持用<code>and</code>和<code>or</code>表达复杂的情况:</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># <span class="number">2.0</span><span class="number">.0</span> <span class="keyword">and</span> later <span class="keyword">until</span> <span class="number">2.1</span><span class="number">.0</span></span><br><span class="line"><span class="string">"&gt;= 2.0.0 and &lt; 2.1.0"</span></span><br></pre></td></tr></table></figure>
+<p>类似上面的例子非常地常见,所以它也能用简单的方式表达:</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"~&gt; 2.0.0"</span></span><br></pre></td></tr></table></figure>
+<p>注意为git库设置版本需求不会影响到取出的分支和标签,所以类似下面这样的定义是合法的:</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">&#123; <span class="attribute">:some_project</span>, <span class="string">"~&gt; 0.5.0"</span>, github: <span class="string">"some_project/other"</span>, tag: <span class="string">"0.3.0"</span> &#125;</span></span><br></pre></td></tr></table></figure>
+<p>但它会导致一个依赖永远无法满足,因为被取出的标签总不能和需求的版本匹配.</p>
+<h3 id="源代码管理(scm)">源代码管理(scm)</h3><p>Mix的设计就考虑到了支持多种的SCM工具,Hex包是默认,但<code>:git</code>和<code>:path</code>是可选项.常见的一些选项是:</p>
+<ul>
+<li><code>:git</code>        - 依赖是一个git版本库,Mix可以来获取和升级.</li>
+<li><code>:path</code>       - 依赖是文件系统中的一个路径</li>
+<li><code>:compile</code>    - 如何编译依赖</li>
+<li><code>:app</code>        - 依赖所定义的应用的路径</li>
+<li><code>:env</code>        - 依赖所用的环境(详情在后),默认是<code>:prod</code>;</li>
+</ul>
+<p>每个SCM可以支持自定义选项,比如<code>:git</code>,支持下面的选项:</p>
+<ul>
+<li><code>:ref</code>        - 用来检出git仓库的一个可选的引用(一次提交);</li>
+<li><code>:tag</code>        - 用来检出git仓库的一个可选的tag</li>
+<li><code>:branch</code>     - 用来检出git仓库的一个可选的分支</li>
+<li><code>:submodules</code> - 当为<code>true</code>,在依赖中递归地初始化子模块;</li>
+</ul>
+<h3 id="编译依赖">编译依赖</h3><p>为了编译依赖,Mix会选择最适合的方式.依赖所包含的文件不同,编译的方式也不一样:</p>
+<ul>
+<li><code>mix.exs</code><ul>
+<li>直接用Mix的<code>compile</code>任务编译依赖;</li>
+</ul>
+</li>
+<li><code>rebar.config</code>或<code>rebar.config.script</code><ul>
+<li>用<code>rebar compile deps_dir=DEPS</code>编译,<code>DEPS</code>是项目依赖的安装目录;</li>
+</ul>
+</li>
+<li><code>Makefile</code><ul>
+<li>简单地调用<code>make</code>;</li>
+</ul>
+</li>
+</ul>
+<p>如果编译的代码里没有包含以上的任何,你可以在``选项里直接指定一个命令:</p>
+<pre><code><span class="collection">{<span class="attribute">:some_dep</span>, git: <span class="string">"..."</span>, compile: <span class="string">"./configure &amp;&amp; make"</span>}</span>
+</code></pre><p>如果<code>:compile</code>被设为<code>false</code>, 不做任何事情.</p>
+<h3 id="重复性">重复性</h3><p>任何一个依赖管理工具的重要特性是可重复性.因此当你初次获取依赖,Mix将创建一个文件``,用来包含每个依赖所取出的索引.</p>
+<p>当另一个开发者得到这个项目的拷贝,Mix将取出相同的那个索引,保证其他的开发者能“重复”同样的设置.</p>
+<p>运行<code>deps.update</code>能自动升级锁,用<code>deps.unlock</code>任务来移除锁.</p>
+<h3 id="依赖任务">依赖任务</h3><p>Elixir自带了许多用来管理项目依赖的任务:</p>
+<ul>
+<li><code>mix deps</code> - 列出所有的依赖和它的情况;</li>
+<li><code>mix deps.get</code> - 获取所有可得的依赖</li>
+<li><code>mix deps.compile</code> - 编译依赖</li>
+<li><code>mix deps.update</code> - 更新依赖;</li>
+<li><code>mix deps.clean</code> - 删除依赖文件;</li>
+<li><code>mix deps.unlock</code> - 解锁依赖</li>
+</ul>
+<p>用<code>mix help</code>来获取更多信息.</p>
+<h3 id="依赖的依赖">依赖的依赖</h3><p>如果你的依赖是一个Mix或rebar的项目,Mix知道如何应付:它将自动获取和处理你的依赖的所有的依赖.然而,如果你的项目中有两个依赖共享了同一个依赖,但它们的SCM信息又无法互相匹配的话,Mix将标明这个依赖是分裂的,并发出警告.要解决而这个问题,你可以在你项目中声明选项<code>override: true</code>, Mix将根据这个信息来获取依赖.</p>
+<h2 id="伞形项目">伞形项目</h2><p>你是否想过,如果能将几个Mix项目打包在一起,只需一个命令就可以运行各自的Mix任务, 该有多方便？.这种将项目打包在一起使用的情况被称为伞形项目.一个伞形项目可以用下面的命令来创建:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mix <span class="keyword">new</span> <span class="keyword">project</span> --umbrella</span><br></pre></td></tr></table></figure>
+<p>这将会创建一个包含以下内容的``文件:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Project</span>.<span class="constant">Mixfile </span></span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Mix.Project</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">project</span> </span><span class="keyword">do</span></span><br><span class="line">    [<span class="symbol">apps_path:</span> <span class="string">"apps"</span>]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p><code>apps_path</code>选项指定了子项目所在的文件夹.在伞形项目中运行的Mix任务,会对<code>apps_path</code>文件夹中的每一个子项目起作用.例如<code>mix compile</code>和<code>mix test</code>将编译或测试文件夹下的每一个项目.值得注意的是,伞形项目既不是一个普通的Mix项目,也不是一个OTP应用,也不能修改其中的源码.</p>
+<p>如果在子项目之间有互相依赖的存在,需要指定它们的顺序,这样Mix才能正确编译.如果项目A依赖于项目B,这个依赖关系必须在项目A的<code>mix.exs</code>文件里指定.修改文件<code>mix.exs</code>来指定这个依赖:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">A</span>.<span class="constant">Mixfile </span></span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Mix.Project</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">project</span> </span><span class="keyword">do</span></span><br><span class="line">    [<span class="symbol">app:</span> <span class="symbol">:a</span>,</span><br><span class="line">     <span class="symbol">deps_path:</span> <span class="string">"../../deps"</span>,</span><br><span class="line">     <span class="symbol">lockfile:</span> <span class="string">"../../mix.lock"</span>,</span><br><span class="line">     <span class="symbol">deps:</span> deps]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  defp deps <span class="keyword">do</span></span><br><span class="line">    [&#123; <span class="symbol">:b</span>, <span class="symbol">in_umbrella:</span> <span class="keyword">true</span> &#125;]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>注意上面的子项目中<code>deps_path</code>和<code>lockfile</code>选项.如果在你的伞形项目的所有子项中都有它们,它们将共享依赖.apps文件夹中的<code>mix new</code>将自动用这些预设的选型创建一个项目.</p>
+<h2 id="环境">环境</h2><p>Mix有环境的概念,能让一个开发者去基于一个外部的设定来定制编译和其他的选项.默认下,Mix能理解项目三类环境:</p>
+<ul>
+<li><code>dev</code> - mix任务的默认环境;</li>
+<li><code>test</code> - 用于<code>mix test</code>;</li>
+<li><code>prod</code> - 在这个环境下,依赖将被载入和编译;</li>
+</ul>
+<p>在默认情况下,这些环境的行为没有不同,我们之前看到的所有配置都将会影响到这三个环境.针对某个环境的定制,可以通过访问<code>Mix.env</code>来实现:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">project</span> </span><span class="keyword">do</span></span><br><span class="line">  [<span class="symbol">deps_path:</span> deps_path(<span class="constant">Mix.</span>env)]</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">defp deps_path(<span class="symbol">:prod</span>), <span class="symbol">do:</span> <span class="string">"prod_deps"</span></span><br><span class="line">defp deps_path(<span class="constant">_)</span>, <span class="symbol">do:</span> <span class="string">"deps"</span></span><br></pre></td></tr></table></figure>
+<p>Mix默认为<code>dev</code>环境(除了测试).可以通过修改环境变量<code>MIX_ENV</code>来改变环境.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span><span class="constant">MIX_ENV=</span>prod mix compile</span><br></pre></td></tr></table></figure>
+<p>在下一章,我们将学习如何用Mix编写OTP应用和如何创建你自己的任务.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/Elixir/">Elixir</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/Elixir/">Elixir</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="2014/11/05/elixir-introduce-mix/" data-title="简介" data-url="http://developerworks.github.io/2014/11/05/elixir-introduce-mix/"></div>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"developerworks"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+</div>
+    </div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/11/thrift-ex/">thrift_ex</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">(译) Ejabberd加入了Elixir的变革</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/25/http2-h2o-get-started/">HTTP/2 尝鲜</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/AD/">AD</a><small>2</small></li>
+  
+    <li><a href="/categories/API/">API</a><small>3</small></li>
+  
+    <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
+  
+    <li><a href="/categories/Database/">Database</a><small>1</small></li>
+  
+    <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
+  
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>32</small></li>
+  
+    <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
+  
+    <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
+  
+    <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
+  
+    <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+  
+    <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
+  
+    <li><a href="/categories/Node-js/">Node.js</a><small>17</small></li>
+  
+    <li><a href="/categories/Opencart/">Opencart</a><small>2</small></li>
+  
+    <li><a href="/categories/QA/">QA</a><small>2</small></li>
+  
+    <li><a href="/categories/RESTFul/">RESTFul</a><small>1</small></li>
+  
+    <li><a href="/categories/SCM/">SCM</a><small>5</small></li>
+  
+    <li><a href="/categories/Testing/">Testing</a><small>1</small></li>
+  
+    <li><a href="/categories/Tools/">Tools</a><small>4</small></li>
+  
+    <li><a href="/categories/Web/">Web</a><small>6</small></li>
+  
+    <li><a href="/categories/XEP/">XEP</a><small>5</small></li>
+  
+    <li><a href="/categories/XMPP/">XMPP</a><small>6</small></li>
+  
+    <li><a href="/categories/english/">english</a><small>1</small></li>
+  
+    <li><a href="/categories/杂类/">杂类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget duoshuo_recent_comments">
+    <h3 class="title">最新评论</h3>
+    <ul class="entry ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-title="1" data-show-time="1"></ul>
+</div>
+<!--多说js加载开始，一个页面只需要加载一次 -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name: "developerworks"};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = 'http://static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!--多说js加载结束，一个页面只需要加载一次 -->
+
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 10px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 18px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 17px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 16px;">docker</a><a href="/tags/ejabberd/" style="font-size: 19px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+</div>
+<footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 zhiqiang he
+  
+</div>
+<div class="clearfix"></div></footer>
+
+<!--<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>-->
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<!--<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
+
+
+

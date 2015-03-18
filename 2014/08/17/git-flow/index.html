@@ -1,0 +1,452 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>体验 git-flow | 元气糯米团子的Coding Blog</title>
+  <meta name="author" content="zhiqiang he">
+  
+  <meta name="description" content="git-flow 是个什么?
+git-flow 是一个管理git代码仓库的生产力工具
+git-flow 是一种git代码管理的最佳实践
+git-flow 是一种能够让你傻笑一整天的玩具">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="体验 git-flow"/>
+  <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="元气糯米团子的Coding Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/assets/css/toc.css"/>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>-->
+  <script type="text/javascript" src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-1.8.3.min.js"></script>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon-76x76.png" />
+  <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <!--
+  <SCRIPT type=text/javascript src="/js/scrolltop.js"></SCRIPT>
+   -->
+  <!--howiefh calendar begin-->
+  <SCRIPT type=text/javascript src="/js/calendar.js"></SCRIPT>
+  <!--howiefh calendar end-->
+  
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</head>
+
+
+<body>
+<header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">元气糯米团子的Coding Blog</a></h1>
+  <h2><a href="/">Tansform information as knowledges, extract and purify as thoughts</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">树根</a></li>
+    
+      <li><a href="/archives">泡菜坛子</a></li>
+    
+      <li><a href="/links">连接</a></li>
+    
+      <li><a href="/atom.xml">粽子</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+
+<div id="content" class="inner">
+    <div id="main-col" class="alignleft">
+        <div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-08-16T16:42:59.000Z"><a href="/2014/08/17/git-flow/">2014-08-17</a></time>
+      
+      
+  
+    <h1 class="title">体验 git-flow</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git-flow_是个什么?"><span class="toc-number">1.</span> <span class="toc-text">git-flow 是个什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在Mac_OS_X上安装"><span class="toc-number">2.1.</span> <span class="toc-text">在Mac OS X上安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows_安装"><span class="toc-number">2.2.</span> <span class="toc-text">Windows 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux_安装"><span class="toc-number">2.3.</span> <span class="toc-text">Linux 安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#入门"><span class="toc-number">3.</span> <span class="toc-text">入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新功能开发"><span class="toc-number">4.</span> <span class="toc-text">新功能开发</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建一个新功能分支"><span class="toc-number">5.</span> <span class="toc-text">创建一个新功能分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#共享你的新功能给其他人"><span class="toc-number">6.</span> <span class="toc-text">共享你的新功能给其他人</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#版本发布"><span class="toc-number">7.</span> <span class="toc-text">版本发布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修订BUG"><span class="toc-number">8.</span> <span class="toc-text">修订BUG</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">9.</span> <span class="toc-text">参考</span></a></li></ol>
+        </div>
+        
+
+
+        <h2 id="git-flow_是个什么?">git-flow 是个什么?</h2><ul>
+<li><code>git-flow</code> 是一个管理<code>git</code>代码仓库的生产力工具</li>
+<li><code>git-flow</code> 是一种<code>git</code>代码管理的最佳实践</li>
+<li><code>git-flow</code> 是一种能够让你傻笑一整天的玩具</li>
+</ul>
+<a id="more"></a>
+<p><img src="/assets/images/60819835-3DF4-4249-B467-DDCBBB37216C.png" alt="git-flow"></p>
+<h2 id="安装">安装</h2><p>下面介绍三个主要平台的安装过程</p>
+<h3 id="在Mac_OS_X上安装">在Mac OS X上安装</h3><p>本人的MBP最开始安装的<code>macports</code>, 虽说<code>macports</code>和<code>brew</code>可以共存, 但是还是不想给自己挖坑, 还是用单一的包管理工具比较好, 慢是慢了一点(我晓得,如果你的网络有啥子问题,这个不是一般的慢),但又不是天天都在装软件, 所以还是坚持使用<code>macports</code>好了.</p>
+<p>如果说你喜欢命令行高效率的方式, 长期使用命令行管理代码, git-flow 对于你来说是再适合不过的进一步提供效率的工具了, 当你上手之后, <code>你是不是要偷笑了, 在我的想象中已经看到你Happy的不得了的样子了</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/<span class="built_in">test</span> $ sudo port selfupdate</span><br><span class="line">/<span class="built_in">test</span> $ sudo port install git-flow</span><br></pre></td></tr></table></figure>
+<p>两行命令, <code>macports</code>轻松帮你搞定安装问题, 下面我会说一下怎么入门. 顺带一句, 你要先安装 <code>Xcode</code>, 否则<code>macports</code>是跑步起来的, 别怪我没有提醒你.</p>
+<h3 id="Windows_安装">Windows 安装</h3><p>下载Cygwin, <a href="https://cygwin.com/install.html" target="_blank" rel="external">https://cygwin.com/install.html</a>, 又32位和64位两个版本, 更具系统版本选择合适的安装程序, 下载完成,启动安装程序,一路选择默认即可, 要注意的是,要能够成功安装<code>git-flow</code>, 需要安装如下几个依赖包:</p>
+<ul>
+<li><code>必须</code> Text/gettext</li>
+<li><code>必须</code> Devel/git</li>
+<li><code>可选</code> Devel/git-completion (建议安装此包,为git增加<code>命令自动补全</code>功能)</li>
+<li><code>必须</code> Base/util-linux</li>
+<li><code>必须</code> Web/wget</li>
+</ul>
+<p>打开<code>Cygwin</code>终端, 运行:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -<span class="keyword">q</span> -O - --<span class="keyword">no</span>-check-certificate http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nvie/gitflow/raw/develop/contrib/gitflow-installer.<span class="keyword">sh</span> | bash</span><br></pre></td></tr></table></figure>
+<h3 id="Linux_安装">Linux 安装</h3><p>开源软件的天然的平台就是Linux, 自然集成度是非常高的, 不需要特别的配置,只需要安装就可以了.</p>
+<p>各种Linux分发版本的安装可参考如下链接:<br><a href="https://github.com/nvie/gitflow/wiki/Linux" target="_blank" rel="external">https://github.com/nvie/gitflow/wiki/Linux</a></p>
+<h2 id="入门">入门</h2><p>安装完成后,从下面开始, 我会给大家演示<code>git-flow</code>的基本操作, 它为什么让我们可以如此<code>惬意</code>的管理我们的代码,<code>git-flow</code> 也是一个命令行, 下面我们来看一下 <code>git-flow</code>的命令行帮助, 大概的看一看它提供了那些功能,能为我们做哪些事情:</p>
+<p>我们从初始化一个全新的仓库开始, 创建一个目录, 然后在其中执行<code>git flow init</code>初始化当前目录, 当然你也可以在现有的<code>git</code>项目下执行<code>git flow init</code>把<code>git</code>项目转换为<code>git-flow</code>项目:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/test $ <span class="built_in">mkdir</span> git-flow-<span class="built_in">get</span>-started &amp;&amp; <span class="keyword">cd</span> git-flow-<span class="built_in">get</span>-started</span><br><span class="line">/test $ git flow init</span><br><span class="line">Initialized <span class="built_in">empty</span> Git repository in /test/.git/</span><br><span class="line">No branches exist yet. Base branches must <span class="keyword">be</span> created now.</span><br><span class="line">Branch name <span class="keyword">for</span> production release<span class="variable">s:</span> [master]</span><br><span class="line">Branch name <span class="keyword">for</span> <span class="string">"next release"</span> developmen<span class="variable">t:</span> [develop]</span><br><span class="line"></span><br><span class="line">How <span class="keyword">to</span> name your supporting branch prefixes?</span><br><span class="line">Feature branches? [feature/]</span><br><span class="line">Release branches? [release/]</span><br><span class="line">Hotfix branches? [hotfix/]</span><br><span class="line">Support branches? [support/]</span><br><span class="line">Version <span class="keyword">tag</span> prefix? [] test</span><br></pre></td></tr></table></figure>
+<p>问你一堆问题, 使用默认的就好, 没必要折腾. 现在一个空的<code>git</code>仓库算是创建好了, 既然<code>git-flow</code>的主要用途是做分支开发, 那么我们使用<code>git branch</code>来看看当前的分支是什么样子的.</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">test</span> $ git branch</span><br><span class="line"><span class="comment">* develop</span></span><br><span class="line">  master</span><br></pre></td></tr></table></figure>
+<p>怎么默认分支在 <code>*develop</code> 上面, 这没有什么奇怪的, 因为 <code>git-flow</code> 的想法就是让你在 <code>develop</code>分支上持续开发. 然后在往 <code>master</code> 分支上合并. 咦, 肿么没有刚才回答问题看到的 <code>feature</code>, <code>release</code>, <code>hotfix</code>, <code>support</code> 分支呢? 这是因为, 你的仓库现在还是空的, 就是这样.</p>
+<p>现在我来详细解释一下这些分支, 是神马意思</p>
+<blockquote>
+<ul>
+<li><code>master</code></li>
+</ul>
+</blockquote>
+<p>这句话是神马意思呢? 产品发布(production releases) 顾名思义是用作产品发布的(或称为主干,类似SVN的<code>trunk</code>)分支, 和线上生产环境的代码是一样的.<br>当你开发的代码经过测试,测试,再测试之后木有任何问题了, 你就可以把开发分支<code>develop</code>的经过测试的代码合并到<code>master</code>分支,并准备发布到生产环境了.</p>
+<h2 id="新功能开发">新功能开发</h2><blockquote>
+<ul>
+<li><code>feature</code></li>
+</ul>
+</blockquote>
+<p>当我们需要为我们正在开发的App增加一个全新的功能时, 这个时候我们就需要使用到 <code>feature</code> 分支了, 增加新功能会有极大的可能会破坏之前已经比较稳定的代码, 为了隔离这种影响我们需要从<code>develop</code>切换到<code>feature</code>分支上开发. 当<code>feature</code>上的新功能开发完成, 再合并到<code>develop</code>分支上进行集成测试.</p>
+<p>测试完成稳定后,最终要合并到 <code>master</code> 分支作为 <code>release</code>的基础.</p>
+<h2 id="创建一个新功能分支">创建一个新功能分支</h2><p>开始一个<code>feature</code>分支, 名称为 <code>acl</code>, 这会在 <code>feature</code>分支下创建一个 <code>acl</code>目录, 表示我们需要为我们的应用程序增加访问控制功能:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/test $ git flow feature start acl&#10;Switched to a new branch &#39;feature/acl&#39;&#10;&#10;Summary of actions:&#10;- A new branch &#39;feature/acl&#39; was created, based on &#39;develop&#39;&#10;- You are now on branch &#39;feature/acl&#39;&#10;&#10;Now, start committing on your feature. When done, use:&#10;&#10;     git flow feature finish acl</span><br></pre></td></tr></table></figure>
+<p>现在我们来看看, 当前我们的分支是什么样子:</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">test</span> $ git branch</span><br><span class="line">  develop</span><br><span class="line"><span class="comment">* feature/acl</span></span><br><span class="line">  master</span><br></pre></td></tr></table></figure>
+<p>当前分支以及切换到<code>feature/acl</code>了, 我们在当前目录下(<code>/test</code>)创建一个<code>readme.md</code>文件, 然后用<code>git status</code>看一下:</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/test $ git status</span><br><span class="line">On branch feature/acl</span><br><span class="line">Untracked <span class="built_in">files</span>:</span><br><span class="line">  (use <span class="string">"git add &lt;file&gt;..."</span> <span class="built_in">to</span> <span class="built_in">include</span> <span class="operator">in</span> what will be committed)</span><br><span class="line"></span><br><span class="line">	readme.md</span><br><span class="line"></span><br><span class="line">nothing added <span class="built_in">to</span> commit but untracked <span class="built_in">files</span> present (use <span class="string">"git add"</span> <span class="built_in">to</span> track)</span><br></pre></td></tr></table></figure>
+<p>在第一行,我们同样能够看到我们当前所在的分支<code>feature/acl</code>, 现在我们要做的就和常规的<code>git</code>操作一样了.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/test $ git add .</span><br><span class="line">/test $ git <span class="operator"><span class="keyword">commit</span> -m <span class="string">'add file of readme.md'</span></span><br><span class="line">[feature/acl <span class="number">6</span>ad1731] <span class="keyword">add</span> file <span class="keyword">of</span> readme.md</span><br><span class="line"> <span class="number">1</span> file <span class="keyword">changed</span>, <span class="number">1</span> insertion(+)</span><br><span class="line"> <span class="keyword">create</span> <span class="keyword">mode</span> <span class="number">100644</span> readme.md</span></span><br></pre></td></tr></table></figure>
+<p>当我们的<code>acl</code>功能开发完成后,就可以通过下面的命令结束<code>acl</code> 分支的生命周期了(<code>feature</code>分支的生命周期是临时的, 它的目的就是为你提供, 开发新功能的场所).</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/test $ git flow feature finish acl</span><br><span class="line">Switched <span class="built_in">to</span> branch <span class="string">'develop'</span></span><br><span class="line">Updating aec3c0e.<span class="number">.6</span>ad1731</span><br><span class="line">Fast-forward</span><br><span class="line"> readme.md | <span class="number">1</span> +</span><br><span class="line"> <span class="number">1</span> <span class="built_in">file</span> changed, <span class="number">1</span> insertion(+)</span><br><span class="line"> <span class="built_in">create</span> mode <span class="number">100644</span> readme.md</span><br><span class="line">Deleted branch feature/acl (was <span class="number">6</span>ad1731).</span><br><span class="line"></span><br><span class="line">Summary <span class="operator">of</span> actions:</span><br><span class="line">- The feature branch <span class="string">'feature/acl'</span> was merged <span class="keyword">into</span> <span class="string">'develop'</span></span><br><span class="line">- Feature branch <span class="string">'feature/acl'</span> has been removed</span><br><span class="line">- You are now <span class="command"><span class="keyword">on</span> <span class="title">branch</span> <span class="string">'develop'</span></span></span><br></pre></td></tr></table></figure>
+<p>同样上面又丰富的提示信息,告诉你发生了什么事情. 运行<code>git branch</code>看看一下现在的分支状况</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">test</span> $ git branch</span><br><span class="line"><span class="comment">* develop</span></span><br><span class="line">  master</span><br></pre></td></tr></table></figure>
+<p><code>feature/acl</code>分支删除了, 当前分支又回到了<code>develop</code>, So Easy, 对吧!</p>
+<h2 id="共享你的新功能给其他人">共享你的新功能给其他人</h2><blockquote>
+<p>TODO::</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/<span class="built_in">test</span> $ git flow feature publish acl</span><br><span class="line">/<span class="built_in">test</span> $ git flow feature pull acl</span><br></pre></td></tr></table></figure>
+<h2 id="版本发布">版本发布</h2><p>我们来描述一下这个开发场景, 团队决定开发一个Web端的实时聊天工具, 以增强与客户的互动性, 为客户提供更好的服务, 更好的响应速度.这个时候我们使用<code>feature</code>分支来创建一个新功能分支,这个在前面说过了.</p>
+<p>现在的分支状态就只包括<code>master</code>, <code>develop</code>, 其中<code>develop</code>包含我们已经开发完成的实时聊天模块.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/test $ git flow <span class="operator"><span class="keyword">release</span> <span class="keyword">start</span> <span class="number">1.0</span><span class="number">.1</span></span><br><span class="line">Switched <span class="keyword">to</span> a new branch <span class="string">'release/1.0.1'</span></span><br><span class="line">Summary <span class="keyword">of</span> actions:</span><br><span class="line">- A new branch <span class="string">'release/1.0.1'</span> was created, based <span class="keyword">on</span> <span class="string">'develop'</span></span><br><span class="line">- You <span class="keyword">are</span> <span class="keyword">now</span> <span class="keyword">on</span> branch <span class="string">'release/1.0.1'</span></span><br><span class="line">Follow-up actions:</span><br><span class="line">- Bump the <span class="keyword">version</span> <span class="built_in">number</span> <span class="keyword">now</span>!</span><br><span class="line">- <span class="keyword">Start</span> committing <span class="keyword">last</span>-<span class="keyword">minute</span> fixes <span class="keyword">in</span> preparing your <span class="keyword">release</span></span><br><span class="line">- <span class="keyword">When</span> done, run:</span><br><span class="line">     git flow <span class="keyword">release</span> finish <span class="string">'1.0.1'</span></span></span><br></pre></td></tr></table></figure>
+<p>上面这个命令标识,创建一个<code>release</code>分支, 版本号为<code>1.0.1</code>, 下面我们执行<code>git branch</code>来看一下分支状态:</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">test</span> $ git branch</span><br><span class="line">  develop</span><br><span class="line">  master</span><br><span class="line"><span class="comment">* release/1.0.1</span></span><br></pre></td></tr></table></figure>
+<p>你看到, 增加了一个<code>release/1.0.1</code>的分支</p>
+<h2 id="修订BUG">修订BUG</h2><p>首先来看看版本情况:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/<span class="built_in">test</span> $ git tag</span><br><span class="line"><span class="built_in">test</span>1.<span class="number">0.1</span></span><br><span class="line"><span class="built_in">test</span>1.<span class="number">0.2</span></span><br><span class="line"><span class="built_in">test</span>1.<span class="number">0.3</span></span><br></pre></td></tr></table></figure>
+<p>我们的软件最新版本为<code>test1.0.3</code>, 目前和<code>master</code>分支的内容是一模一样的, 同时也是生产环境中正在运行着的版本. 某天当你半夜被你的BOSS叫起来的时候, 他给你说我们的生产环境发现了一个严重的BUG, 要马上修复. 这时候就是<code>hoxfix</code>的时候了.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/<span class="built_in">test</span> $ git flow hotfix start <span class="number">1.0</span>.<span class="number">4</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>把当前<code>master</code>分支的内容完整拷贝到<code>hotfix/1.0.4</code>,</li>
+<li>切换分支到 <code>hotfix/1.0.4</code></li>
+<li>在<code>hotfix/1.0.4</code> 修改BUG</li>
+<li><code>git add . &amp;&amp; git commit -m &#39;bug fixed&#39;</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/<span class="built_in">test</span> $ git flow hotfix finish <span class="number">1.0</span>.<span class="number">4</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>结束<code>hoxfix/1.0.4</code>分支</li>
+<li>合并到<code>master</code></li>
+<li>合并到<code>develop</code></li>
+<li>删除<code>hotfix/1.0.4</code>分支</li>
+<li>切换回<code>develop</code>分支</li>
+</ul>
+<h2 id="参考">参考</h2><p>关于<code>git-flow</code>你还可以参考<a href="http://danielkummer.github.io/git-flow-cheatsheet/" target="_blank" rel="external"><code>git-flow-cheatsheet</code></a>,<a href="http://danielkummer.github.io/git-flow-cheatsheet/index.zh_CN.html" target="_blank" rel="external">这里</a>是中文版. 它是一个分支管理流程图标,如果你完全理解了<code>git-flow</code>的工作方式,即使在大规模项目中,你同样能够很好的管理你的代码.</p>
+<blockquote>
+<p>提示: 请仔细看<code>git-flow-cheatsheet</code>中的 <code>红</code>,<code>青</code>,<code>橙</code>,<code>蓝</code>,<code>绿</code>的五线谱, 看看<code>git-flow</code>是怎么在这个五线谱弹奏优雅的旋律的.</p>
+</blockquote>
+<p><a href="http://www.oschina.net/translate/a-successful-git-branching-model?from=20130303" target="_blank" rel="external">一个成功的分支模型</a><br><a href="http://nvie.com/posts/a-successful-git-branching-model/" target="_blank" rel="external">一个成功的分支模型-英文原文</a><br><a href="http://www.ituring.com.cn/article/56870" target="_blank" rel="external">基于git的源代码管理模型——git flow</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/SCM/">SCM</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/git/">git</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="2014/08/17/git-flow/" data-title="体验 git-flow" data-url="http://developerworks.github.io/2014/08/17/git-flow/"></div>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"developerworks"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+</div>
+    </div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/11/thrift-ex/">thrift_ex</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">(译) Ejabberd加入了Elixir的变革</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/25/http2-h2o-get-started/">HTTP/2 尝鲜</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/AD/">AD</a><small>2</small></li>
+  
+    <li><a href="/categories/API/">API</a><small>3</small></li>
+  
+    <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
+  
+    <li><a href="/categories/Database/">Database</a><small>1</small></li>
+  
+    <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
+  
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>32</small></li>
+  
+    <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
+  
+    <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
+  
+    <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
+  
+    <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+  
+    <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
+  
+    <li><a href="/categories/Node-js/">Node.js</a><small>17</small></li>
+  
+    <li><a href="/categories/Opencart/">Opencart</a><small>2</small></li>
+  
+    <li><a href="/categories/QA/">QA</a><small>2</small></li>
+  
+    <li><a href="/categories/RESTFul/">RESTFul</a><small>1</small></li>
+  
+    <li><a href="/categories/SCM/">SCM</a><small>5</small></li>
+  
+    <li><a href="/categories/Testing/">Testing</a><small>1</small></li>
+  
+    <li><a href="/categories/Tools/">Tools</a><small>4</small></li>
+  
+    <li><a href="/categories/Web/">Web</a><small>6</small></li>
+  
+    <li><a href="/categories/XEP/">XEP</a><small>5</small></li>
+  
+    <li><a href="/categories/XMPP/">XMPP</a><small>6</small></li>
+  
+    <li><a href="/categories/english/">english</a><small>1</small></li>
+  
+    <li><a href="/categories/杂类/">杂类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget duoshuo_recent_comments">
+    <h3 class="title">最新评论</h3>
+    <ul class="entry ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-title="1" data-show-time="1"></ul>
+</div>
+<!--多说js加载开始，一个页面只需要加载一次 -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name: "developerworks"};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = 'http://static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!--多说js加载结束，一个页面只需要加载一次 -->
+
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 10px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 18px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 17px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 16px;">docker</a><a href="/tags/ejabberd/" style="font-size: 19px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+</div>
+<footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 zhiqiang he
+  
+</div>
+<div class="clearfix"></div></footer>
+
+<!--<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>-->
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<!--<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
+
+
+

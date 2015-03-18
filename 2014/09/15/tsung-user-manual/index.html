@@ -1,0 +1,415 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Tsung 用户手册 | 元气糯米团子的Coding Blog</title>
+  <meta name="author" content="zhiqiang he">
+  
+  <meta name="description" content="Tsung是用Erlang开发的一个大规模负载测试工具, 由于Erlang天生就是为大规模并发设计的, 因此Tsung可以模拟大规模的用户操作, 这是Erlang本身给Tsung带来的优势.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Tsung 用户手册"/>
+  <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="元气糯米团子的Coding Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/assets/css/toc.css"/>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>-->
+  <script type="text/javascript" src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-1.8.3.min.js"></script>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon-76x76.png" />
+  <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <!--
+  <SCRIPT type=text/javascript src="/js/scrolltop.js"></SCRIPT>
+   -->
+  <!--howiefh calendar begin-->
+  <SCRIPT type=text/javascript src="/js/calendar.js"></SCRIPT>
+  <!--howiefh calendar end-->
+  
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</head>
+
+
+<body>
+<header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">元气糯米团子的Coding Blog</a></h1>
+  <h2><a href="/">Tansform information as knowledges, extract and purify as thoughts</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">树根</a></li>
+    
+      <li><a href="/archives">泡菜坛子</a></li>
+    
+      <li><a href="/links">连接</a></li>
+    
+      <li><a href="/atom.xml">粽子</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+
+<div id="content" class="inner">
+    <div id="main-col" class="alignleft">
+        <div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-09-15T05:29:37.000Z"><a href="/2014/09/15/tsung-user-manual/">2014-09-15</a></time>
+      
+      
+  
+    <h1 class="title">Tsung 用户手册</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务器和客户端"><span class="toc-number">1.</span> <span class="toc-text">服务器和客户端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本设置"><span class="toc-number">1.1.</span> <span class="toc-text">基本设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#高级设置"><span class="toc-number">1.2.</span> <span class="toc-text">高级设置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#maxusers"><span class="toc-number">1.2.1.</span> <span class="toc-text">maxusers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Running_Tsung_with_a_job_scheduler"><span class="toc-number">1.3.</span> <span class="toc-text">Running Tsung with a job scheduler</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-3_监控"><span class="toc-number">2.</span> <span class="toc-text">6.3 监控</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-1_Erlang"><span class="toc-number">2.1.</span> <span class="toc-text">6.3.1 Erlang</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SNMP"><span class="toc-number">2.2.</span> <span class="toc-text">SNMP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Munin"><span class="toc-number">2.3.</span> <span class="toc-text">Munin</span></a></li></ol></li></ol>
+        </div>
+        
+
+
+        <p><code>Tsung</code>是用Erlang开发的一个大规模负载测试工具, 由于Erlang天生就是为大规模并发设计的, 因此<code>Tsung</code>可以模拟大规模的用户操作, 这是Erlang本身给Tsung带来的优势.</p>
+<a id="more"></a>
+<h2 id="服务器和客户端">服务器和客户端</h2><p>Scenarios start with clients (Tsung cluster) and server definitions:</p>
+<h3 id="基本设置">基本设置</h3><p>对于<code>非分布式</code>负载, 可以使用基本设置如下:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">clients</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"localhost"</span> <span class="attribute">use_controller_vm</span>=<span class="value">"true"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">clients</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">servers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">server</span> <span class="attribute">host</span>=<span class="value">"192.168.1.1"</span> <span class="attribute">port</span>=<span class="value">"80"</span> <span class="attribute">type</span>=<span class="value">"tcp"</span>&gt;</span><span class="tag">&lt;/<span class="title">server</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">servers</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这会在同一台机器的同一个Erlang虚拟机中启动负载测试</p>
+<p>servers是进入集群的入口点. 可以点击多个服务器, 默认每个服务器的权重为<code>1</code>, 并且每个会话会依据权重<code>随机</code>选择一个服务器. 你可以像这样设置每个服务器的权重.(权重可以是<code>整数</code>,或<code>浮点数</code>):</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;servers&gt;</span><br><span class="line">  &lt;server <span class="variable">host=</span><span class="string">"server1"</span> <span class="variable">port=</span><span class="string">"80"</span> <span class="variable">type=</span><span class="string">"tcp"</span> <span class="variable">weight=</span><span class="string">"4"</span>&gt;&lt;/server&gt;</span><br><span class="line">  &lt;server <span class="variable">host=</span><span class="string">"server2"</span> <span class="variable">port=</span><span class="string">"80"</span> <span class="variable">type=</span><span class="string">"tcp"</span> <span class="variable">weight=</span><span class="string">"1"</span>&gt;&lt;/server&gt;</span><br><span class="line">&lt;/servers&gt;</span><br></pre></td></tr></table></figure>
+<p>(由于<code>weight</code>选项是在版本 <code>1.5.0</code> 之后实现的, 之前的版本采用轮训 <code>round robin</code> 的方式选择服务器).<br><code>type</code>可以是 <code>tcp</code>, <code>ssl</code>, <code>udp</code> (对应的IPv6为 <code>tcp6</code>, <code>ssl6</code>, <code>udp6</code>, 在版本1.4.2及以上可用), 或者 <code>websocket</code> (仅在1.5.0及高版本可用)</p>
+<h3 id="高级设置">高级设置</h3><p>The next example is more complex, and use several features for advanced distributed testing:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">clients</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"louxor"</span> <span class="attribute">weight</span>=<span class="value">"1"</span> <span class="attribute">maxusers</span>=<span class="value">"800"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ip</span> <span class="attribute">value</span>=<span class="value">"10.9.195.12"</span>&gt;</span><span class="tag">&lt;/<span class="title">ip</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ip</span> <span class="attribute">value</span>=<span class="value">"10.9.195.13"</span>&gt;</span><span class="tag">&lt;/<span class="title">ip</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">client</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"memphis"</span> <span class="attribute">weight</span>=<span class="value">"3"</span> <span class="attribute">maxusers</span>=<span class="value">"600"</span> <span class="attribute">cpu</span>=<span class="value">"2"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">clients</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">servers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">server</span> <span class="attribute">host</span>=<span class="value">"10.9.195.1"</span> <span class="attribute">port</span>=<span class="value">"8080"</span> <span class="attribute">type</span>=<span class="value">"tcp"</span>&gt;</span><span class="tag">&lt;/<span class="title">server</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">servers</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Several virtual IP can be used to simulate more machines. This is very useful when a load-balancer use the client’s IP to distribute the traffic among a cluster of servers. New in 1.1.1: IP is no longer mandatory. If not specified, the default IP will be used.</p>
+<p>New in 1.4.0: You can use <code>&lt;ip scan=&quot;yes&quot; value=&quot;eth0&quot;/&gt;</code> to scan for all the IP aliases on a given interface (<code>eth0</code> in this example).</p>
+<p>In this example, a second machine is used in the Tsung cluster, with a higher weight, and 2 cpus. Two Erlang virtual machines will be used to take advantage of the number of CPU.</p>
+<blockquote>
+<p>Note Even if an Erlang VM is now able to handle several CPUs (erlang SMP), benchmarks shows that it’s more efficient to use one VM per CPU (with SMP disabled) for tsung clients. Only the controller node is using SMP erlang. Therefore, <code>cpu</code> should be equal to the number of cores of your nodes. If you prefer to use erlang SMP, add the <code>-s</code> option when starting tsung (and don’t set cpu in the config file).</p>
+</blockquote>
+<p>By default, the load is distributed uniformly on all CPU (one CPU per client by default). The weight parameter (integer) can be used to take into account the speed of the client machine. For instance, if one real client has a weight of 1 and the other client has a weight of 2, the second one will start twice the number of users as the first (the proportions will be 1/3 and 2/3). In the earlier example where for the second client has 2 CPU and weight=3, the weight is equal to 1.5 for each CPU.</p>
+<h4 id="maxusers">maxusers</h4><h3 id="Running_Tsung_with_a_job_scheduler">Running Tsung with a job scheduler</h3><p>Tsung is able to get its client node list from a batch/job scheduler. It currently handle PBS/torque, LSF and OAR. To do this, set the <code>type</code> attribute to <code>batch</code>, e.g.:</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;client <span class="variable">type=</span><span class="string">"batch"</span> <span class="variable">batch=</span><span class="string">"torque"</span> <span class="variable">maxusers=</span><span class="string">"30000"</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>If you need to scan IP aliases on nodes given by the batch scheduler, use scan_intf like this:</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;client <span class="variable">type=</span><span class="string">"batch"</span> <span class="variable">batch=</span><span class="string">"torque"</span> <span class="variable">scan_intf=</span>'eth0' <span class="variable">maxusers=</span><span class="string">"30000"</span>&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="6-3_监控">6.3 监控</h2><p>Tsung能够使用多个与远程代理通信的后端监控远程服务器. 这是配置在<code>&lt;monitoring&gt;</code>节中的. 可用的统计有: CPU活动, 平均负载和内存用量.</p>
+<p>你可以从一个作业调度器获取要监控的节点, 比如:</p>
+<pre><code>&lt;monitor <span class="variable">batch=</span><span class="string">"true"</span> <span class="variable">host=</span><span class="string">"torque"</span> <span class="variable">type=</span><span class="string">"erlang"</span>&gt;&lt;/monitor&gt;
+</code></pre><p>支持多种远程代理(默认为erlang):</p>
+<h3 id="6-3-1_Erlang">6.3.1 Erlang</h3><p>远程代理由Tsung启动. 其使用erlang通信机制来获取服务器上的统计信息. 例如, 下面是一个基于Erlang代理的用于监控包含6个计算机的集群:</p>
+<pre><code><span class="tag">&lt;<span class="title">monitoring</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"geronimo"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"bigfoot-1"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"bigfoot-2"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"f14-1"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"f14-2"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"db"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">monitoring</span>&gt;</span>
+</code></pre><blockquote>
+<p>注意: 被监控的计算机需要能够通过网络访问, 并且必须允许erlang通信(没防火墙更好). 需要配置SSH(或 rsh)允许无密码访问. 必须在所有节点上使用相同版本的Erlang/OTP, 否则可能不能正常工作!</p>
+</blockquote>
+<p>如果不能在远程服务器上安装Erlang, 可以使用其他可用的代理.</p>
+<p><em>1.5.1中新增</em></p>
+<p>erlang 监控包含一个选项, 用mysqladmin来监控mysql数据库. 像这样使用:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"db"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">mysqladmin</span> <span class="attribute">port</span>=<span class="value">"3306"</span> <span class="attribute">username</span>=<span class="value">"root"</span> <span class="attribute">password</span>=<span class="value">"sesame"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可用的统计:</p>
+<ul>
+<li>mysql线程数</li>
+<li>查询数</li>
+</ul>
+<h3 id="SNMP">SNMP</h3><p>The <code>type</code> keyword <code>snmp</code> can replace the erlang keyword, if SNMP monitoring is preferred. They can be mixed.</p>
+<p>Since version 1.2.2, you can customize the SNMP version, community and port number. It uses the Management Information Base (MIB) provided in <code>net-snmp</code> (see also <a href="http://tsung.erlang-projects.org/user_manual/faq.html#sec-faq-snmp-label" target="_blank" rel="external">SNMP monitoring doesn’t work?</a>).</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">monitoring</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"geronimo"</span> <span class="attribute">type</span>=<span class="value">"snmp"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"f14-2"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"db"</span> <span class="attribute">type</span>=<span class="value">"snmp"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">snmp</span> <span class="attribute">version</span>=<span class="value">"v2"</span> <span class="attribute">community</span>=<span class="value">"mycommunity"</span> <span class="attribute">port</span>=<span class="value">"11161"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">monitor</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">monitoring</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The default <code>version</code> is <code>v1</code>, default community <code>public</code> and default port <code>161</code>.</p>
+<p>Since version 1.4.2, you can also customize the object identifiers (OID) retrieved from the SNMP server, using one or several <code>oid</code> element:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"127.0.0.1"</span> <span class="attribute">type</span>=<span class="value">"snmp"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">snmp</span> <span class="attribute">version</span>=<span class="value">"v2"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">oid</span> <span class="attribute">value</span>=<span class="value">"1.3.6.1.4.1.42.2.145.3.163.1.1.2.11.0"</span></span><br><span class="line">         <span class="attribute">name</span>=<span class="value">"heapused"</span> <span class="attribute">type</span>=<span class="value">"sample"</span> <span class="attribute">eval</span>=<span class="value">"fun(X)-&gt; X/100 end."</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">snmp</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>type</code> can be <code>sample</code>, <code>counter</code> or <code>sum</code>, and optionally you can define a function (with erlang syntax) to be applied to the value (<code>eval</code> attribute).</p>
+<h3 id="Munin">Munin</h3><p><em>1.3.1新增.</em></p>
+<p>Tsung 能够从nunin-node 代理获取数据(参考 <a href="http://munin-monitoring.org/wiki/munin-node" target="_blank" rel="external">http://munin-monitoring.org/wiki/munin-node</a>). <code>type</code>属性值必须设置为<code>munin</code>, 例如:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">monitoring</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"geronimo"</span> <span class="attribute">type</span>=<span class="value">"munin"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">monitor</span> <span class="attribute">host</span>=<span class="value">"f14-2"</span> <span class="attribute">type</span>=<span class="value">"erlang"</span>&gt;</span><span class="tag">&lt;/<span class="title">monitor</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">monitoring</span>&gt;</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/QA/">QA</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/erlang/">erlang</a>, <a href="/tags/testing/">testing</a>, <a href="/tags/tsung/">tsung</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="2014/09/15/tsung-user-manual/" data-title="Tsung 用户手册" data-url="http://developerworks.github.io/2014/09/15/tsung-user-manual/"></div>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"developerworks"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+</div>
+    </div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/11/thrift-ex/">thrift_ex</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">(译) Ejabberd加入了Elixir的变革</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/25/http2-h2o-get-started/">HTTP/2 尝鲜</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/AD/">AD</a><small>2</small></li>
+  
+    <li><a href="/categories/API/">API</a><small>3</small></li>
+  
+    <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
+  
+    <li><a href="/categories/Database/">Database</a><small>1</small></li>
+  
+    <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
+  
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>32</small></li>
+  
+    <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
+  
+    <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
+  
+    <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
+  
+    <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+  
+    <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
+  
+    <li><a href="/categories/Node-js/">Node.js</a><small>17</small></li>
+  
+    <li><a href="/categories/Opencart/">Opencart</a><small>2</small></li>
+  
+    <li><a href="/categories/QA/">QA</a><small>2</small></li>
+  
+    <li><a href="/categories/RESTFul/">RESTFul</a><small>1</small></li>
+  
+    <li><a href="/categories/SCM/">SCM</a><small>5</small></li>
+  
+    <li><a href="/categories/Testing/">Testing</a><small>1</small></li>
+  
+    <li><a href="/categories/Tools/">Tools</a><small>4</small></li>
+  
+    <li><a href="/categories/Web/">Web</a><small>6</small></li>
+  
+    <li><a href="/categories/XEP/">XEP</a><small>5</small></li>
+  
+    <li><a href="/categories/XMPP/">XMPP</a><small>6</small></li>
+  
+    <li><a href="/categories/english/">english</a><small>1</small></li>
+  
+    <li><a href="/categories/杂类/">杂类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget duoshuo_recent_comments">
+    <h3 class="title">最新评论</h3>
+    <ul class="entry ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-title="1" data-show-time="1"></ul>
+</div>
+<!--多说js加载开始，一个页面只需要加载一次 -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name: "developerworks"};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = 'http://static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!--多说js加载结束，一个页面只需要加载一次 -->
+
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 10px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 18px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 17px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 16px;">docker</a><a href="/tags/ejabberd/" style="font-size: 19px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+</div>
+<footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 zhiqiang he
+  
+</div>
+<div class="clearfix"></div></footer>
+
+<!--<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>-->
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<!--<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
+
+
+

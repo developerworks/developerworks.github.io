@@ -1,0 +1,390 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ejabberd中用Jiffy输出JSON数据 | 元气糯米团子的Coding Blog</title>
+  <meta name="author" content="zhiqiang he">
+  
+  <meta name="description" content="警告! 使用Jiffy需要特别注意,其实现为NIF,可能导致Erlang VM崩溃.
+编译12345678cd /tmpgit clone https://github.com/processone/ejabberd.gitcd ejabberdchmod +x autogen.sh./autoge">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Ejabberd中用Jiffy输出JSON数据"/>
+  <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="元气糯米团子的Coding Blog" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/assets/css/toc.css"/>
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>-->
+  <script type="text/javascript" src="//upcdn.b0.upaiyun.com/libs/jquery/jquery-1.8.3.min.js"></script>
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-touch-icon-57x57.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-touch-icon-114x114.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon-60x60.png" />
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon-76x76.png" />
+  <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <!--
+  <SCRIPT type=text/javascript src="/js/scrolltop.js"></SCRIPT>
+   -->
+  <!--howiefh calendar begin-->
+  <SCRIPT type=text/javascript src="/js/calendar.js"></SCRIPT>
+  <!--howiefh calendar end-->
+  
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</head>
+
+
+<body>
+<header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">元气糯米团子的Coding Blog</a></h1>
+  <h2><a href="/">Tansform information as knowledges, extract and purify as thoughts</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">树根</a></li>
+    
+      <li><a href="/archives">泡菜坛子</a></li>
+    
+      <li><a href="/links">连接</a></li>
+    
+      <li><a href="/atom.xml">粽子</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+
+<div id="content" class="inner">
+    <div id="main-col" class="alignleft">
+        <div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-09-28T05:05:43.000Z"><a href="/2014/09/28/ejabberd-jiffy/">2014-09-28</a></time>
+      
+      
+  
+    <h1 class="title">Ejabberd中用Jiffy输出JSON数据</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#编译"><span class="toc-number">1.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个例子"><span class="toc-number">2.</span> <span class="toc-text">一个例子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#构造复杂JSON对象"><span class="toc-number">3.</span> <span class="toc-text">构造复杂JSON对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Erlang和JSON格式对照表"><span class="toc-number">3.1.</span> <span class="toc-text">Erlang和JSON格式对照表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例代码"><span class="toc-number">3.2.</span> <span class="toc-text">示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输出"><span class="toc-number">3.3.</span> <span class="toc-text">输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变更"><span class="toc-number">4.</span> <span class="toc-text">变更</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2014-10-04"><span class="toc-number">4.1.</span> <span class="toc-text">2014-10-04</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol>
+        </div>
+        
+
+
+        <p>警告! 使用Jiffy需要特别注意,其实现为NIF,可能导致Erlang VM崩溃.</p>
+<h2 id="编译">编译</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span> /tmp</span><br><span class="line">git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/processone/ejabberd.git</span><br><span class="line"><span class="keyword">cd</span> ejabberd</span><br><span class="line">chmod +<span class="keyword">x</span> autogen.<span class="keyword">sh</span></span><br><span class="line">./autogen.<span class="keyword">sh</span></span><br><span class="line">./configure --enable-json --enable-mysql</span><br><span class="line"><span class="keyword">make</span></span><br><span class="line"><span class="keyword">make</span> install</span><br></pre></td></tr></table></figure>
+<p><code>jiffy.so</code>路径有个Bug,写作本文时,该BUG暂未解决. 请参考:<br><a href="https://github.com/processone/ejabberd/issues/309" target="_blank" rel="external">https://github.com/processone/ejabberd/issues/309</a>,<br>要解决此问题, 执行:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv <span class="regexp">/lib/</span>ejabberd<span class="regexp">/priv/</span>lib<span class="regexp">/jiffy.so /</span>lib<span class="regexp">/ejabberd/</span>priv<span class="regexp">/jiffy.so</span></span><br></pre></td></tr></table></figure>
+<h2 id="一个例子">一个例子</h2><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="pp"><span class="keyword">-module</span><span class="params">(mod_online_users)</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-author</span><span class="params">('hezhiqiang')</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-behaviour</span><span class="params">(gen_mod)</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-export</span><span class="params">([</span><br><span class="line">    start/<span class="number">2</span>,</span><br><span class="line">    stop/<span class="number">1</span>,</span><br><span class="line">    process/<span class="number">2</span></span><br><span class="line">])</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-include</span><span class="params">(<span class="string">"ejabberd.hrl"</span>)</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-include</span><span class="params">(<span class="string">"jlib.hrl"</span>)</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-include</span><span class="params">(<span class="string">"ejabberd_http.hrl"</span>)</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-include</span><span class="params">(<span class="string">"logger.hrl"</span>)</span></span>.</span><br><span class="line"><span class="comment">%% 处理函数,直接返回要输出到浏览器的内容</span></span><br><span class="line"><span class="function"><span class="title">process</span><span class="params">(<span class="variable">_LocalPath</span>, <span class="variable">_Request</span>)</span> -&gt;</span></span><br><span class="line">    <span class="variable">Users</span> = <span class="function_name">mnesia:table_info</span>(session, size),</span><br><span class="line">    <span class="variable">OnlineUsers</span> = <span class="function_name">jiffy:encode</span>(<span class="tuple">&#123;[<span class="tuple">&#123;&lt;&lt;<span class="string">"onlineusers"</span>&gt;&gt;, <span class="variable">Users</span>&#125;</span>]&#125;</span>),</span><br><span class="line">    <span class="tuple">&#123;<span class="number">200</span>, [], <span class="variable">OnlineUsers</span>&#125;</span>.</span><br><span class="line"><span class="function"><span class="title">start</span><span class="params">(<span class="variable">_Host</span>, <span class="variable">_Opts</span>)</span> -&gt;</span></span><br><span class="line">    ?<span class="variable">INFO_MSG</span>(<span class="string">"===Starting module mod_online_users==="</span>, []),</span><br><span class="line">    ok.</span><br><span class="line"><span class="function"><span class="title">stop</span><span class="params">(<span class="variable">_Host</span>)</span> -&gt;</span></span><br><span class="line">    ?<span class="variable">INFO_MSG</span>(<span class="string">"===Stopping module mod_online_users==="</span>, []),</span><br><span class="line">    ok.</span><br></pre></td></tr></table></figure>
+<p>配置<code>/etc/ejabberd/ejabberd.yml</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-</span><br><span class="line">  port: <span class="number">5280</span></span><br><span class="line">  module: ejabberd_http</span><br><span class="line">  request_handlers:</span><br><span class="line">    <span class="string">"/pub/archive"</span>: mod_http_fileserver</span><br><span class="line">    <span class="string">"/http-bind/"</span>: mod_http_<span class="built_in">bind</span></span><br><span class="line">    <span class="string">"admin"</span>: ejabberd_web_admin</span><br><span class="line">    <span class="string">"online"</span>: mod_online_users</span><br><span class="line">  web_admin: <span class="literal">true</span></span><br><span class="line">  http_poll: <span class="literal">true</span></span><br><span class="line">  http_<span class="built_in">bind</span>: <span class="literal">true</span></span><br><span class="line">  captcha: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>重启</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ejabberdctl</span> restart</span><br></pre></td></tr></table></figure>
+<p>访问</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http:</span><span class="comment">//192.168.8.132:5280/online/</span></span><br></pre></td></tr></table></figure>
+<p><img src="/assets/images/9058AA0F-5ECA-4FCD-84BB-9CFAD161991F.png" alt="在线用户数模块"></p>
+<h2 id="构造复杂JSON对象">构造复杂JSON对象</h2><h3 id="Erlang和JSON格式对照表">Erlang和JSON格式对照表</h3><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Erlang                          JSON            Erlang</span><br><span class="line">==========================================================================</span><br><span class="line">null                       -&gt; null           -&gt; null</span><br><span class="line"><span class="keyword">true</span>                       -&gt; <span class="keyword">true</span>           -&gt; <span class="keyword">true</span></span><br><span class="line"><span class="keyword">false</span>                      -&gt; <span class="keyword">false</span>          -&gt; <span class="keyword">false</span></span><br><span class="line"><span class="string">"hi"</span>                       -&gt; [<span class="number">104</span>, <span class="number">105</span>]     -&gt; [<span class="number">104</span>, <span class="number">105</span>]</span><br><span class="line">&lt;&lt;<span class="string">"hi"</span>&gt;&gt;                   -&gt; <span class="string">"hi"</span>           -&gt; &lt;&lt;<span class="string">"hi"</span>&gt;&gt;</span><br><span class="line">hi                         -&gt; <span class="string">"hi"</span>           -&gt; &lt;&lt;<span class="string">"hi"</span>&gt;&gt;</span><br><span class="line"><span class="number">1</span>                          -&gt; <span class="number">1</span>              -&gt; <span class="number">1</span></span><br><span class="line"><span class="number">1.25</span>                       -&gt; <span class="number">1.25</span>           -&gt; <span class="number">1.25</span></span><br><span class="line">[]                         -&gt; []             -&gt; []</span><br><span class="line">[<span class="keyword">true</span>, <span class="number">1.0</span>]                -&gt; [<span class="keyword">true</span>, <span class="number">1.0</span>]    -&gt; [<span class="keyword">true</span>, <span class="number">1.0</span>]</span><br><span class="line">&#123;[]&#125;                       -&gt; &#123;&#125;             -&gt; &#123;[]&#125;</span><br><span class="line">&#123;[&#123;foo, bar&#125;]&#125;             -&gt; &#123;<span class="string">"foo"</span>: <span class="string">"bar"</span>&#125; -&gt; &#123;[&#123;&lt;&lt;<span class="string">"foo"</span>&gt;&gt;, &lt;&lt;<span class="string">"bar"</span>&gt;&gt;&#125;]&#125;</span><br><span class="line">&#123;[&#123;&lt;&lt;<span class="string">"foo"</span>&gt;&gt;, &lt;&lt;<span class="string">"bar"</span>&gt;&gt;&#125;]&#125; -&gt; &#123;<span class="string">"foo"</span>: <span class="string">"bar"</span>&#125; -&gt; &#123;[&#123;&lt;&lt;<span class="string">"foo"</span>&gt;&gt;, &lt;&lt;<span class="string">"bar"</span>&gt;&gt;&#125;]&#125;</span><br><span class="line">#&#123;&lt;&lt;<span class="string">"foo"</span>&gt;&gt; =&gt; &lt;&lt;<span class="string">"bar"</span>&gt;&gt;&#125;  -&gt; &#123;<span class="string">"foo"</span>: <span class="string">"bar"</span>&#125; -&gt; #&#123;&lt;&lt;<span class="string">"foo"</span>&gt;&gt; -&gt; &lt;&lt;<span class="string">"bar"</span>&gt;&gt;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="示例代码">示例代码</h3><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">process</span><span class="params">(<span class="variable">_LocalPath</span>, <span class="variable">_Request</span>)</span> -&gt;</span></span><br><span class="line">    <span class="variable">ConnectedUsersNumber</span> = <span class="function_name">ejabberd_sm:connected_users_number</span>(),</span><br><span class="line">    <span class="comment">%% 获取在线用户列表</span></span><br><span class="line">    <span class="variable">AllSessionList</span> = <span class="function_name">ejabberd_sm:dirty_get_sessions_list</span>(),</span><br><span class="line">    <span class="comment">%% 构造JSON对象数组</span></span><br><span class="line">    <span class="variable">AllSessions</span> = <span class="function_name">lists:map</span>(<span class="keyword">fun</span>(<span class="tuple">&#123;<span class="variable">User</span>, <span class="variable">Server</span>, <span class="variable">Resource</span>&#125;</span>) -&gt;</span><br><span class="line">        <span class="tuple">&#123;[<span class="tuple">&#123;user, <span class="variable">User</span>&#125;</span>, <span class="tuple">&#123;server, <span class="variable">Server</span>&#125;</span>, <span class="tuple">&#123;resource, <span class="variable">Resource</span>&#125;</span>]&#125;</span></span><br><span class="line">    <span class="keyword">end</span>, <span class="variable">AllSessionList</span>),</span><br><span class="line">    <span class="comment">%% 编码JSON格式</span></span><br><span class="line">    <span class="variable">Json</span> = <span class="function_name">jiffy:encode</span>(<span class="tuple">&#123;[</span><br><span class="line">        <span class="tuple">&#123;connected_users_number, <span class="variable">ConnectedUsersNumber</span>&#125;</span>,</span><br><span class="line">        <span class="tuple">&#123;sessions, <span class="variable">AllSessions</span>&#125;</span></span><br><span class="line">    ]&#125;</span>),</span><br><span class="line">    <span class="tuple">&#123;<span class="number">200</span>, [], <span class="variable">Json</span>&#125;</span>.</span><br></pre></td></tr></table></figure>
+<h3 id="输出">输出</h3><p>把上面的代码和下面的输出对照理解.</p>
+<p><img src="/assets/images/BB5D080B-5B6B-43EE-A8DF-0E7DEBE7BAF4.png" alt="JSON输出"></p>
+<h2 id="变更">变更</h2><h3 id="2014-10-04">2014-10-04</h3><p>调用<code>mnesia:system_info(all).</code>获取Mnesia数据库信息, 下面是返回的<code>Term</code>:</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">[</span><br><span class="line">    <span class="collection">&#123;access_module,mnesia&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;auto_repair,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;backup_module,mnesia_backup&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;checkpoints,<span class="collection">[]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;db_nodes,<span class="collection">[ejabberd@localhost]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;debug,none&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;directory,<span class="string">"/var/lib/ejabberd"</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;dump_log_load_regulation,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;dump_log_time_threshold,<span class="number">180000</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;dump_log_update_in_place,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;dump_log_write_threshold,<span class="number">1000</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;event_module,mnesia_event&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;extra_db_nodes,<span class="collection">[]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;fallback_activated,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;held_locks,<span class="collection">[]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;ignore_fallback_at_startup,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;fallback_error_function,<span class="collection">&#123;mnesia,lkill&#125;</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;is_running,yes&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;local_tables,<span class="collection">[</span><br><span class="line">        shaper,</span><br><span class="line">        mod_register_ip,local_config,caps_features,acl,</span><br><span class="line">        access,carboncopy,http_bind,reg_users_counter,pubsub_subscription,bytestream,</span><br><span class="line">        privacy,passwd,irc_custom,roster,last_activity,sr_user,roster_version,</span><br><span class="line">        pubsub_last_item,offline_msg,route,motd,s2s,vcard,pubsub_index,sr_group,</span><br><span class="line">        session_counter,vcard_search,motd_users,schema,session,private_storage,</span><br><span class="line">        pubsub_item,muc_room,pubsub_state,iq_response,temporarily_blocked,</span><br><span class="line">        muc_registered,muc_online_room,pubsub_node</span><br><span class="line">    ]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;lock_queue,<span class="collection">[]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;log_version,<span class="string">"4.3"</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;master_node_tables,<span class="collection">[]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;max_wait_for_decision,infinity&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;protocol_version,<span class="collection">&#123;<span class="number">8</span>,<span class="number">1</span>&#125;</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;running_db_nodes,<span class="collection">[ejabberd@localhost]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;schema_location,opt_disc&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;schema_version,<span class="collection">&#123;<span class="number">2</span>,<span class="number">0</span>&#125;</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;subscribers,<span class="collection">[&lt;0.15778.0&gt;,&lt;0.16018.0&gt;,&lt;0.15961.0&gt;,&lt;0.15954.0&gt;]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;tables,<span class="collection">[</span><br><span class="line">        carboncopy,http_bind,reg_users_counter,pubsub_subscription,bytestream,</span><br><span class="line">        privacy,local_config,passwd,irc_custom,shaper,roster,last_activity,</span><br><span class="line">        sr_user,roster_version,pubsub_last_item,offline_msg,route,motd,</span><br><span class="line">        access,acl,s2s,vcard,pubsub_index,caps_features,sr_group,session_counter,</span><br><span class="line">        mod_register_ip,vcard_search,motd_users,schema,session,private_storage,</span><br><span class="line">        pubsub_item,muc_room,pubsub_state,iq_response,temporarily_blocked,</span><br><span class="line">        muc_registered,muc_online_room,pubsub_node</span><br><span class="line">    ]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;transaction_commits,<span class="number">56</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;transaction_failures,<span class="number">81</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;transaction_log_writes,<span class="number">0</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;transaction_restarts,<span class="number">0</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;transactions,<span class="collection">[]</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;use_dir,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;core_dir,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;no_table_loaders,<span class="number">2</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;dc_dump_limit,<span class="number">4</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;send_compressed,<span class="number">0</span>&#125;</span>,</span><br><span class="line">    <span class="collection">&#123;version,<span class="string">"4.12.3"</span>&#125;</span></span><br><span class="line">]</span></span><br></pre></td></tr></table></figure>
+<p><code>process/2</code>函数修改为:</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">process<span class="function"><span class="params">(_LocalPath, _Request)</span> -&gt;</span></span><br><span class="line">    ConnectedUsersNumber = <span class="attribute">ejabberd_sm</span>:connected_users_number(),</span><br><span class="line">    %% 用户列表</span><br><span class="line">    AllSessionList = <span class="attribute">ejabberd_sm</span>:dirty_get_sessions_list(),</span><br><span class="line">    ?DEBUG(<span class="string">"All sessions ~p~n"</span>, [AllSessionList]),</span><br><span class="line">    %% Mnesia 表信息</span><br><span class="line">    MnesiaSystemInfo = <span class="attribute">mnesia</span>:system_info(all),</span><br><span class="line">    ?DEBUG(<span class="string">"Mnesia Information ~p~n"</span>, [MnesiaSystemInfo]),</span><br><span class="line">    %% [&#123;&lt;&lt;<span class="string">"root"</span>&gt;&gt;,&lt;&lt;<span class="string">"xmpp.myserver.info"</span>&gt;&gt;,&lt;&lt;<span class="string">"3439698832141213525690305"</span>&gt;&gt;&#125;]</span><br><span class="line">    %% 构造一个JSON对象数组</span><br><span class="line">    %% 对象: &#123;[]&#125;</span><br><span class="line">    %% 数组: []</span><br><span class="line">    AllSessions = <span class="attribute">lists</span>:map<span class="function"><span class="params">(fun(&#123;User, Server, Resource&#125;) -&gt;</span><br><span class="line">        &#123;[&#123;user, User&#125;, &#123;server, Server&#125;, &#123;resource, Resource&#125;]&#125;</span><br><span class="line">    end, AllSessionList)</span>,</span><br><span class="line">    <span class="title">RemoveElements</span> = [<span class="title">subscribers</span>, <span class="title">fallback_error_function</span>],</span><br><span class="line">    <span class="title">MnesiaSystemInfoJiffy</span> = <span class="title">lists</span>:<span class="title">filtermap</span><span class="params">(fun(&#123;Key, Value&#125;) -&gt;</span><br><span class="line">        <span class="keyword">case</span> lists:any(fun(E2) -&gt; E2 =:= Key end, RemoveElements) <span class="keyword">of</span></span><br><span class="line">            <span class="literal">true</span> -&gt;</span><br><span class="line">                <span class="literal">false</span>;</span><br><span class="line">            <span class="literal">false</span> -&gt;</span><br><span class="line">                <span class="keyword">case</span> Key <span class="keyword">of</span></span><br><span class="line">                    directory -&gt;</span><br><span class="line">                        &#123;<span class="literal">true</span>, &#123;Key, list_to_bitstring(Value)&#125;&#125;;</span><br><span class="line">                    version -&gt;</span><br><span class="line">                        &#123;<span class="literal">true</span>, &#123;Key, list_to_bitstring(Value)&#125;&#125;;</span><br><span class="line">                    log_version -&gt;</span><br><span class="line">                        &#123;<span class="literal">true</span>, &#123;Key, list_to_bitstring(Value)&#125;&#125;;</span><br><span class="line">                    schema_version -&gt;</span><br><span class="line">                        &#123;V1, V2&#125; = Value,</span><br><span class="line">                        &#123;<span class="literal">true</span>, &#123;Key, list_to_bitstring([integer_to_list(V1), <span class="string">"."</span>, integer_to_list(V2)])&#125;&#125;;</span><br><span class="line">                    protocol_version -&gt;</span><br><span class="line">                        &#123;V1, V2&#125; = Value,</span><br><span class="line">                        &#123;<span class="literal">true</span>, &#123;Key, list_to_bitstring([integer_to_list(V1), <span class="string">"."</span>, integer_to_list(V2)])&#125;&#125;;</span><br><span class="line">                    _ -&gt;</span><br><span class="line">                        &#123;<span class="literal">true</span>, &#123;Key, Value&#125;&#125;</span><br><span class="line">                end</span><br><span class="line">        end</span><br><span class="line">    end, MnesiaSystemInfo)</span>,</span><br><span class="line">    <span class="title">Json</span> = <span class="title">jiffy</span>:<span class="title">encode</span><span class="params">(&#123;[</span><br><span class="line">        &#123;connected_users_number, ConnectedUsersNumber&#125;,</span><br><span class="line">        &#123;sessions, AllSessions&#125;,</span><br><span class="line">        &#123;mnesia, &#123;MnesiaSystemInfoJiffy&#125;&#125;</span><br><span class="line">    ]&#125;)</span>,</span><br><span class="line">    &#123;200, [], <span class="title">Json</span>&#125;.</span></span><br></pre></td></tr></table></figure>
+<p>JSON输出由JSON View Formater格式化<br><a href="https://chrome.google.com/webstore/detail/hdmbdioamgdkppmocchpkjhbpfmpjiei" target="_blank" rel="external">https://chrome.google.com/webstore/detail/hdmbdioamgdkppmocchpkjhbpfmpjiei</a></p>
+<p><img src="/assets/images/3C50996B-E5DA-4574-83E7-C9B237DD9587.png" alt="Mnesia系统信息JSON数据"></p>
+<p>注意<code>lists:filtermap</code>返回的是元组列表, 列表中的每个元素是一个元组, 每个元组包含两个项, <code>lists:filtermap</code>函数是<code>lists:filter</code>(过滤)和<code>lists:map</code>(映射)两个函数功能上的合并:<code>过滤并映射</code></p>
+<p>这里例子中有部分值为空<code>[]</code>, 比如<code>checkpoints</code>, 当包含值的时候<code>可能</code>需要按照Jiffy方式转换类型.</p>
+<p>完整代码如下:<br><a href="https://gist.github.com/553129e3015995b56028" target="_blank" rel="external">https://gist.github.com/553129e3015995b56028</a></p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="https://github.com/davisp/jiffy" target="_blank" rel="external">https://github.com/davisp/jiffy</a></li>
+<li><a href="http://www.erlang.org/doc/man/lists.html" target="_blank" rel="external">http://www.erlang.org/doc/man/lists.html</a></li>
+<li><a href="http://www.erlang.org/doc/man/mnesia.html" target="_blank" rel="external">http://www.erlang.org/doc/man/mnesia.html</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/Ejabberd/">Ejabberd</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/ejabberd/">ejabberd</a>, <a href="/tags/jiffy/">jiffy</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-thread-key="2014/09/28/ejabberd-jiffy/" data-title="Ejabberd中用Jiffy输出JSON数据" data-url="http://developerworks.github.io/2014/09/28/ejabberd-jiffy/"></div>
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name:"developerworks"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+            || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+</div>
+    </div>
+    <aside id="sidebar" class="alignright">
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/11/thrift-ex/">thrift_ex</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">(译) Ejabberd加入了Elixir的变革</a>
+      </li>
+    
+      <li>
+        <a href="/2015/02/25/http2-h2o-get-started/">HTTP/2 尝鲜</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/AD/">AD</a><small>2</small></li>
+  
+    <li><a href="/categories/API/">API</a><small>3</small></li>
+  
+    <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
+  
+    <li><a href="/categories/Database/">Database</a><small>1</small></li>
+  
+    <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
+  
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>32</small></li>
+  
+    <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
+  
+    <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
+  
+    <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
+  
+    <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
+  
+    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+  
+    <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
+  
+    <li><a href="/categories/Node-js/">Node.js</a><small>17</small></li>
+  
+    <li><a href="/categories/Opencart/">Opencart</a><small>2</small></li>
+  
+    <li><a href="/categories/QA/">QA</a><small>2</small></li>
+  
+    <li><a href="/categories/RESTFul/">RESTFul</a><small>1</small></li>
+  
+    <li><a href="/categories/SCM/">SCM</a><small>5</small></li>
+  
+    <li><a href="/categories/Testing/">Testing</a><small>1</small></li>
+  
+    <li><a href="/categories/Tools/">Tools</a><small>4</small></li>
+  
+    <li><a href="/categories/Web/">Web</a><small>6</small></li>
+  
+    <li><a href="/categories/XEP/">XEP</a><small>5</small></li>
+  
+    <li><a href="/categories/XMPP/">XMPP</a><small>6</small></li>
+  
+    <li><a href="/categories/english/">english</a><small>1</small></li>
+  
+    <li><a href="/categories/杂类/">杂类</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget duoshuo_recent_comments">
+    <h3 class="title">最新评论</h3>
+    <ul class="entry ds-recent-comments" data-num-items="5" data-show-avatars="0" data-show-title="1" data-show-time="1"></ul>
+</div>
+<!--多说js加载开始，一个页面只需要加载一次 -->
+<script type="text/javascript">
+    var duoshuoQuery = {short_name: "developerworks"};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = 'http://static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!--多说js加载结束，一个页面只需要加载一次 -->
+
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">标签云</h3>
+  <div class="entry">
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 10px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 18px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 17px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 16px;">docker</a><a href="/tags/ejabberd/" style="font-size: 19px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+</div>
+<footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 zhiqiang he
+  
+</div>
+<div class="clearfix"></div></footer>
+
+<!--<script src="http://libs.baidu.com/jquery/2.0.3/jquery.min.js"></script>-->
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<!--<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-53429135-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
+
+
+

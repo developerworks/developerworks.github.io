@@ -1,0 +1,867 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[元气糯米团子的Coding Blog]]></title>
+  <subtitle><![CDATA[Tansform information as knowledges, extract and purify as thoughts]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://developerworks.github.io/"/>
+  <updated>2015-03-18T06:26:49.000Z</updated>
+  <id>http://developerworks.github.io/</id>
+  
+  <author>
+    <name><![CDATA[zhiqiang he]]></name>
+    <email><![CDATA[developerworks@163.com]]></email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[AngularJS中的If..Else语句]]></title>
+    <link href="http://developerworks.github.io/2015/03/18/angular-if-else-statement-in-template/"/>
+    <id>http://developerworks.github.io/2015/03/18/angular-if-else-statement-in-template/</id>
+    <published>2015-03-18T06:21:20.000Z</published>
+    <updated>2015-03-18T06:26:49.000Z</updated>
+    <content type="html"><![CDATA[<ol>
+<li><a href="http://docs.angularjs.org/api/ng.directive%3angSwitch" target="_blank" rel="external">ng-switch</a> directive:</li>
+</ol>
+<p>can be used something like the following.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">ng-switch</span> <span class="attribute">on</span>=<span class="value">"video"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">ng-switch-when</span>=<span class="value">"video.large"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- code to render a large video block--&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">ng-switch-default</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- code to render the regular video block --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><a href="http://docs.angularjs.org/api/ng.directive%3angHide" target="_blank" rel="external">ng-hide</a> / <a href="http://docs.angularjs.org/api/ng.directive%3angShow" target="_blank" rel="external">ng-show</a> directives</li>
+</ol>
+<p>Alternatively, you might also use <code>ng-show/ng-hide</code> but using this will actually render both a large video and a small video element and then hide the one that meets the <code>ng-hide</code> condition and shows the one that meets <code>ng-show</code> condition.</p>
+<p>So on each page you’ll actually be rendering two different elements.</p>
+<ol>
+<li>Another option to consider is <a href="http://docs.angularjs.org/api/ng.directive%3angClass" target="_blank" rel="external">ng-class</a> directive.</li>
+</ol>
+<p>This can be used as follows.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">ng-class</span>=<span class="value">"&#123;large-video: video.large&#125;"</span>&gt;</span></span><br><span class="line">   <span class="comment">&lt;!-- video block goes here --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The above basically will add a <code>large-video</code> css class to the div element if <code>video.large</code> is truthy.</p>
+<p>UPDATE: <a href="http://code.angularjs.org/1.1.5/docs/" target="_blank" rel="external">Angular 1.1.5</a> introduced the <a href="http://docs.angularjs.org/api/ng.directive%3angIf" target="_blank" rel="external">ngIf directive</a></p>
+<ol>
+<li>ng-if directive:</li>
+</ol>
+<p>In the versions above <code>1.1.5</code> you can use the <code>ng-if</code> directive. This would remove the element if the expression provided returns <code>false</code> and re-inserts the <code>element</code> in the DOM if the expression returns <code>true</code>. Can be used as follows.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">ng-if</span>=<span class="value">"video == video.large"</span>&gt;</span></span><br><span class="line">   <span class="comment">&lt;!-- code to render a large video block--&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">ng-if</span>=<span class="value">"video != video.large"</span>&gt;</span></span><br><span class="line">   <span class="comment">&lt;!-- code to render the regular video block --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="http://stackoverflow.com/questions/15810278/if-else-statement-in-angularjs-templates" target="_blank" rel="external">http://stackoverflow.com/questions/15810278/if-else-statement-in-angularjs-templates</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<ol>
+<li><a href="http://docs.angularjs.org/api/ng.directive%3angSwitch" target="_blank" rel="external">ng-switch</a> directive:</li>
+</ol>
+]]>
+    </summary>
+    
+      <category term="angular" scheme="http://developerworks.github.io/tags/angular/"/>
+    
+      <category term="Javascript" scheme="http://developerworks.github.io/categories/Javascript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Nodejs应用程序持续部署]]></title>
+    <link href="http://developerworks.github.io/2015/03/18/continuous-deployment-of-node-js-applications/"/>
+    <id>http://developerworks.github.io/2015/03/18/continuous-deployment-of-node-js-applications/</id>
+    <published>2015-03-18T06:18:01.000Z</published>
+    <updated>2015-03-18T06:20:12.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="文章">文章</h2><ol>
+<li><p>Continuous Deployment of Node.js Applications<br><a href="http://blog.risingstack.com/continuous-deployment-of-node-js-applications" target="_blank" rel="external">http://blog.risingstack.com/continuous-deployment-of-node-js-applications</a></p>
+</li>
+<li><p>Best Practices for Deploying Node.js in Production<br><a href="https://strongloop.com/strongblog/node-js-deploy-production-best-practice" target="_blank" rel="external">https://strongloop.com/strongblog/node-js-deploy-production-best-practice</a></p>
+</li>
+</ol>
+<h2 id="持续部署工具">持续部署工具</h2><ol>
+<li>Strider<br><a href="http://stridercd.com" target="_blank" rel="external">http://stridercd.com</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="文章">文章</h2><ol>
+<li><p>Continuous Deployment of Node.js Applications<br><a href="http://blog.risingstack.com/continuous-deployment-o]]>
+    </summary>
+    
+      <category term="Node.js" scheme="http://developerworks.github.io/tags/Node-js/"/>
+    
+      <category term="Continuous Deployment" scheme="http://developerworks.github.io/categories/Continuous-Deployment/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Erlang Pooler]]></title>
+    <link href="http://developerworks.github.io/2015/03/17/erlang-pooler/"/>
+    <id>http://developerworks.github.io/2015/03/17/erlang-pooler/</id>
+    <published>2015-03-17T15:51:53.000Z</published>
+    <updated>2015-03-17T16:06:05.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="http://erlangcentral.org/the-pooler-story-how-i-learned-otp-by-writing-a-connection-pool" target="_blank" rel="external">http://erlangcentral.org/the-pooler-story-how-i-learned-otp-by-writing-a-connection-pool</a></li>
+<li><a href="https://github.com/bfrog/hottub" target="_blank" rel="external">https://github.com/bfrog/hottub</a></li>
+<li><a href="http://sourceforge.net/projects/erlpool/" target="_blank" rel="external">http://sourceforge.net/projects/erlpool/</a></li>
+<li><a href="http://www.cnblogs.com/--00/p/4287209.html" target="_blank" rel="external">http://www.cnblogs.com/--00/p/4287209.html</a></li>
+<li><a href="http://www.cnblogs.com/--00/p/4281938.html" target="_blank" rel="external">http://www.cnblogs.com/--00/p/4281938.html</a></li>
+<li><a href="http://www.cnblogs.com/--00/tag/Erlang/" target="_blank" rel="external">http://www.cnblogs.com/--00/tag/Erlang/</a></li>
+<li><a href="http://learnyousomeerlang.com/building-applications-with-otp" target="_blank" rel="external">http://learnyousomeerlang.com/building-applications-with-otp</a></li>
+<li><a href="http://www.lshift.net/blog/2010/03/29/on-the-limits-of-concurrency-worker-pools-in-erlang/" target="_blank" rel="external">http://www.lshift.net/blog/2010/03/29/on-the-limits-of-concurrency-worker-pools-in-erlang/</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="http://erlangcentral.org/the-pooler-story-how-i-learned-otp-by-writing-a-connection-pool" target="_]]>
+    </summary>
+    
+      <category term="Pool" scheme="http://developerworks.github.io/tags/Pool/"/>
+    
+      <category term="Erlang" scheme="http://developerworks.github.io/categories/Erlang/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Ejabberd模块安装工具]]></title>
+    <link href="http://developerworks.github.io/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/"/>
+    <id>http://developerworks.github.io/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/</id>
+    <published>2015-03-16T16:23:38.000Z</published>
+    <updated>2015-03-17T05:27:03.000Z</updated>
+    <content type="html"><![CDATA[<p>从Ejabberd版本<a href="https://github.com/processone/ejabberd/commit/aa1250a3ddf952119982970acc8a743dda6c1041" target="_blank" rel="external">15.02.77 (aa1250a)</a>起,支持通过<code>ejabberdctl</code>命令行工具安装<a href="https://github.com/processone/ejabberd-contrib" target="_blank" rel="external">第三方模块</a></p>
+<ul>
+<li>如果你之前从源码便已过Ejabberd,并且是从源码安装的, 请首先重新执行如下命令:</li>
+</ul>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">./autogen.sh</span><br><span class="line">./configure --enable-mysql \</span><br><span class="line">    -<span class="ruby">-enable-iconv \</span><br><span class="line"></span>    -<span class="ruby">-enable-elixir \</span><br><span class="line"></span>    -<span class="ruby">-enable-tools \</span><br><span class="line"></span>    -<span class="ruby">-enable-nif \</span><br><span class="line"></span>    -<span class="ruby">-enable-odbc \</span><br><span class="line"></span>    -<span class="ruby">-enable-zlib \</span><br><span class="line"></span>    -<span class="ruby">-enable-json</span><br><span class="line"></span>make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<ul>
+<li>更新模块列表</li>
+</ul>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ejabberdctl</span> modules_update_specs</span><br></pre></td></tr></table></figure>
+<ul>
+<li>列出可用的模块</li>
+</ul>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">root@xmpp:~<span class="comment"># ejabberdctl modules_available</span></span><br><span class="line">atom_pubsub         Provides access <span class="built_in">to</span> all PEP nodes via <span class="operator">an</span> AtomPub interface</span><br><span class="line">ejabberd_auth_http  Authentication via HTTP request</span><br><span class="line">ircd                IRC server frontend <span class="built_in">to</span> ejabberd</span><br><span class="line">mod_admin_extra     Additional ejabberd commands</span><br><span class="line">mod_archive         Supports almost all <span class="operator">the</span> XEP-<span class="number">0136</span> <span class="built_in">version</span> <span class="number">0.6</span> except otr</span><br><span class="line">mod_cron            Execute scheduled commands</span><br><span class="line">mod_log_chat        Logging chat messages <span class="operator">in</span> <span class="keyword">text</span> <span class="built_in">files</span></span><br><span class="line">mod_logsession      Log session connections <span class="built_in">to</span> <span class="built_in">file</span></span><br><span class="line">mod_logxml          Log XMPP packets <span class="built_in">to</span> XML <span class="built_in">file</span></span><br><span class="line">mod_mam	Message     Archive Management (XEP-<span class="number">0313</span>)</span><br><span class="line">mod_message_log     Log <span class="constant">one</span> <span class="built_in">line</span> per message transmission <span class="operator">in</span> <span class="keyword">text</span> <span class="built_in">file</span></span><br><span class="line">mod_muc_admin       Administrative features <span class="keyword">for</span> MUC</span><br><span class="line">mod_muc_log_http    Serve MUC logs <span class="command"><span class="keyword">on</span> <span class="title">the</span> <span class="title">web</span></span></span><br><span class="line">mod_multicast       Extended Stanza Addressing (XEP-<span class="number">0033</span>) support</span><br><span class="line">mod_openid          Transform <span class="operator">the</span> Jabber Server <span class="operator">in</span> <span class="operator">an</span> openid provider</span><br><span class="line">mod_post_log        Logs messages <span class="built_in">to</span> <span class="operator">an</span> HTTP API</span><br><span class="line">mod_profile         User Profile (XEP-<span class="number">0154</span>) <span class="operator">in</span> Mnesia table</span><br><span class="line">mod_rest            HTTP interface <span class="built_in">to</span> POST stanzas <span class="keyword">into</span> ejabberd</span><br><span class="line">mod_s2s_log         Log all s2s connections <span class="operator">in</span> <span class="operator">a</span> <span class="built_in">file</span></span><br><span class="line">mod_shcommands      Execute <span class="built_in">shell</span> commands</span><br><span class="line">mod_statsdx         Calculates <span class="operator">and</span> gathers statistics actively</span><br><span class="line">mod_webpresence     Publish user presence information <span class="operator">in</span> <span class="operator">the</span> web</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装一个模块</li>
+</ul>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ejabberdctl</span> module_install mod_cron</span><br></pre></td></tr></table></figure>
+<p>该命令从<a href="https://github.com/processone/ejabberd-contrib" target="_blank" rel="external">ejabberd-contrib</a>仓库安装<code>mod_cron</code>模块</p>
+<p><code>$HOME/.ejabberd-modules/mod_cron/conf/mod_cron.yml</code></p>
+<h2 id="原文">原文</h2><p><a href="https://blog.process-one.net/easy-installer-and-structure-for-ejabberd-contributed-modules" target="_blank" rel="external">https://blog.process-one.net/easy-installer-and-structure-for-ejabberd-contributed-modules</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>从Ejabberd版本<a href="https://github.com/processone/ejabberd/commit/aa1250a3ddf952119982970acc8a743dda6c1041" target="_blank" rel="external]]>
+    </summary>
+    
+      <category term="Modules" scheme="http://developerworks.github.io/tags/Modules/"/>
+    
+      <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Ejabberd Howto 20150312 <TODO LIST>]]></title>
+    <link href="http://developerworks.github.io/2015/03/13/ejabberd-howto-20150312/"/>
+    <id>http://developerworks.github.io/2015/03/13/ejabberd-howto-20150312/</id>
+    <published>2015-03-12T16:17:23.000Z</published>
+    <updated>2015-03-12T19:24:21.000Z</updated>
+    <content type="html"><![CDATA[<ul>
+<li><p>如何使用15.02中新增的Websocket?</p>
+<p>  <a href="https://github.com/processone/ejabberd/search?utf8=%E2%9C%93&amp;q=websocket" target="_blank" rel="external">https://github.com/processone/ejabberd/search?utf8=%E2%9C%93&amp;q=websocket</a></p>
+</li>
+<li><p>新增的SM(Session Manager)数据库后端有什么用处?</p>
+<p>  <a href="https://github.com/processone/ejabberd/commit/72d9b099c6a8c73c691cb45ba9e422d69fb55db8#" target="_blank" rel="external">https://github.com/processone/ejabberd/commit/72d9b099c6a8c73c691cb45ba9e422d69fb55db8#</a></p>
+</li>
+<li><p>如何使用新增的集群脚本?</p>
+<p>  <a href="https://github.com/processone/ejabberd/tree/master/tools" target="_blank" rel="external">https://github.com/processone/ejabberd/tree/master/tools</a></p>
+</li>
+<li><p>如何配置和使用<a href="https://github.com/processone/ejabberd-contrib" target="_blank" rel="external">ejabberd-modules</a>仓库中的模块?</p>
+<p>  <a href="https://github.com/processone/ejabberd/commit/f77622067b80bd0e75400f7f5e4b1ae5f6884e8d" target="_blank" rel="external">https://github.com/processone/ejabberd/commit/f77622067b80bd0e75400f7f5e4b1ae5f6884e8d</a></p>
+</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<ul>
+<li><p>如何使用15.02中新增的Websocket?</p>
+<p>  <a href="https://github.com/processone/ejabberd/search?utf8=%E2%9C%93&amp;q=websocket" target="]]>
+    </summary>
+    
+      <category term="Howto" scheme="http://developerworks.github.io/tags/Howto/"/>
+    
+      <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Ejabberd 性能调优(草稿)]]></title>
+    <link href="http://developerworks.github.io/2015/03/12/ejabberd-performance-turning/"/>
+    <id>http://developerworks.github.io/2015/03/12/ejabberd-performance-turning/</id>
+    <published>2015-03-12T13:13:41.000Z</published>
+    <updated>2015-03-17T16:58:15.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="第一阶段">第一阶段</h2><p>目标10W并发连接</p>
+<h2 id="进程打开文件数限制">进程打开文件数限制</h2><ol>
+<li>编辑 <code>/etc/pam.d/login</code>,取消<code>pam_limits.so</code>的注释</li>
+</ol>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Sets up user limits according <span class="keyword">to</span> /etc/security/limits.conf</span><br><span class="line"># (Replaces the <span class="keyword">use</span> <span class="keyword">of</span> /etc/limits <span class="keyword">in</span> old login)</span><br><span class="line">session    required   pam_limits.so</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>/etc/security/limits.conf</code></li>
+</ol>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">root</span>    soft    nofile  <span class="number">320000</span></span><br><span class="line"><span class="literal">root</span>    hard    nofile  <span class="number">320000</span></span><br></pre></td></tr></table></figure>
+<p>我们在root账户下测试, 如何验证该设置是否生效?</p>
+<p>exit 退出shell, 重新登录执行<code>ulimit -a</code>查看<code>open files</code>是否为<code>320000</code></p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">root<span class="annotation">@ci</span>:~# ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 127413</span><br><span class="line">max locked memory       (kbytes, -l) 64</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 320000</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 127413</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+<h2 id="启动参数">启动参数</h2><p>Ejabberd的启动参数可以在配置文件<code>/etc/ejabberd/ejabberdctl.cfg</code>中进行调整</p>
+<ul>
+<li><p><code>ERL_MAX_PORTS</code></p>
+<p>  每个到客户端(s2c)和服务器(s2s)的连接消耗一个<code>port</code>, <code>ERL_MAX_PORTS</code>定义了Ejabberd可以支持的并发连接数. 其可以在配置文件<code>/etc/ejabberd/ejabberdctl.cfg</code>中指定, 默认值为<code>32000</code>.</p>
+<p>  大并发连接场景下的应用需要增大该参数的值.</p>
+</li>
+<li><p><code>ERL_PROCESSES</code></p>
+<p>  Erlang消耗很多轻量级进程, 如果Ejabberd比较繁忙, 可能会达到进程数上限, 这种情况会导致高延迟. 当消息延迟过高时, 需要判断是否是由于该参数引起的.</p>
+</li>
+</ul>
+<h2 id="内核参数调整">内核参数调整</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_syncookies</span> = <span class="number">1</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_tw_reuse</span> = <span class="number">1</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_tw_recycle</span> = <span class="number">0</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_timestamps</span> = <span class="number">1</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_max_syn_backlog</span> = <span class="number">65535</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_fin_timeout</span> = <span class="number">30</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_rmem</span> = <span class="number">4096</span> <span class="number">4096</span> <span class="number">16777216</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_wmem</span> = <span class="number">4096</span> <span class="number">4096</span> <span class="number">16777216</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.ip_local_port_range</span> = <span class="number">1025</span> <span class="number">65000</span></span><br><span class="line">fs<span class="class">.file-max</span> = <span class="number">65535000</span></span><br><span class="line">net<span class="class">.core</span><span class="class">.rmem_max</span> = <span class="number">16777216</span></span><br><span class="line">net<span class="class">.core</span><span class="class">.wmem_max</span> = <span class="number">16777216</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_rmem</span> = <span class="number">4096</span> <span class="number">87380</span> <span class="number">16777216</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_wmem</span> = <span class="number">4096</span> <span class="number">65536</span> <span class="number">16777216</span></span><br><span class="line">net<span class="class">.core</span><span class="class">.netdev_max_backlog</span> = <span class="number">30000</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.tcp_mtu_probing</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>内核网络参数<code>net.ipv4.ip_local_port_range</code>指定了本地程序可以打开的端口范围. <code>61000-32768=28232</code>可以最多建立28232个到Ejabberd服务器的连接, 一般比这个数字小, 系统还有其他程序需要占用端口.</p>
+<ul>
+<li><code>net.ipv4.tcp_tw_recycle = 1</code> 快速回收TCP连接, 避免TIME_WAIT时间过长</li>
+</ul>
+<p>修改端口范围<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo <span class="number">1024</span> <span class="number">65535</span> &gt; /<span class="keyword">proc</span>/sys/net/ipv4/ip_local_port_range</span><br></pre></td></tr></table></figure></p>
+<h2 id="排查">排查</h2><ul>
+<li>查看ulimit</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ulimit</span> <span class="operator">-a</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>验证进程的最大可打开文件 <code>Max open files</code></li>
+</ul>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">root@scm:~# cat /<span class="keyword">proc</span>/18938/limits<span class="symbol"></span><br><span class="line">Limit</span> <span class="symbol">                    Soft</span> Limit<span class="symbol">           Hard</span> Limit<span class="symbol">           Units</span></span><br><span class="line">Max<span class="symbol"> cpu</span> time<span class="symbol">              unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           seconds</span></span><br><span class="line">Max<span class="symbol"> file</span> size<span class="symbol">             unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> data</span> size<span class="symbol">             unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> stack</span> size            8388608<span class="symbol">              unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> core</span> file<span class="symbol"> size</span>        0<span class="symbol">                    unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> resident</span> set<span class="symbol">          unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> processes</span>             127460               127460<span class="symbol">               processes</span></span><br><span class="line">Max<span class="symbol"> open</span> files            60000                60000<span class="symbol">                files</span></span><br><span class="line">Max<span class="symbol"> locked</span> memory         65536                65536<span class="symbol">                bytes</span></span><br><span class="line">Max<span class="symbol"> address</span> space<span class="symbol">         unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           bytes</span></span><br><span class="line">Max<span class="symbol"> file</span> locks<span class="symbol">            unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           locks</span></span><br><span class="line">Max<span class="symbol"> pending</span> signals       127460               127460<span class="symbol">               signals</span></span><br><span class="line">Max<span class="symbol"> msgqueue</span> size         819200               819200<span class="symbol">               bytes</span></span><br><span class="line">Max<span class="symbol"> nice</span> priority         0                    0<span class="symbol"></span><br><span class="line">Max</span> realtime<span class="symbol"> priority</span>     0                    0<span class="symbol"></span><br><span class="line">Max</span> realtime<span class="symbol"> timeout</span> <span class="symbol">     unlimited</span> <span class="symbol">           unlimited</span> <span class="symbol">           us</span></span><br></pre></td></tr></table></figure>
+<h2 id="Mnesia表过载">Mnesia表过载</h2><p>编辑配置文件<code>/etc/ejabberd/ejabberdctl.cfg</code>, 设置选项:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">ERL_OPTIONS=<span class="value"><span class="string">"-mnesia dump_log_write_threshold 50000 -mnesia dc_dump_limit 40"</span></span></span></span><br></pre></td></tr></table></figure>
+<p>当前版本的SHELL脚本有BUG, 需要使用<code>\</code>转义, 如下:</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ERL_OPTIONS</span>=<span class="string">"-mnesia\ dump_log_write_threshold\ 50000\ -mnesia\ dc_dump_limit\ 40"</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><p>文件描述符<br><a href="http://erlangcentral.org/wiki/index.php?title=Introduction_to_Load_Testing_with_Tsung#Max_open_file_descriptor_limit" target="_blank" rel="external">http://erlangcentral.org/wiki/index.php?title=Introduction_to_Load_Testing_with_Tsung#Max_open_file_descriptor_limit</a></p>
+</li>
+<li><p>虚拟接口<br><a href="http://erlangcentral.org/wiki/index.php?title=Introduction_to_Load_Testing_with_Tsung#Virtual_interfaces" target="_blank" rel="external">http://erlangcentral.org/wiki/index.php?title=Introduction_to_Load_Testing_with_Tsung#Virtual_interfaces</a></p>
+</li>
+<li><p>Mnesia过载问题<br><a href="http://blog.include.io/archives/106" target="_blank" rel="external">http://blog.include.io/archives/106</a><br><a href="http://www.tuicool.com/articles/rIBbqa" target="_blank" rel="external">http://www.tuicool.com/articles/rIBbqa</a></p>
+</li>
+<li><p>Tsung 常见问题<br><a href="http://tsung.erlang-projects.org/user_manual/faq.html" target="_blank" rel="external">http://tsung.erlang-projects.org/user_manual/faq.html</a></p>
+</li>
+<li><p><a href="http://blog.fnil.net/index.php/archives/276/" target="_blank" rel="external">http://blog.fnil.net/index.php/archives/276/</a></p>
+</li>
+<li><p>幻灯片-安装过程(需要梯子)<br><a href="http://www.slideshare.net/ngocdaothanh/tsung-13985127?related=1" target="_blank" rel="external">http://www.slideshare.net/ngocdaothanh/tsung-13985127?related=1</a></p>
+</li>
+<li><p>Performance Tuning<br><a href="https://www.ejabberd.im/tuning" target="_blank" rel="external">https://www.ejabberd.im/tuning</a></p>
+</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="第一阶段">第一阶段</h2><p>目标10W并发连接</p>
+<h2 id="进程打开文件数限制">进程打开文件数限制</h2><ol>
+<li>编辑 <code>/etc/pam.d/login</code>,取消<code>pam_limits.so</co]]>
+    </summary>
+    
+      <category term="Performance" scheme="http://developerworks.github.io/tags/Performance/"/>
+    
+      <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[使用Tsung对Ejabberd进行性能测试]]></title>
+    <link href="http://developerworks.github.io/2015/03/12/ejabberd-benchmark-with-tsung/"/>
+    <id>http://developerworks.github.io/2015/03/12/ejabberd-benchmark-with-tsung/</id>
+    <published>2015-03-12T10:16:24.000Z</published>
+    <updated>2015-03-17T13:44:17.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="测试环境">测试环境</h2><ul>
+<li><p>操作系统:</p>
+<p>  <code>Ubuntu Server 14.04</code></p>
+</li>
+<li><p>Erlang版本</p>
+<p>  <code>OTP 17.4</code></p>
+</li>
+<li><p>Ejabberd版本</p>
+<p>  <code>15.02</code></p>
+</li>
+</ul>
+<h2 id="依赖包">依赖包</h2><p>安装生成报告需要的<code>gnuplot</code>软件包和<code>Template.pm</code> Perl模块.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get <span class="operator"><span class="keyword">install</span> -y gnuplot</span><br><span class="line">apt-<span class="keyword">get</span> <span class="keyword">install</span> -y templatetoolkit-perl</span></span><br></pre></td></tr></table></figure>
+<h2 id="命令行">命令行</h2><h2 id="编写配置文件">编写配置文件</h2><h2 id="生成报告">生成报告</h2><p><code>tsung</code> 会在你的Home目录<code>~/.tsung/log</code>中生成测试报告, 进入到报告目录执行 <code>/usr/lib/tsung/bin/tsung_stats.pl</code> 可在报告目录下生成HTML格式的统计信息, 可用浏览器打开查看.</p>
+<p>例如:</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">root</span>@scm:cd ~/.tsung/log/<span class="number">20150312</span>-<span class="number">1407</span></span><br><span class="line"><span class="literal">root</span>@scm:/usr/lib/tsung/bin/tsung_stats.pl</span><br><span class="line"><span class="literal">root</span>@scm:~/.tsung/log/<span class="number">20150312</span>-<span class="number">1746</span><span class="comment"># ll</span></span><br><span class="line">drwxr-xr-x <span class="number">2</span> <span class="literal">root</span> <span class="literal">root</span>     <span class="number">4096</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">20</span>:<span class="number">28</span> data/</span><br><span class="line">-rw-r--r-- <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>    <span class="number">13720</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">20</span>:<span class="number">32</span> gnuplot.log</span><br><span class="line">drwxr-xr-x <span class="number">2</span> <span class="literal">root</span> <span class="literal">root</span>     <span class="number">4096</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">20</span>:<span class="number">28</span> gnuplot_scripts/</span><br><span class="line">-rw-r--r-- <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>     <span class="number">7166</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">20</span>:<span class="number">32</span> graph.html</span><br><span class="line">drwxr-xr-x <span class="number">2</span> <span class="literal">root</span> <span class="literal">root</span>     <span class="number">4096</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">20</span>:<span class="number">28</span> images/</span><br><span class="line">-rw-r--r-- <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>     <span class="number">1388</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">17</span>:<span class="number">46</span> jabber_register.xml</span><br><span class="line">-rw-r--r-- <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>  <span class="number">1011724</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">17</span>:<span class="number">51</span> match.log</span><br><span class="line">-rw-r--r-- <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>     <span class="number">8169</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">20</span>:<span class="number">32</span> report.html</span><br><span class="line">-rw-r--r-- <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span> <span class="number">23789099</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">17</span>:<span class="number">51</span> tsung_controller@scm.log</span><br><span class="line">-rw-r--r-- <span class="number">1</span> <span class="literal">root</span> <span class="literal">root</span>    <span class="number">20601</span> <span class="constant">Mar</span> <span class="number">12</span> <span class="number">17</span>:<span class="number">51</span> tsung.log</span><br></pre></td></tr></table></figure>
+<h2 id="用多个虚拟IP增大并发量">用多个虚拟IP增大并发量</h2><p>设置临时虚拟IP(重启后消失)</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ifconfig</span> eth1:<span class="number">0</span> <span class="number">192.168.8.35</span> netmask <span class="number">255.255.255.0</span> up</span><br><span class="line">ifconfig eth1:<span class="number">1</span> <span class="number">192.168.8.36</span> netmask <span class="number">255.255.255.0</span> up</span><br><span class="line">ifconfig eth1:<span class="number">2</span> <span class="number">192.168.8.37</span> netmask <span class="number">255.255.255.0</span> up</span><br></pre></td></tr></table></figure>
+<p><a href="http://tsung.erlang-projects.org/user_manual/conf-client-server.html#advanced-setup" target="_blank" rel="external">http://tsung.erlang-projects.org/user_manual/conf-client-server.html#advanced-setup</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">clients</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"louxor"</span> <span class="attribute">weight</span>=<span class="value">"1"</span> <span class="attribute">maxusers</span>=<span class="value">"800"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ip</span> <span class="attribute">value</span>=<span class="value">"10.9.195.12"</span>&gt;</span><span class="tag">&lt;/<span class="title">ip</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ip</span> <span class="attribute">value</span>=<span class="value">"10.9.195.13"</span>&gt;</span><span class="tag">&lt;/<span class="title">ip</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">client</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"memphis"</span> <span class="attribute">weight</span>=<span class="value">"3"</span> <span class="attribute">maxusers</span>=<span class="value">"600"</span> <span class="attribute">cpu</span>=<span class="value">"2"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">clients</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">servers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">server</span> <span class="attribute">host</span>=<span class="value">"10.9.195.1"</span> <span class="attribute">port</span>=<span class="value">"8080"</span> <span class="attribute">type</span>=<span class="value">"tcp"</span>&gt;</span><span class="tag">&lt;/<span class="title">server</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">servers</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>多个虚拟IP可以用于模拟多个机器. 这在负载均衡器使用客户端IP把流量分布到集群中的服务器上时特别有用. 在<code>tsung 1.1.1</code>中IP不再是强制要求了.</p>
+<p>在<code>1.4.0</code>中, 可以使用<code>&lt;ip scan=&quot;yes&quot; value=&quot;eth0&quot;/&gt;</code>扫描给定接口的所有IP别名(此例中为<code>eth0</code>)</p>
+<blockquote>
+<p>Even if an Erlang VM is now able to handle several CPUs (erlang SMP), benchmarks shows that it’s more efficient to use one VM per CPU (with SMP disabled) for tsung clients. Only the controller node is using SMP erlang. Therefore, <strong>cpu should be equal to the number of cores of your nodes</strong>. If you prefer to use erlang SMP, add the <code>-s</code> option when starting tsung (and don’t set <code>cpu</code> in the config file).</p>
+</blockquote>
+<p>默认, 负载均匀分地布在所有CPU上(默认每客户端一个CPU). 权重(weight)参数(整数)可用于分布客户端机器的负载比例.</p>
+<p>例如, 如果一个客户端具有权重为1,其他客户端有权重为2, 那么后者启动的用户数为前者的两倍(比例将为1/3和2/3), 在先前的例子中, 第二个客户端又2个CPU,权重为3, 每CPU的权重为1.5</p>
+<h2 id="分布式测试">分布式测试</h2><p><img src="/assets/ejabberd/distributed-test.jpg" alt="分布式测试"></p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;client <span class="variable">host=</span><span class="string">"t1"</span> <span class="variable">cpu=</span><span class="string">"8"</span> <span class="variable">maxusers=</span><span class="string">"100000"</span>&gt;&lt;/client&gt;</span><br><span class="line">&lt;client <span class="variable">host=</span><span class="string">"t2"</span> <span class="variable">cpu=</span><span class="string">"8"</span> <span class="variable">maxusers=</span><span class="string">"100000"</span>&gt;&lt;/client&gt;</span><br><span class="line">&lt;client <span class="variable">host=</span><span class="string">"t3"</span> <span class="variable">cpu=</span><span class="string">"8"</span> <span class="variable">maxusers=</span><span class="string">"100000"</span>&gt;&lt;/client&gt;</span><br></pre></td></tr></table></figure>
+<p><a href="http://my.oschina.net/jielucky/blog/168320" target="_blank" rel="external">http://my.oschina.net/jielucky/blog/168320</a></p>
+<h2 id="分布式测试的关键">分布式测试的关键</h2><ul>
+<li>相同的Erlang Cookie</li>
+<li>控制器主机(Master)能够无密码登陆到(Slave)机器上, Master/Slave的机器必须都要安装Tsung<br>-</li>
+</ul>
+<h1 id="参考资料">参考资料</h1><ol>
+<li><a href="http://tsung.erlang-projects.org/user_manual/reports.html" target="_blank" rel="external">http://tsung.erlang-projects.org/user_manual/reports.html</a></li>
+<li><a href="http://blog.chinaunix.net/uid-13189580-id-3049461.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-13189580-id-3049461.html</a></li>
+<li><a href="http://my.oschina.net/jielucky/blog/168320" target="_blank" rel="external">http://my.oschina.net/jielucky/blog/168320</a></li>
+<li><a href="http://stackoverflow.com/questions/23011544/simulating-online-user-in-ejabberd-with-tsung" target="_blank" rel="external">http://stackoverflow.com/questions/23011544/simulating-online-user-in-ejabberd-with-tsung</a></li>
+<li><a href="http://www.quora.com/Ejabberd-load-test-with-tsung" target="_blank" rel="external">http://www.quora.com/Ejabberd-load-test-with-tsung</a></li>
+<li><a href="http://vidorsolutions.blogspot.jp/2010/12/load-testing-ejabberd-xmpp-server-with.html" target="_blank" rel="external">http://vidorsolutions.blogspot.jp/2010/12/load-testing-ejabberd-xmpp-server-with.html</a></li>
+<li><a href="https://pdincau.wordpress.com/2010/08/01/testing-your-xmpp-external-component-using-tsung-and-ejabberd-part-2/" target="_blank" rel="external">https://pdincau.wordpress.com/2010/08/01/testing-your-xmpp-external-component-using-tsung-and-ejabberd-part-2/</a></li>
+<li><a href="http://cryolite.iteye.com/blog/378758" target="_blank" rel="external">http://cryolite.iteye.com/blog/378758</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="测试环境">测试环境</h2><ul>
+<li><p>操作系统:</p>
+<p>  <code>Ubuntu Server 14.04</code></p>
+</li>
+<li><p>Erlang版本</p>
+<p>  <code>OTP 17.4</code><]]>
+    </summary>
+    
+      <category term="Tsung" scheme="http://developerworks.github.io/tags/Tsung/"/>
+    
+      <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[thrift_ex]]></title>
+    <link href="http://developerworks.github.io/2015/03/11/thrift-ex/"/>
+    <id>http://developerworks.github.io/2015/03/11/thrift-ex/</id>
+    <published>2015-03-11T05:34:42.000Z</published>
+    <updated>2015-03-11T05:38:42.000Z</updated>
+    <content type="html"><![CDATA[<p>如果用mix构建Erlang项目, 使用<code>mix thrift</code>从<code>.thrift</code>文件生成Erlang代码. 生成的代码保存在<code>src/gen-erl</code>目录中. 还可以在<code>lib/ex_gen</code>生成Elixir包装.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>如果用mix构建Erlang项目, 使用<code>mix thrift</code>从<code>.thrift</code>文件生成Erlang代码. 生成的代码保存在<code>src/gen-erl</code>目录中. 还可以在<code>lib/ex_gen</]]>
+    </summary>
+    
+      <category term="Thrift" scheme="http://developerworks.github.io/tags/Thrift/"/>
+    
+      <category term="Elixir" scheme="http://developerworks.github.io/categories/Elixir/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[(译) Ejabberd加入了Elixir的变革]]></title>
+    <link href="http://developerworks.github.io/2015/02/26/ejabberd-joins-the-elixir-revolution/"/>
+    <id>http://developerworks.github.io/2015/02/26/ejabberd-joins-the-elixir-revolution/</id>
+    <published>2015-02-26T10:13:36.000Z</published>
+    <updated>2015-03-17T16:53:19.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/assets/elixir/ejabberd_elixir.jpg" alt="Ejabberd加入了Elixir的变革"></p>
+<p>原文:</p>
+<p><a href="https://blog.process-one.net/ejabberd-joins-the-elixir-revolution/" target="_blank" rel="external">https://blog.process-one.net/ejabberd-joins-the-elixir-revolution/</a></p>
+<h2 id="前提条件">前提条件</h2><p>安装Erlang R17</p>
+<p>克隆Ejabberd源码添加Elixir支持.</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone git@github<span class="class">.com</span>:processone/ejabberd<span class="class">.git</span></span><br><span class="line">cd ejabberd</span><br><span class="line">chmod +x autogen<span class="class">.sh</span></span><br><span class="line">./autogen<span class="class">.sh</span></span><br><span class="line">./configure --prefix=<span class="variable">$HOME</span>/my-ejabberd --enable-elixir</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cd $HOME<span class="regexp">/my-ejabberd/</span></span><br><span class="line">.<span class="regexp">/sbin/</span>ejabberdctl live</span><br><span class="line"></span><br><span class="line">(ejabberd<span class="annotation">@localhost</span>)<span class="number">1</span>&gt; m(<span class="string">'Elixir.Enum'</span>).</span><br><span class="line">Module <span class="string">'Elixir.Enum'</span> <span class="string">compiled:</span> <span class="string">Date:</span> January <span class="number">24</span> <span class="number">2015</span>, <span class="string">Time:</span> <span class="number">16.27</span></span><br><span class="line">Compiler <span class="string">options:</span>  [debug_info]</span><br><span class="line">Object <span class="string">file:</span> <span class="regexp">/Users/</span>mremond<span class="regexp">/my-ejabberd/</span>lib<span class="regexp">/ejabberd/</span>ebin/Elixir.Enum.beam</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h2 id="用Elixir编写ejabberd插件">用Elixir编写ejabberd插件</h2><p>现在可以用Elixir来编写插件, 并注册钩子扩展ejabberd的功能.</p>
+<p>把<code>*.ex</code>插件文件放到ejabberd的<code>lib</code>目录中, 让编译链知道如何编译它们.</p>
+<p>在ejabberd的<code>lib/</code>目录中,添加如下文件<code>mod_presence_demo.ex</code>:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ModPresenceDemo</span> </span><span class="keyword">do</span></span><br><span class="line">  <span class="variable">@behaviour</span> <span class="symbol">:gen_mod</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">start</span>(<span class="constant">_host,</span> <span class="constant">_opts)</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="symbol">:ok</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">stop</span>(<span class="constant">_host)</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="symbol">:ok</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>这是一个最小的ejabberd模块, 为了演示, 我们现在忽略<code>host</code>和<code>options</code>.</p>
+<p>当你在Shell中敲入<code>make</code>, 模块应该能够正确的构建. 当执行<code>make install</code>时, 它会被安装到正确的位置.</p>
+<p>现在可以在ejabberd配置文件<code>ejabberd.yml</code>中添加模块配置了, 向下面这样:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">modules:</span><br><span class="line"><span class="keyword">...</span></span><br><span class="line">  ModPresenceDemo: &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>你可以直接使用模块的名称, Ejabberd会检测到这是一个Elixir模块,并能够正确的使用它.</p>
+<p>下面来扩展一下这个模块的功能:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ModPresenceDemo</span> </span><span class="keyword">do</span></span><br><span class="line">  import <span class="constant">Ejabberd.Logger </span><span class="comment"># this allow using info, error, etc for logging</span></span><br><span class="line">  <span class="variable">@behaviour</span> <span class="symbol">:gen_mod</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">start</span>(host, <span class="constant">_opts)</span> </span><span class="keyword">do</span></span><br><span class="line">    info(<span class="string">'Starting ejabberd module Presence Demo'</span>)</span><br><span class="line">    <span class="constant">Ejabberd.Hooks.</span>add(<span class="symbol">:set_presence_hook</span>, host, <span class="constant">__ENV__.</span><span class="keyword">module</span>, <span class="symbol">:on_presence</span>, <span class="number">50</span>)</span><br><span class="line">    <span class="symbol">:ok</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">stop</span>(host) </span><span class="keyword">do</span></span><br><span class="line">    info(<span class="string">'Stopping ejabberd module Presence Demo'</span>)</span><br><span class="line">    <span class="constant">Ejabberd.Hooks.</span>delete(<span class="symbol">:set_presence_hook</span>, host, <span class="constant">__ENV__.</span><span class="keyword">module</span>, <span class="symbol">:on_presence</span>, <span class="number">50</span>)</span><br><span class="line">    <span class="symbol">:ok</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">on_presence</span>(user, <span class="constant">_server,</span> <span class="constant">_resource,</span> <span class="constant">_packet)</span> </span><span class="keyword">do</span></span><br><span class="line">    info(<span class="string">'Receive presence for <span class="subst">#&#123;user&#125;</span>'</span>)</span><br><span class="line">    <span class="symbol">:none</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>当启动ejabberd的时候, 应该能够在日志中看到如下输出:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">15<span class="pseudo">:17</span><span class="pseudo">:58</span><span class="class">.913</span> <span class="attr_selector">[info]</span> <span class="tag">Starting</span> <span class="tag">ejabberd</span> <span class="tag">module</span> <span class="tag">Presence</span> <span class="tag">Demo</span> <span class="tag">test</span></span><br></pre></td></tr></table></figure>
+<p>And anytime an XMPP client changes its presence, you should see the following in the log file:</p>
+<p>任何时候, 如果客户端改变其在线状态(presence), 你可以看到如下输出:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">15<span class="pseudo">:30</span><span class="pseudo">:01</span><span class="class">.266</span> <span class="attr_selector">[info]</span> <span class="tag">Receive</span> <span class="tag">presence</span> <span class="tag">for</span> <span class="tag">test</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="https://blog.process-one.net/elixir-sips-ejabberd-with-elixir-part-1" target="_blank" rel="external">https://blog.process-one.net/elixir-sips-ejabberd-with-elixir-part-1</a></li>
+</ol>
+<h2 id="修订">修订</h2><ul>
+<li>2015-03-18<ul>
+<li>添加参考Elixir Sips的视频讲解连接</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/assets/elixir/ejabberd_elixir.jpg" alt="Ejabberd加入了Elixir的变革"></p>
+<p>原文:</p>
+<p><a href="https://blog.process-one.net/ejabber]]>
+    </summary>
+    
+      <category term="Elixir" scheme="http://developerworks.github.io/tags/Elixir/"/>
+    
+      <category term="Erlang" scheme="http://developerworks.github.io/tags/Erlang/"/>
+    
+      <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[HTTP/2 尝鲜]]></title>
+    <link href="http://developerworks.github.io/2015/02/25/http2-h2o-get-started/"/>
+    <id>http://developerworks.github.io/2015/02/25/http2-h2o-get-started/</id>
+    <published>2015-02-25T09:16:51.000Z</published>
+    <updated>2015-02-25T09:34:27.000Z</updated>
+    <content type="html"><![CDATA[<p>最近发布了HTTP/2的正式标准, 下面通过简单几个步骤尝尝鲜.</p>
+<h2 id="软件要求:">软件要求:</h2><ul>
+<li>Firefox/36.0 (36.0正式支持HTTP/2)</li>
+</ul>
+<ul>
+<li>H20/1.0</li>
+</ul>
+<p>编译和安装</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="built_in">get</span> install -<span class="keyword">y</span> cmake</span><br><span class="line"><span class="keyword">cd</span> /tmp</span><br><span class="line">git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/h2o/h2o.git</span><br><span class="line"><span class="keyword">cd</span> h2o</span><br><span class="line">cmake -DCMAKE_INSTALL_PREFIX=/usr/local .</span><br><span class="line"><span class="keyword">make</span></span><br><span class="line">sudo <span class="keyword">make</span> install</span><br></pre></td></tr></table></figure>
+<ul>
+<li>启动</li>
+</ul>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">h2o -c examples<span class="regexp">/h2o/</span>h2o.conf</span><br></pre></td></tr></table></figure>
+<ul>
+<li>打开Firefox在地址栏中输入:</li>
+</ul>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># HTTP</span></span><br><span class="line">http:<span class="comment">//192.168.8.200:8080</span></span><br><span class="line"><span class="preprocessor"># HTTPS</span></span><br><span class="line">https:<span class="comment">//192.168.8.200:8081</span></span><br></pre></td></tr></table></figure>
+<p><img src="/assets/http2/487154F3-B4E1-45BA-B157-4B12184FF14C.png" alt="It works"></p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li>HTTP/2服务器实现清单<br><a href="https://github.com/http2/http2-spec/wiki/Implementations" target="_blank" rel="external">https://github.com/http2/http2-spec/wiki/Implementations</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近发布了HTTP/2的正式标准, 下面通过简单几个步骤尝尝鲜.</p>
+<h2 id="软件要求:">软件要求:</h2><ul>
+<li>Firefox/36.0 (36.0正式支持HTTP/2)</li>
+</ul>
+<ul>
+<li>H20/1.0</li>
+</u]]>
+    </summary>
+    
+      <category term="H2O" scheme="http://developerworks.github.io/tags/H2O/"/>
+    
+      <category term="HTTP2" scheme="http://developerworks.github.io/categories/HTTP2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Escalus 一个Ejabberd服务器测试工具]]></title>
+    <link href="http://developerworks.github.io/2015/02/13/ejabberd-escalus/"/>
+    <id>http://developerworks.github.io/2015/02/13/ejabberd-escalus/</id>
+    <published>2015-02-12T17:35:15.000Z</published>
+    <updated>2015-03-12T19:26:38.000Z</updated>
+    <content type="html"><![CDATA[<p>Escalus 是一个Erlang XMPP客户端库. 它最开始是作为一个XMPP服务器测试工具产生, 但也可以用作独立的Erlang应用程序.</p>
+<p>和Tsung这类只做压力测试不验证正确性的工具相比, Escalus的目标是检查服务器行为的正确性.</p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li>项目仓库<br><a href="https://github.com/esl/escalus" target="_blank" rel="external">https://github.com/esl/escalus</a></li>
+<li>简介文档<br><a href="https://github.com/esl/escalus/blob/master/docs/intro.md" target="_blank" rel="external">https://github.com/esl/escalus/blob/master/docs/intro.md</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Escalus 是一个Erlang XMPP客户端库. 它最开始是作为一个XMPP服务器测试工具产生, 但也可以用作独立的Erlang应用程序.</p>
+<p>和Tsung这类只做压力测试不验证正确性的工具相比, Escalus的目标是检查服务器行为的正确性.</p>
+<h]]>
+    </summary>
+    
+      <category term="Escalus" scheme="http://developerworks.github.io/tags/Escalus/"/>
+    
+      <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[使用RefactorErl重构你的Erlang模块和应用程序]]></title>
+    <link href="http://developerworks.github.io/2015/02/12/erlang-refactoring-your-erlang-module-and-application-with-refactorerl/"/>
+    <id>http://developerworks.github.io/2015/02/12/erlang-refactoring-your-erlang-module-and-application-with-refactorerl/</id>
+    <published>2015-02-12T03:29:17.000Z</published>
+    <updated>2015-02-17T12:05:23.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<h2 id="序">序</h2></blockquote>
+<p>本文是一篇介绍如何使用工具重构Erlang程序的文章. 本文以分析,阅读和重构Ejabberd 14.12作为示例, 演示如何重构一个现有的Erlang模块, 和应用程序.</p>
+<p>本文的演示系统是基于Ubuntu 14.04, 并且带图形界面安装, 后续需要用到的重构工具都需要图形界面, 实际操作前, 请准备好相关的系统环境.</p>
+<p>不建议使用非Linux进行本文的实验, 因为非Linux或多或少有一些软件兼容性问题, 会给实验过程带来不必要的麻烦, 如果你的操作系统是非Linux, 可安装VMWare, VirtualBox等虚拟机搭建本文的重构操作需要的实验环境.</p>
+<p>本文是一个入门的介绍性文章, 要把RefactorErl用到你的工作中, 还需要阅读大量的相关资料,理解很多概念,请参考文章末尾的参考资料.</p>
+<blockquote>
+<h2 id="简介">简介</h2></blockquote>
+<p>RefactorErl 是一个源代码分析和转换,重构工具, 是欧洲几个大学的联合研究项目, 写作本文的时候, <code>RefactorErl</code>的版本为<code>0.9.14.09</code></p>
+<blockquote>
+<h2 id="编译">编译</h2></blockquote>
+<p>系统环境 Ubuntu 14.04</p>
+<h3 id="安装Yaws_Web服务器">安装Yaws Web服务器</h3><p>Yaws Web服务器是构建基于浏览器的重构工具所需要的, 如果需要在浏览器上体验RefactorErl的功能, 需要安装Yaws Web服务器. 官方推荐使用<code>1.95</code>版本的Yaws.</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="comment">//yaws.hyber.org/download/yaws-1.95.tar.gz</span></span><br><span class="line">tar zxf yaws-<span class="number">1.95</span>.tar.gz</span><br><span class="line">cd yaws-<span class="number">1.95</span></span><br><span class="line"># 编辑如下文件,把<span class="number">1250</span>行的 <span class="string">`HashBin = crypto:sha(Salted),`</span></span><br><span class="line"># 改为 <span class="string">`HashBin = crypto:hash(sha, Salted),`</span> 否则会导致编译出错.</span><br><span class="line">vi src/yaws_websocket.erl</span><br><span class="line">./configure</span><br><span class="line"><span class="built_in">make</span></span><br><span class="line"><span class="built_in">make</span> install</span><br></pre></td></tr></table></figure>
+<h3 id="安装graphviz">安装graphviz</h3><p>生成模块依赖图需要使用到<code>graphviz</code></p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="keyword">get</span> install -y graphviz</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h2 id="编译RefactorErl">编译RefactorErl</h2></blockquote>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">wget</span> <span class="url">http://plc.inf.elte.hu/erlang/dl/refactorerl-0.9.14.09.tar.gz</span></span><br><span class="line">tar zxf refactorerl-<span class="number">0.9.14.09</span>.tar.gz</span><br><span class="line">cd refactorerl-<span class="number">0.9.14.09</span></span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+<blockquote>
+<h2 id="运行">运行</h2></blockquote>
+<p>进入RefactorErl Shell执行各种分析操作.</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># -<span class="keyword">db</span> 参数标识使用的数据库引擎</span><br><span class="line"># 目前支持 Mnesia, C++ <span class="keyword">graph</span> based 和 KyotoCabinet based <span class="keyword">graph</span> 三种存储后端</span><br><span class="line">bin/referl -<span class="keyword">db</span> kcmini</span><br></pre></td></tr></table></figure>
+<p>在RefactorErl Shell中设置用于浏览器分析界面的登陆密码</p>
+<pre><code>referl_ui_web2:<span class="function"><span class="title">set_web2_pass</span><span class="params">(<span class="string">"admin"</span>, <span class="string">"admin"</span>)</span></span>.
+</code></pre><p>命令行方式直接启动Web UI</p>
+<pre><code>bin<span class="regexp">/referl -web2 -yaws_path /u</span>sr<span class="regexp">/local/</span>lib<span class="regexp">/yaws/</span>ebin -yaws_listen <span class="number">192.168</span>.<span class="number">8.132</span> -yaws_port <span class="number">8001</span>
+</code></pre><p>SHELL方式启动</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">ri:</span>start_web2([</span><br><span class="line">    &#123;yaws_path,<span class="string">"/usr/local/lib/yaws/ebin"</span>&#125;,</span><br><span class="line">    &#123;yaws_listen,<span class="string">"192.168.8.132"</span>&#125;,</span><br><span class="line">    &#123;yaws_name , <span class="string">"192.168.8.132"</span>&#125;,</span><br><span class="line">    &#123;yaws_port , <span class="string">"8001"</span>&#125;,</span><br><span class="line">    &#123;browser_root , <span class="string">"/tmp/erlang"</span>&#125;,</span><br><span class="line">    &#123;images_dir , <span class="string">"/tmp/graph_images"</span>&#125;,</span><br><span class="line">    &#123;restricted_mode , <span class="literal">true</span> &#125;</span><br><span class="line">]).</span><br></pre></td></tr></table></figure>
+<p>在浏览器中打开: <code>http://192.168.8.132:8001/</code></p>
+<p>停止</p>
+<pre><code>ri:<span class="function"><span class="title">stop_web2</span><span class="params">()</span></span>.
+</code></pre><ul>
+<li>启动RefactorErl</li>
+</ul>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/referl -<span class="keyword">db</span> nif</span><br></pre></td></tr></table></figure>
+<ul>
+<li>设置Web2密码</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">referl_ui_web2:<span class="function"><span class="title">set_web2_pass</span><span class="params">(<span class="string">"admin"</span>, <span class="string">"admin"</span>)</span></span>.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>添加文件到数据库引擎</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/deps/p1_xml/include/xml.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/deps/esip/include/esip.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/jlib.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/adhoc.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/ejabberd_config.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/ejabberd.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/ejabberd_web_admin.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/ELDAPv3.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/jlib.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/mod_muc_room.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/mod_proxy65.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/ns.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/XmppAddr.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/ejabberd_commands.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/ejabberd_ctl.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/ejabberd_http.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/eldap.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/http_bind.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/logger.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/mod_privacy.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/mod_roster.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/include/pubsub.hrl"</span>)</span></span>.</span><br><span class="line">ri:<span class="function"><span class="title">add</span><span class="params">(<span class="string">"/root/sources/ejabberd/src"</span>)</span></span>.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>启动Web2</li>
+</ul>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">ri:</span>start_web2([</span><br><span class="line">    &#123;yaws_path,<span class="string">"/usr/local/lib/yaws/ebin"</span>&#125;,</span><br><span class="line">    &#123;yaws_listen,<span class="string">"192.168.8.102"</span>&#125;,</span><br><span class="line">    &#123;yaws_name , <span class="string">"192.168.8.102"</span>&#125;,</span><br><span class="line">    &#123;yaws_port , <span class="string">"8001"</span>&#125;,</span><br><span class="line">    &#123;browser_root , <span class="string">"/tmp/erlang"</span>&#125;,</span><br><span class="line">    &#123;images_dir , <span class="string">"/tmp/graph_images"</span>&#125;,</span><br><span class="line">    &#123;restricted_mode , <span class="literal">true</span> &#125;</span><br><span class="line">]).</span><br></pre></td></tr></table></figure>
+<ul>
+<li>打开连接</li>
+</ul>
+<p><a href="http://192.168.8.132:8001" target="_blank" rel="external">http://192.168.8.132:8001</a></p>
+<ul>
+<li>登陆Web2分析界面</li>
+</ul>
+<p>用户名: admin<br>密码: admin</p>
+<blockquote>
+<h2 id="参考资料">参考资料</h2></blockquote>
+<ol>
+<li>视频介绍<br><a href="https://erlangcentral.org/erlang-factory-2014-refactorerl-supports-your-daily-work" target="_blank" rel="external">https://erlangcentral.org/erlang-factory-2014-refactorerl-supports-your-daily-work</a></li>
+<li>项目首页<br><a href="http://plc.inf.elte.hu/erlang/index.html" target="_blank" rel="external">http://plc.inf.elte.hu/erlang/index.html</a></li>
+<li>用户手册(PDF)<br><a href="http://plc.inf.elte.hu/erlang/dl/manual_12_01.pdf" target="_blank" rel="external">http://plc.inf.elte.hu/erlang/dl/manual_12_01.pdf</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<h2 id="序">序</h2></blockquote>
+<p>本文是一篇介绍如何使用工具重构Erlang程序的文章. 本文以分析,阅读和重构Ejabberd 14.12作为示例, 演示如何重构一个现有的Erlang模块, 和应用程序.</p>
+<p]]>
+    </summary>
+    
+      <category term="RefactorErl" scheme="http://developerworks.github.io/tags/RefactorErl/"/>
+    
+      <category term="Erlang" scheme="http://developerworks.github.io/categories/Erlang/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何使用PM2部署一个Node.js项目]]></title>
+    <link href="http://developerworks.github.io/2015/02/07/nodejs-how-to-use-pm2-to-deploy-a-project/"/>
+    <id>http://developerworks.github.io/2015/02/07/nodejs-how-to-use-pm2-to-deploy-a-project/</id>
+    <published>2015-02-07T15:05:51.000Z</published>
+    <updated>2015-02-07T17:25:02.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="创建一个新项目用于部署">创建一个新项目用于部署</h2><p>第一步我们需要创建一个项目</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir pm2_<span class="built_in">test</span> &amp;&amp; <span class="built_in">cd</span> pm2_<span class="built_in">test</span></span><br><span class="line">npm init</span><br></pre></td></tr></table></figure>
+<p>然后创建初始化一个Express项目</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">express</span> init</span><br></pre></td></tr></table></figure>
+<p>第三步安装依赖模块</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="keyword">install</span></span><br></pre></td></tr></table></figure>
+<p>现在一个基本的Express项目就创建好了.</p>
+<h2 id="初始化部署配置文件">初始化部署配置文件</h2><p>执行</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p<span class="title">m2</span> ecosystem</span><br></pre></td></tr></table></figure>
+<p>会在当前目录下生成一个<code>ecosystem.json5</code>文件</p>
+<p>重命名</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv ecosystem<span class="class">.json5</span> ecosystem.json</span><br></pre></td></tr></table></figure>
+<p>编辑<code>ecosystem.json</code>, 设置几个选项</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">...</span></span><br><span class="line">deploy : &#123;</span><br><span class="line">  production : &#123;</span><br><span class="line">    user : <span class="string">"root"</span>,            // 登陆用户名</span><br><span class="line">    host : <span class="string">"servername"</span>,      // 要部署的目标服务器IP地址或域名</span><br><span class="line">    ref  : <span class="string">"origin/master"</span>,   // 用于部署的Git仓库分支</span><br><span class="line">    repo : <span class="string">"https://github.com/developerworks/pm2_test.git"</span>,  // Git仓库位置</span><br><span class="line">    path : <span class="string">"/var/www/production"</span>, // 部署目标服务器文件系统位置</span><br><span class="line">    <span class="string">"post-deploy"</span> : <span class="string">"pm2 startOrRestart ecosystem.json --env production"</span>  // 部署后启动</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">...</span></span><br></pre></td></tr></table></figure>
+<p>执行部署</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 deploy ecosystem<span class="class">.json</span> production</span><br></pre></td></tr></table></figure>
+<p>更新部署</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">pm2</span> deploy production update</span><br></pre></td></tr></table></figure>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="https://github.com/Unitech/PM2/blob/development/ADVANCED_README.md" target="_blank" rel="external">https://github.com/Unitech/PM2/blob/development/ADVANCED_README.md</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="创建一个新项目用于部署">创建一个新项目用于部署</h2><p>第一步我们需要创建一个项目</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="lin]]>
+    </summary>
+    
+      <category term="PM2" scheme="http://developerworks.github.io/tags/PM2/"/>
+    
+      <category term="Node.js" scheme="http://developerworks.github.io/categories/Node-js/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[复制公匙到服务器的两种方式]]></title>
+    <link href="http://developerworks.github.io/2015/02/07/copy-ssh-id/"/>
+    <id>http://developerworks.github.io/2015/02/07/copy-ssh-id/</id>
+    <published>2015-02-07T14:59:27.000Z</published>
+    <updated>2015-02-07T15:01:36.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="第一种">第一种</h2><p>在有<code>ssh-copy-id</code>工具的系统上, 比如Linux</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-<span class="keyword">copy</span>-<span class="property">id</span> username@domain</span><br></pre></td></tr></table></figure>
+<h2 id="第二种">第二种</h2><p>在没有<code>ssh-copy-id</code>工具的系统上, 比如Mac OS X</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat ~<span class="regexp">/.ssh/id</span>_rsa.pub | ssh username<span class="variable">@domain</span> <span class="string">"cat &gt;&gt; ~/.ssh/authorized_keys"</span></span><br></pre></td></tr></table></figure>]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="第一种">第一种</h2><p>在有<code>ssh-copy-id</code>工具的系统上, 比如Linux</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><p]]>
+    </summary>
+    
+      <category term="SSH" scheme="http://developerworks.github.io/tags/SSH/"/>
+    
+      <category term="Linux" scheme="http://developerworks.github.io/categories/Linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Etco 简介]]></title>
+    <link href="http://developerworks.github.io/2015/02/01/elixir-etco-intro/"/>
+    <id>http://developerworks.github.io/2015/02/01/elixir-etco-intro/</id>
+    <published>2015-02-01T04:11:23.000Z</published>
+    <updated>2015-02-02T04:56:36.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="Ecto_简介">Ecto 简介</h2><p>Ecto是一种领域语言(DSL), 用于在Elixir中编写数据库查询,和其他数据库操作. Ecto是用Elixir语言开发的一个关系型数据库工具.</p>
+<p>本章主要介绍如何在Elixir项目中使用Ecto</p>
+<h2 id="主要组件">主要组件</h2><p>Ecto有三个主要组件: 库(Repositories), 模型(Models), 和查询(Queries)</p>
+<h3 id="Ecto_库">Ecto 库</h3><p>库是一个数据库的封装, 可以通过如下方式定义一个库:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Repo</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Repo,</span> <span class="symbol">adapter:</span> <span class="constant">Ecto.Adapters.Postgres</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">conf</span> </span><span class="keyword">do</span></span><br><span class="line">        parse_url <span class="string">"ecto://username:password@localhost/ecto_simple"</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>Ecto当前仅支持Postgresql数据库, 未来会支持其他数据库.</p>
+<p>在Ecto中每个库通过定义一个<code>start_link/0</code>函数, 该函数需要在使用库(Repository)之前调用. 该函数不会直接调用, 而是通过一个<code>supervisor</code>链.<br>找到<code>supervisor.ex</code>并使用下面的<code>init/1</code>函数启动一个<code>supervisor</code>:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span>([]) </span><span class="keyword">do</span></span><br><span class="line">    tree = [worker(<span class="constant">Repo,</span> [])]</span><br><span class="line">    supervise(tree, <span class="symbol">strategy:</span> <span class="symbol">:one_for_all</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="Ecto_模型">Ecto 模型</h3><p>模型是用于定义在查询,验证和回调中使用的模式(Schema), 下面是一个模式定义的例子:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Weather</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Model</span></span><br><span class="line">    <span class="comment"># weather is the DB table</span></span><br><span class="line">    schema <span class="string">"weather"</span> <span class="keyword">do</span></span><br><span class="line">        field <span class="symbol">:city</span>,    <span class="symbol">:string</span></span><br><span class="line">        field <span class="symbol">:temp_lo</span>, <span class="symbol">:integer</span></span><br><span class="line">        field <span class="symbol">:temp_hi</span>, <span class="symbol">:integer</span></span><br><span class="line">        field <span class="symbol">:prcp</span>,    <span class="symbol">:float</span>, <span class="symbol">default:</span> <span class="number">0</span>.<span class="number">0</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>还可以定义<code>primary_key</code>, <code>foreign_key</code> <code>belongs_to</code>等. 模式的详细信息可<a href="http://elixir-lang.org/docs/ecto/Ecto.Model.Schema.html" target="_blank" rel="external">查看文档</a>.</p>
+<p>定义了模式后, Ecto自动地定义一个包含模式字段的结构:</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">weather = <span class="preprocessor">%</span>Weather&#123;temp_lo: <span class="number">30</span>&#125;</span><br><span class="line">weather.temp_lo <span class="title">#=&gt; 30</span></span><br></pre></td></tr></table></figure>
+<p>模型和数据库交互:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">weather = %Weather&#123;<span class="string">temp_lo:</span> <span class="number">0</span>, <span class="string">temp_hi:</span> <span class="number">23</span>&#125;</span><br><span class="line">Repo.insert(weather)</span><br></pre></td></tr></table></figure>
+<p>插入数据库, 返回一个<code>weather</code>的拷贝, 可以通过返回的这个值从数据库中读取一个结构:</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 读取数据</span></span><br><span class="line">weather = Repo.<span class="keyword">get</span> Weather, <span class="number">1</span></span><br><span class="line"><span class="preprocessor">#=&gt; %Weather&#123;id: 1, ...&#125;</span></span><br><span class="line"><span class="preprocessor"># 更新</span></span><br><span class="line">weather = %&#123;weather | temp_lo: <span class="number">10</span>&#125;</span><br><span class="line">Repo.update(weather)</span><br><span class="line"><span class="preprocessor">#=&gt; :ok</span></span><br><span class="line"><span class="preprocessor"># 删除</span></span><br><span class="line">Repo.delete(weather)</span><br></pre></td></tr></table></figure>
+<h3 id="查询(Query)">查询(Query)</h3><p>最后一个组件让我们可以编写查询,并向Repository执行查询.</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import Ecto<span class="class">.Query</span></span><br><span class="line">query = from w <span class="keyword">in</span> Weather,</span><br><span class="line">        where w<span class="class">.prcp</span> &gt; <span class="number">0</span> or w<span class="class">.prcp</span> == nil,</span><br><span class="line">        select w</span><br><span class="line">Repo.<span class="function"><span class="title">all</span><span class="params">(query)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="移植(Migration)">移植(Migration)</h3><p>Ecto还支持数据库移植SQL脚本. 为了生成一个新的移植脚本, 需要高数ecto移植脚本在哪里(哪个目录, 相对于项目根目录).</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Repo</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Repo,</span> <span class="symbol">adapter:</span> <span class="constant">Ecto.Adapters.Postgres</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">priv</span> </span><span class="keyword">do</span></span><br><span class="line">        app_dir(<span class="symbol">:YOUR_APP_NAME</span>, <span class="string">"priv/repo"</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>然后, 可以通过<code>mix</code>工具生成移植脚本</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix ecto<span class="class">.gen</span><span class="class">.migration</span> Repo create_posts</span><br></pre></td></tr></table></figure>
+<p>该命令会在<code>priv/repo/migrations</code>目录中生成一个新的文件. 需要编写一个SQL命令来创建表结构, 已经创建一个删除表的命令.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Repo</span>.<span class="constant">CreatePosts </span></span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Ecto.Migration</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">up</span> </span><span class="keyword">do</span></span><br><span class="line">    [ <span class="string">"CREATE TABLE IF NOT EXISTS migrations_test(id serial primary key, name text)"</span>,</span><br><span class="line">      <span class="string">"INSERT INTO migrations_test (name) VALUES ('inserted')"</span> ]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">down</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="string">"DROP TABLE migrations_test"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>使用下面的命令, 运行所有PENDING状态的的移植脚本,</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix ecto<span class="class">.migrate</span> Repo</span><br></pre></td></tr></table></figure>
+<p>回滚</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mix</span> ecto.rollback Repo --<span class="built_in">all</span></span><br></pre></td></tr></table></figure>
+<p>Ecto的更多信息可以到<a href="https://github.com/elixir-lang/ecto" target="_blank" rel="external">Github上的Ecto项目</a>上获取, 或阅读<a href="http://elixir-lang.org/docs/ecto/" target="_blank" rel="external">Ecto文档</a></p>
+<h2 id="创建项目">创建项目</h2><p>简单介绍Ecto后, 是时候在项目中使用了. 下面创建一个名为 <code>elixir_jobs</code>的项目:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mix new elixir_<span class="built_in">jobs</span></span><br><span class="line"><span class="built_in">cd</span> exlixir_<span class="built_in">jobs</span></span><br></pre></td></tr></table></figure>
+<h3 id="安装Ecto">安装Ecto</h3><p>打开 <code>mix.exs</code> 文件. 需要<code>postgresql</code>驱动作为依赖, 这里我们使用<code>postgrex</code>.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">defp deps <span class="keyword">do</span></span><br><span class="line">    [&#123;<span class="symbol">:postgrex</span>, <span class="string">"0.5.2"</span>&#125;,</span><br><span class="line">     &#123;<span class="symbol">:ecto</span>, <span class="string">"0.2.0"</span>&#125;</span><br><span class="line">    ]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>更新应用程序列表包含<code>ecto</code>和<code>postgrex</code>.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">application</span> </span><span class="keyword">do</span></span><br><span class="line">    [<span class="symbol">applications:</span> [<span class="symbol">:postgrex</span>, <span class="symbol">:ecto</span>]]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>终端中运行<code>mix deps.get</code>获取依赖.</p>
+<h3 id="添加库(Repository)">添加库(Repository)</h3><p>A repo in ecto terms is the definition of a basic interface to a database,<br>in this case PostgreSQL. Open up lib/elixir_jobs/repo.ex and add the code below.<br>If the directory doesn’t exist, create it.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ElixirJobs</span>.<span class="constant">Repo </span></span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Repo,</span> <span class="symbol">adapter:</span> <span class="constant">Ecto.Adapters.Postgres</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">conf</span> </span><span class="keyword">do</span></span><br><span class="line">        parse_url <span class="string">"ecto://postgresuser:password@localhost/elixir_jobs"</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">priv</span> </span><span class="keyword">do</span></span><br><span class="line">        app_dir(<span class="symbol">:elixir_jobs</span>, <span class="string">"priv/repo"</span>)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>我们定义了PostgreSQL连接URL.</p>
+<p>你需要替换的时<code>postgresuser</code>, <code>password</code>和<code>elixir_jobs</code>数据库名称. 我们使用了移植功能,所以<code>priv</code>函数是必须的.</p>
+<p>我们只需要告诉Ecto移植脚本放在什么位置, 这个位置是<code>priv/repo</code>.</p>
+<p>接下来, 我们应该确保Repo模块随我们的应用程序一起启动. 打开<code>lib/elixir_jobs.ex</code>:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ElixirJobs</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Application</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start</span>(<span class="constant">_type,</span> <span class="constant">_args)</span> </span><span class="keyword">do</span></span><br><span class="line">        import <span class="constant">Supervisor.Spec</span></span><br><span class="line">        tree = [worker(<span class="constant">ElixirJobs,Repo,</span> [])]</span><br><span class="line">        opts = [<span class="symbol">name:</span> <span class="constant">ElixirJobs.Sup,</span> <span class="symbol">strategy:</span> <span class="symbol">:one_for_one</span>]</span><br><span class="line">        <span class="constant">Supervisor.</span>start_link(tree, opts)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>确保一切OK, 让我们编译该项目</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mix</span> compile</span><br></pre></td></tr></table></figure>
+<p>如果没有错误消息, 然后我们需要使用<code>psql</code>工具添加数据库<code>elixir_jobs</code>.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&gt;</span> psql -<span class="constant">Upostgresuser </span>-<span class="constant">W </span>template1</span><br><span class="line"><span class="constant">Password </span><span class="keyword">for</span> user <span class="symbol">postgresuser:</span></span><br><span class="line">template1=<span class="comment"># CREATE DATABASE elixir_jobs;</span></span><br><span class="line"><span class="constant">CREATE DATABASE</span></span><br><span class="line">template1=<span class="comment"># \q</span></span><br></pre></td></tr></table></figure>
+<p>使用<code>\q</code>退出<code>psql</code>, 然后添加一个模型用于查询.</p>
+<h3 id="添加模型(Models)">添加模型(Models)</h3><p>创建一个单独的文件 <code>lib/elixir_jobs/jobs.ex</code>,并输入下面的代码, 模型名称为<code>Jobs</code>.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ElixirJobs</span>.<span class="constant">Jobs </span></span><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">use</span> <span class="constant">Ecto.Model</span></span><br><span class="line"></span><br><span class="line">    schema <span class="string">"jobs"</span> <span class="keyword">do</span></span><br><span class="line">        field <span class="symbol">:title</span>, <span class="symbol">:string</span></span><br><span class="line">        field <span class="symbol">:type</span>, <span class="symbol">:string</span></span><br><span class="line">        field <span class="symbol">:description</span>, <span class="symbol">:string</span></span><br><span class="line">        field <span class="symbol">:status</span>, <span class="symbol">:string</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>运行<code>mix help</code>可以看到一组用于移植的命令</p>
+<h3 id="生成移植(Migration)脚本">生成移植(Migration)脚本</h3><p>我们使用 <code>mix ecto.gen.migration</code>生成移植脚本, 首先使用下面的命令创建一个移植脚本.</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$&gt; mix ecto.<span class="keyword">gen</span>.migration ElixirJobs.Repo create_job</span><br><span class="line"><span class="comment">* creating priv/repo/migrations</span></span><br><span class="line"><span class="comment">* creating priv/repo/migrations/20140802043823_create_job.exs</span></span><br></pre></td></tr></table></figure>
+<p>打开生成的<code>priv/repo/migrations/20140802043823_create_job.exs</code>文件. 在这个文件中, 我们还必须手工编写SQL命令用于创建和删除表.</p>
+<p>文件名<code>20140802043823_create_job.exs</code>依据生成的时间变化.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">ElixirJobs</span>.<span class="constant">Repo.Migrations.CreateJob </span></span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Ecto.Migration</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">up</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="string">"CREATE TABLE jobs(id serial primary key, title varchar(125), type varchar(50), description text, status varchar(50))"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">down</span> </span><span class="keyword">do</span></span><br><span class="line">    <span class="string">"DROP TABLE jobs"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>创建了移植脚本后, 我们就可以运行它了.</p>
+<h3 id="移植">移植</h3><p>运行移植非常容易, 像这样:</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$&gt; mix ecto.migrate ElixirJobs.Repo</span><br><span class="line">* running UP _build<span class="regexp">/dev/</span>lib<span class="regexp">/elixir_jobs/</span>priv<span class="regexp">/repo/mig</span>rations<span class="regexp">/20140802043823_create_job.exs</span></span><br></pre></td></tr></table></figure>
+<p>就这样! 如果你打开<code>elixir_jobs</code>数据库, 你会发现一个<code>jobs</code>表, 如下:</p>
+<figure class="highlight vhdl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> Column    |          <span class="keyword">Type</span>          |                     Modifiers</span><br><span class="line"><span class="comment">-------------+----------------------+---------------------------------------------------</span></span><br><span class="line"> id        | <span class="typename">integer</span>                | <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">default</span> nextval(<span class="attribute">'jobs_id_seq</span>'::regclass)</span><br><span class="line"> title     | <span class="typename">character</span> varying(<span class="number">125</span>) |</span><br><span class="line"> <span class="keyword">type</span>      | <span class="typename">character</span> varying(<span class="number">50</span>)  |</span><br><span class="line"> description| text                   |</span><br><span class="line"> status    | <span class="typename">character</span> varying(<span class="number">50</span>)  |</span><br></pre></td></tr></table></figure>
+<p>现在可以测试一下INSERT, UPDATE, DELETE以及SELECT操作了.</p>
+<h3 id="实际操作">实际操作</h3><p>启动<code>iex</code>测试我们的设置. 开始操作数据库之前, 需要使用<code>start_link</code>函数启动库(Repo), 否则会得到一个错误.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$&gt; iex -S mix</span><br><span class="line">Erlang/OTP <span class="number">17</span> [erts-<span class="number">6.0</span>] [<span class="built_in">source</span>] [<span class="number">64</span>-bit] [smp:<span class="number">4</span>:<span class="number">4</span>] [async-threads:<span class="number">10</span>] [hipe] [kernel-poll:<span class="literal">false</span>]</span><br><span class="line">Interactive Elixir (<span class="number">0.14</span>.<span class="number">1</span>) - press Ctrl+C to <span class="built_in">exit</span> (<span class="built_in">type</span> h() ENTER <span class="keyword">for</span> <span class="built_in">help</span>)</span><br><span class="line">iex(<span class="number">1</span>)&gt; ElixirJobs.Repo.start_link</span><br><span class="line">&#123;:ok, <span class="comment">#PID&lt;0.108.0&gt;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>如果返回<code>:ok</code>, 那么就可以使用定义模型时Ecto生成的结构插入数据了.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iex(<span class="number">2</span>)&gt; job = %ElixirJobs.Jobs&#123;<span class="string">title:</span> <span class="string">"Elixir Expert Needed"</span>, <span class="string">description:</span> <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="string">type:</span> <span class="string">"Remote"</span>, <span class="string">status:</span> <span class="string">"Part Time"</span>&#125;</span><br><span class="line">iex(<span class="number">3</span>)&gt; ElixirJobs.Repo.insert(job)</span><br><span class="line">%ElixirJobs.Jobs&#123;<span class="string">description:</span> <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="string">id:</span> <span class="number">2</span>, <span class="string">status:</span> <span class="string">"Part Time"</span>, <span class="string">title:</span> <span class="string">"Elixir Expert Needed"</span>, <span class="string">type:</span> <span class="string">"Remote"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>打开<code>jobs</code>表, 就可以看到刚刚插入的数据. 现在来读取数据:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex(<span class="number">4</span>)&gt; ejob = Repo.get(ElixirJobs.Jobs, <span class="number">1</span>)</span><br><span class="line">%ElixirJobs.Jobs&#123;<span class="string">description:</span> <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="string">id:</span> <span class="number">1</span>, <span class="string">status:</span> <span class="string">"Part Time"</span>, <span class="string">title:</span> <span class="string">"Elixir Expert Needed"</span>, <span class="string">type:</span> <span class="string">"Remote"</span>&#125;</span><br><span class="line">iex(<span class="number">5</span>)&gt; ejob.title</span><br><span class="line"><span class="string">"Elixir Expert Needed"</span></span><br></pre></td></tr></table></figure>
+<p>然后更新数据:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex(<span class="number">6</span>)&gt; ejob = %&#123;ejob | <span class="string">title:</span> <span class="string">"Elixir Writer Needed"</span>&#125;</span><br><span class="line">%ElixirJobs.Jobs&#123;<span class="string">description:</span> <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="string">id:</span> <span class="number">1</span>, <span class="string">status:</span> <span class="string">"Part Time"</span>, <span class="string">title:</span> <span class="string">"Elixir Writer Needed"</span>, <span class="string">type:</span> <span class="string">"Remote"</span>&#125;</span><br><span class="line">iex(<span class="number">7</span>)&gt; ElixirJobs.Repo.update(ejob)</span><br><span class="line">:ok</span><br></pre></td></tr></table></figure>
+<p>验证数据已经被更新:</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">iex</span>(<span class="number">8</span>)&gt; <span class="tag">ElixirJobs</span><span class="class">.Repo</span><span class="class">.get</span>(Jobs, <span class="number">1</span>)</span><br><span class="line">%<span class="tag">ElixirJobs</span><span class="class">.Jobs</span>&#123;<span class="attribute">description</span>: <span class="string">"ElixirDose need your help to produce a high quality Elixir article every month or two."</span>, <span class="attribute">d</span>: <span class="number">1</span>, <span class="attribute">status</span>: <span class="string">"Part Time"</span>, <span class="attribute">title</span>: <span class="string">"Elixir Writer Needed"</span>, <span class="attribute">type</span>: <span class="string">"Remote"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>现在, 删除数据:</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">iex</span><span class="params">(<span class="number">9</span>)</span></span>&gt; ElixirJobs<span class="class">.Repo</span><span class="class">.delete</span>(ejob)</span><br><span class="line">:ok</span><br><span class="line"><span class="function"><span class="title">iex</span><span class="params">(<span class="number">10</span>)</span></span>&gt; ElixirJobs<span class="class">.Repo</span><span class="class">.get</span>(Jobs, <span class="number">1</span>)</span><br><span class="line">nil</span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2><p>本文涵盖了Ecto的基本使用, 用DSL编写查询,以及和数据库交互.</p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="https://github.com/elixir-lang/ecto" target="_blank" rel="external">https://github.com/elixir-lang/ecto</a></li>
+<li><a href="http://www.youtube.com/watch?v=SJRfujy9vLA" target="_blank" rel="external">http://www.youtube.com/watch?v=SJRfujy9vLA</a></li>
+<li><a href="http://elixirsips.com/episodes/024_ecto_part_1.html" target="_blank" rel="external">http://elixirsips.com/episodes/024_ecto_part_1.html</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="Ecto_简介">Ecto 简介</h2><p>Ecto是一种领域语言(DSL), 用于在Elixir中编写数据库查询,和其他数据库操作. Ecto是用Elixir语言开发的一个关系型数据库工具.</p>
+<p>本章主要介绍如何在Elixir项目中使用Ecto</]]>
+    </summary>
+    
+      <category term="Ecto" scheme="http://developerworks.github.io/tags/Ecto/"/>
+    
+      <category term="Elixir" scheme="http://developerworks.github.io/tags/Elixir/"/>
+    
+      <category term="Elixir" scheme="http://developerworks.github.io/categories/Elixir/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[使用iconutil命令行工具制作App图标]]></title>
+    <link href="http://developerworks.github.io/2015/01/15/make-app-icns-images-using-iconutil-command-line/"/>
+    <id>http://developerworks.github.io/2015/01/15/make-app-icns-images-using-iconutil-command-line/</id>
+    <published>2015-01-15T14:09:38.000Z</published>
+    <updated>2015-01-16T03:47:02.000Z</updated>
+    <content type="html"><![CDATA[<p>iconutil是一个命令行工具, 用于在<code>.iconset</code>文件(实际上是一个图标集目录)和<code>.icns</code>文件之间转换.</p>
+<p>用到的图片可以从这里下载:</p>
+<p><a href="https://github.com/andrevvm/appicns" target="_blank" rel="external">https://github.com/andrevvm/appicns</a></p>
+<p>比如下面的命令, 把一个<code>1024x1024</code>的<code>netbook.icns</code>文件</p>
+<pre><code>iconutil -c iconset -o output<span class="class">.iconset</span> netbook.icns
+</code></pre><p>这个命令很简单,可以通过manpage查看:</p>
+<pre><code><span class="title">man</span> iconutil
+</code></pre><p>语法:</p>
+<pre><code>iconutil -c {icns | iconset} [-o <span class="type">file</span>] <span class="type">file</span>
+</code></pre><h2 id="生成的图标集效果">生成的图标集效果</h2><p><img src="/assets/images/9CA1D34F-1A00-47B3-A65A-EBB0636CF617.png" alt="图标集"></p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="http://stackoverflow.com/questions/12306223/how-to-manually-create-icns-files-using-iconutil" target="_blank" rel="external">http://stackoverflow.com/questions/12306223/how-to-manually-create-icns-files-using-iconutil</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>iconutil是一个命令行工具, 用于在<code>.iconset</code>文件(实际上是一个图标集目录)和<code>.icns</code>文件之间转换.</p>
+<p>用到的图片可以从这里下载:</p>
+<p><a href="https://github.c]]>
+    </summary>
+    
+      <category term="iconutil" scheme="http://developerworks.github.io/tags/iconutil/"/>
+    
+      <category term="Tools" scheme="http://developerworks.github.io/categories/Tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Erlang Ranch - 监听器]]></title>
+    <link href="http://developerworks.github.io/2015/01/14/erlang-ranch-listeners/"/>
+    <id>http://developerworks.github.io/2015/01/14/erlang-ranch-listeners/</id>
+    <published>2015-01-14T02:23:11.000Z</published>
+    <updated>2015-01-14T02:28:58.000Z</updated>
+    <content type="html"><![CDATA[<p>Ranch 是一个Erlang Tcp服务器Acceptor池的实现.</p>
+<p>监听器是一组进程, 其角色是在端口上监听新连接. 它管理一个Acceptor进程池,每个Acceptor阻塞,知道有新的连接请求到达</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Ranch 是一个Erlang Tcp服务器Acceptor池的实现.</p>
+<p>监听器是一组进程, 其角色是在端口上监听新连接. 它管理一个Acceptor进程池,每个Acceptor阻塞,知道有新的连接请求到达</p>
+]]>
+    </summary>
+    
+      <category term="Ranch" scheme="http://developerworks.github.io/tags/Ranch/"/>
+    
+      <category term="Erlang" scheme="http://developerworks.github.io/categories/Erlang/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[ElixirSublime 代码补全功能的异常问题.]]></title>
+    <link href="http://developerworks.github.io/2015/01/08/elixir-sublime-autocomplete-issue/"/>
+    <id>http://developerworks.github.io/2015/01/08/elixir-sublime-autocomplete-issue/</id>
+    <published>2015-01-08T07:50:36.000Z</published>
+    <updated>2015-01-08T08:21:01.000Z</updated>
+    <content type="html"><![CDATA[<p>最开始的问题是:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):&#10;  File &#34;/Applications/Sublime Text.app/Contents/MacOS/sublime_plugin.py&#34;, line 358, in on_query_completions&#10;    res = callback.on_query_completions(v, prefix, locations)&#10;  File &#34;/Users/user/Library/Application Support/Sublime Text 3/Packages/ElixirSublime/elixir_sublime.py&#34;, line 270, in on_query_completions&#10;    if not session.send(&#39;COMPLETE&#39;, expand_selection(view, locations[0], aliases=aliases)):&#10;  File &#34;/Users/user/Library/Application Support/Sublime Text 3/Packages/ElixirSublime/elixir_sublime.py&#34;, line 189, in send&#10;    self.socket.send(str.encode(cmd))&#10;AttributeError: &#39;NoneType&#39; object has no attribute &#39;send&#39;&#10;Traceback (most recent call last):&#10;  File &#34;/Applications/Sublime Text.app/Contents/MacOS/sublime_plugin.py&#34;, line 311, in on_activated_async&#10;    callback.on_activated_async(v)&#10;  File &#34;/Users/user/Library/Application Support/Sublime Text 3/Packages/ElixirSublime/elixir_sublime.py&#34;, line 255, in on_activated_async&#10;    self.on_load_async(view)&#10;  File &#34;/Users/user/Library/Application Support/Sublime Text 3/Packages/ElixirSublime/elixir_sublime.py&#34;, line 260, in on_load_async&#10;    ElixirSession.ensure(os.path.dirname(filename))&#10;  File &#34;/Users/user/Library/Application Support/Sublime Text 3/Packages/ElixirSublime/elixir_sublime.py&#34;, line 160, in ensure&#10;    session.connect()&#10;  File &#34;/Users/user/Library/Application Support/Sublime Text 3/Packages/ElixirSublime/elixir_sublime.py&#34;, line 179, in connect&#10;    self.socket, _ = _socket.accept()&#10;  File &#34;./socket.py&#34;, line 135, in accept&#10;socket.timeout: timed out</span><br></pre></td></tr></table></figure>
+<p>ElixirSublime日志</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;_io<span class="class">.TextIOWrapper</span> name=<span class="string">'/var/folders/m3/vn1yyrfx7l36cq6p8msc6wt80000gn/T/ElixirSublime.log'</span> mode=<span class="string">'w'</span> encoding=<span class="string">'US-ASCII'</span>&gt;</span><br></pre></td></tr></table></figure>
+<p>通过Sublime的日志文件看到ElixirSublime使用了一个Mix项目<code>~/Library/Application Support/Sublime Text 3/Packages/ElixirSublime/sublime_completion</code>,<br>其中需要的依赖<code>poison</code>没找到, 我就进入这个执行了一下:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix deps.<span class="keyword">get</span></span><br></pre></td></tr></table></figure>
+<p>结果又冒出一个证书问题.</p>
+<p><img src="/assets/elixir/hex.im-certificate-not-trusted.jpg" alt="hex.pm的证书不可信"></p>
+<p>上述问题, 请参考<a href="/2015/01/08/elixir-hex-certificate-not-trusted">Elixir 在Mac OS X上安装Hex.pm服务器证书不信任的问题</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最开始的问题是:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre]]>
+    </summary>
+    
+      <category term="Sublime" scheme="http://developerworks.github.io/tags/Sublime/"/>
+    
+      <category term="Elixir" scheme="http://developerworks.github.io/categories/Elixir/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Elixir 在Mac OS X上安装Hex.pm服务器证书不信任的问题]]></title>
+    <link href="http://developerworks.github.io/2015/01/08/elixir-hex-certificate-not-trusted/"/>
+    <id>http://developerworks.github.io/2015/01/08/elixir-hex-certificate-not-trusted/</id>
+    <published>2015-01-08T07:32:31.000Z</published>
+    <updated>2015-01-08T07:44:02.000Z</updated>
+    <content type="html"><![CDATA[<p>我的Mac OS X是用的MacPorts作为第三方软件包的管理器.</p>
+<p>wget是通过MacPorts安装的, 默认是不会包含服务器根证书的, 需要通过如下命令安装:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo port <span class="keyword">install</span> curl-ca-bundle</span><br></pre></td></tr></table></figure>
+<h2 id="参考资料:">参考资料:</h2><ol>
+<li><a href="http://blog.55minutes.com/2012/01/fixing-https-certificate-errors-in-wget-and-ruby/" target="_blank" rel="external">http://blog.55minutes.com/2012/01/fixing-https-certificate-errors-in-wget-and-ruby/</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>我的Mac OS X是用的MacPorts作为第三方软件包的管理器.</p>
+<p>wget是通过MacPorts安装的, 默认是不会包含服务器根证书的, 需要通过如下命令安装:</p>
+<figure class="highlight cmake"><table><tr>]]>
+    </summary>
+    
+      <category term="CURL" scheme="http://developerworks.github.io/tags/CURL/"/>
+    
+      <category term="Hex.pm" scheme="http://developerworks.github.io/tags/Hex-pm/"/>
+    
+      <category term="SSL" scheme="http://developerworks.github.io/tags/SSL/"/>
+    
+      <category term="Elixir" scheme="http://developerworks.github.io/categories/Elixir/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Elixir ExUnit测试]]></title>
+    <link href="http://developerworks.github.io/2015/01/06/elixir-mix-test/"/>
+    <id>http://developerworks.github.io/2015/01/06/elixir-mix-test/</id>
+    <published>2015-01-06T15:41:45.000Z</published>
+    <updated>2015-01-09T09:22:02.000Z</updated>
+    <content type="html"><![CDATA[<p>Mix的测试过程</p>
+<ul>
+<li>Mix首先启动应用程序</li>
+<li>Mix然后查找项目根目录下的<code>test</code>子目录, 查找模式为<code>test/**/_test.exs</code>, 所有匹配这个模式的Elixir脚本都本认为是测试代码.</li>
+</ul>
+<h2 id="给测试方法打标签">给测试方法打标签</h2><p>有的时候,为了加速测试过程,我们需要过滤那些依赖外部资源的测试,为此,我们可以给测试打上标签,排除那些标记为<code>ignore</code>的测试.</p>
+<p>首先需要在测试配置文件<code>test/test_helper.exs</code>中添加如下一行,用于排除外部测试</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExUnit.configure <span class="string">exclude:</span> [<span class="string">ignore:</span> <span class="literal">true</span>]</span><br></pre></td></tr></table></figure>
+<p>不依赖外部资源的代码都通过测试后, 如果你还需要做一次整体测试, 可以通过参数, 把标记为<code>ignore</code>,值为<code>true</code>的测试包含进来.</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix test --<span class="literal">include</span> <span class="literal">ignore</span>:<span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p>也可以指定所有包含标签<code>ignore</code>的测试,而不管其值是什么</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix test --<span class="literal">include</span> <span class="literal">ignore</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置测试">配置测试</h2><ul>
+<li><code>:test_paths</code> 指定测试代码的位置列表, 默认为<code>[&quot;test&quot;]</code>, 每个测试路径下面都应该包含一个<code>test_helper.exs</code>文件.</li>
+<li><code>:test_pattern</code> 测试匹配模式, 默认为<code>*_test.exs</code></li>
+<li><code>:test_coverage</code> 测试覆盖率选项</li>
+</ul>
+<h2 id="给测试打标记">给测试打标记</h2><p><img src="/assets/elixir/FB52C36C-1100-4CAA-B430-C4D932CEDBBE.png" alt="给测试打上@ignore标记"></p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix test --trace --<span class="literal">exclude</span> <span class="literal">ignore</span>:<span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p><img src="/assets/elixir/36FC718B-1167-4E3B-BCB2-9B8F06AE698C.jpg" alt="运行结果"></p>
+<p>关于测试的详细配置和说明,请参考<code>mix help test</code></p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="http://stackoverflow.com/questions/26150146/how-can-i-make-mix-run-only-specific-tests-from-my-suite-of-tests" target="_blank" rel="external">http://stackoverflow.com/questions/26150146/how-can-i-make-mix-run-only-specific-tests-from-my-suite-of-tests</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Mix的测试过程</p>
+<ul>
+<li>Mix首先启动应用程序</li>
+<li>Mix然后查找项目根目录下的<code>test</code>子目录, 查找模式为<code>test/**/_test.exs</code>, 所有匹配这个模式的Elixir脚本都本认为]]>
+    </summary>
+    
+      <category term="ExUnit" scheme="http://developerworks.github.io/tags/ExUnit/"/>
+    
+      <category term="Mix" scheme="http://developerworks.github.io/tags/Mix/"/>
+    
+      <category term="Elixir" scheme="http://developerworks.github.io/categories/Elixir/"/>
+    
+  </entry>
+  
+</feed>
