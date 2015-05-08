@@ -2,6 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://developerworks.github.io/2015/05/07/xmpp-xep-0279-server-ip-check/</loc>
+    <lastmod>2015-05-08T02:45:06.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/24/ejabberd-socket-infrastructure/</loc>
+    <lastmod>2015-04-20T09:10:47.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/23/thrift-messing-guide/</loc>
+    <lastmod>2015-03-23T05:09:27.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/23/ejabberd-clustering/</loc>
+    <lastmod>2015-03-22T14:14:49.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/12/ejabberd-performance-turning/</loc>
+    <lastmod>2015-03-20T19:03:06.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/12/ejabberd-benchmark-with-tsung/</loc>
+    <lastmod>2015-03-20T17:14:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2015/03/18/ejabberd-os-optimizations/</loc>
+    <lastmod>2015-03-18T17:18:07.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2015/03/18/angular-if-else-statement-in-template/</loc>
     <lastmod>2015-03-18T06:26:49.000Z</lastmod>
   </url>
@@ -9,11 +44,6 @@
   <url>
     <loc>http://developerworks.github.io/2015/03/18/continuous-deployment-of-node-js-applications/</loc>
     <lastmod>2015-03-18T06:20:12.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2015/03/12/ejabberd-performance-turning/</loc>
-    <lastmod>2015-03-17T16:58:15.000Z</lastmod>
   </url>
   
   <url>
@@ -47,11 +77,6 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2015/03/12/ejabberd-benchmark-with-tsung/</loc>
-    <lastmod>2015-03-17T13:44:17.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://developerworks.github.io/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/</loc>
     <lastmod>2015-03-17T05:27:03.000Z</lastmod>
   </url>
@@ -79,11 +104,6 @@
   <url>
     <loc>http://developerworks.github.io/2014/10/06/ejabberd-code-analysis-translate-auxiliary-tool/</loc>
     <lastmod>2015-03-12T19:29:08.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/23/ejabberd-clustering/</loc>
-    <lastmod>2015-03-12T19:28:50.000Z</lastmod>
   </url>
   
   <url>
@@ -117,17 +137,17 @@
   </url>
   
   <url>
+    <loc>http://developerworks.github.io/2014/09/24/xmpp-xep-0095-stream-initiation/</loc>
+    <lastmod>2015-03-12T19:27:44.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2014/09/22/xmpp-xep-0065-socks5-bytestreams/</loc>
     <lastmod>2015-03-12T19:27:44.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://developerworks.github.io/2014/09/20/xmpp-xep-0085-chat-status/</loc>
-    <lastmod>2015-03-12T19:27:44.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/24/xmpp-xep-0095-stream-initiation/</loc>
     <lastmod>2015-03-12T19:27:44.000Z</lastmod>
   </url>
   
@@ -142,12 +162,7 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/29/ejabberd-route-table/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/22/xmpp-xep-0047-in-bind-bytestreams/</loc>
+    <loc>http://developerworks.github.io/2014/09/25/ejabberd-modules-a-simple-echo-service/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -157,32 +172,7 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/15/xmpp-basic/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/16/xmpp-connection-managers/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/11/07/ejabberd-muc/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/26/ejabberd-modules-quickstart/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://developerworks.github.io/2014/10/03/strophejs-plugins-register/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/25/ejabberd-modules-a-simple-echo-service/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -192,12 +182,27 @@
   </url>
   
   <url>
+    <loc>http://developerworks.github.io/2014/11/07/ejabberd-muc/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/18/ejabberd-stream-management-for-mobile-3g-network/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/22/xmpp-xep-0047-in-bind-bytestreams/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2014/09/23/ejabberd-debugging/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/24/ejabberd-socket-infrastructure/</loc>
+    <loc>http://developerworks.github.io/2014/09/15/xmpp-basic/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -207,12 +212,12 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/29/ejabberd-modules-pitfalls/</loc>
+    <loc>http://developerworks.github.io/2014/09/26/ejabberd-modules-quickstart/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/12/18/ejabberd-stream-management-for-mobile-3g-network/</loc>
+    <loc>http://developerworks.github.io/2014/09/27/ejabberd-c2s-basic/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -237,17 +242,27 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/27/ejabberd-c2s-basic/</loc>
+    <loc>http://developerworks.github.io/2014/10/24/ejabberd-client-disconnect-by-kill/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/16/xmpp-connection-managers/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/29/ejabberd-modules-pitfalls/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/29/ejabberd-route-table/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://developerworks.github.io/2014/09/30/ejabberd-modules-get-room-member-list/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/10/24/ejabberd-client-disconnect-by-kill/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -262,12 +277,12 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/10/02/ejabberd-pubsub/</loc>
+    <loc>http://developerworks.github.io/2014/10/15/ejabberd-mod-logxml/</loc>
     <lastmod>2015-03-12T19:26:37.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/10/15/ejabberd-mod-logxml/</loc>
+    <loc>http://developerworks.github.io/2014/10/02/ejabberd-pubsub/</loc>
     <lastmod>2015-03-12T19:26:37.000Z</lastmod>
   </url>
   
@@ -332,17 +347,17 @@
   </url>
   
   <url>
+    <loc>http://developerworks.github.io/2014/12/08/nodejs-loopback-database-connector-example/</loc>
+    <lastmod>2015-01-29T17:12:24.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2014/12/08/nodejs-loopback-model-relations/</loc>
     <lastmod>2015-01-29T17:12:24.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://developerworks.github.io/2014/11/22/nodejs-loopback-getstarted/</loc>
-    <lastmod>2015-01-29T17:12:24.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/12/08/nodejs-loopback-database-connector-example/</loc>
     <lastmod>2015-01-29T17:12:24.000Z</lastmod>
   </url>
   
@@ -362,7 +377,12 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/10/24/elixir-learn-in-n-minutes/</loc>
+    <loc>http://developerworks.github.io/2014/11/01/elixir-deps/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/12/13/elixir-build-an-irc-logger/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
@@ -377,12 +397,17 @@
   </url>
   
   <url>
+    <loc>http://developerworks.github.io/2014/11/20/elixir-distributed-tasks-and-configuration/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2014/10/14/elixir-first/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/10/14/elixir-doc/</loc>
+    <loc>http://developerworks.github.io/2014/11/13/elixir-book-listing-app-with-phoenix-postgresql-and-ecto/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
@@ -397,12 +422,22 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/12/13/elixir-build-an-irc-logger/</loc>
+    <loc>http://developerworks.github.io/2014/10/14/elixir-doc/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://developerworks.github.io/2014/11/13/elixir-encoding/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/24/elixir-learn-in-n-minutes/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/11/10/elixir-anonymous-function/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
@@ -417,32 +452,7 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/11/10/elixir-anonymous-function/</loc>
-    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/11/04/elixir-create-custom-mix-tasks/</loc>
-    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/10/23/elixir-base64/</loc>
-    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://developerworks.github.io/2014/11/05/elixir-introduce-mix/</loc>
-    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/10/30/elixir-defdelegate/</loc>
-    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/11/19/elixir-bit-syntax-and-id3/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
@@ -452,17 +462,17 @@
   </url>
   
   <url>
+    <loc>http://developerworks.github.io/2014/11/04/elixir-create-custom-mix-tasks/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/30/elixir-defdelegate/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2014/11/13/elixir-deploy-phoenix-application-to-a-ubuntu-server/</loc>
-    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/11/01/elixir-deps/</loc>
-    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/11/20/elixir-distributed-tasks-and-configuration/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
@@ -472,12 +482,17 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/10/31/elixir-mix-and-otp-ch6-ets/</loc>
+    <loc>http://developerworks.github.io/2014/10/23/elixir-base64/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://developerworks.github.io/2014/11/21/elixir-tasks/</loc>
+    <lastmod>2015-01-29T17:01:18.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/31/elixir-mix-and-otp-ch6-ets/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   
@@ -492,7 +507,7 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/11/13/elixir-book-listing-app-with-phoenix-postgresql-and-ecto/</loc>
+    <loc>http://developerworks.github.io/2014/11/19/elixir-bit-syntax-and-id3/</loc>
     <lastmod>2015-01-29T17:01:18.000Z</lastmod>
   </url>
   

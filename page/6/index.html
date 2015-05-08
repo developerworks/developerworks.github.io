@@ -96,6 +96,189 @@
     <header>
       
         <!--<div class="icon"></div>-->
+        <time datetime="2014-09-29T12:30:48.000Z"><a href="/2014/09/29/ejabberd-important-records/">2014-09-29</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/09/29/ejabberd-important-records/">Ejabberd中几个重要的Record结构</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>Ejabberd中几非常重要的记录结构, 贯穿整个Ejabberd的开发, 非常基础, 如果不能很好的理解,那么几乎不能很好的扩展Ejabberd的功能.</p>
+<h2 id="jid"><code>jid</code></h2><p>Jabber 标识, 最基本的一个record结构, 定义在文件<code>$EJABBERD_SRC/include/jlib.hrl</code>中,包含6个字段</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-record(jid, <span class="keyword">&#123;</span><span class="keyword">user</span> = &lt;&lt;<span class="string">""</span>&gt;&gt; :: <span class="literal">binary</span>(),</span><br><span class="line">              server = &lt;&lt;<span class="string">""</span>&gt;&gt; :: <span class="literal">binary</span>(),</span><br><span class="line">              resource = &lt;&lt;<span class="string">""</span>&gt;&gt; :: <span class="literal">binary</span>(),</span><br><span class="line">              luser = &lt;&lt;<span class="string">""</span>&gt;&gt; :: <span class="literal">binary</span>(),</span><br><span class="line">              lserver = &lt;&lt;<span class="string">""</span>&gt;&gt; :: <span class="literal">binary</span>(),</span><br><span class="line">              lresource = &lt;&lt;<span class="string">""</span>&gt;&gt; :: <span class="literal">binary</span>()<span class="keyword">&#125;</span>).</span><br></pre></td></tr></table></figure>
+<h2 id="iq"><code>iq</code></h2><p>Info/Query 节, XMPP协议中三个基本的XML节之一, 并且是三个中最重要的一个, 大多数交互都是靠它来完成的. 定义在文件<code>$EJABBERD_SRC/include/jlib.hrl</code>中</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-record(iq, &#123;id = &lt;&lt;<span class="string">""</span>&gt;&gt;       :: binary(),</span><br><span class="line">             <span class="keyword">type</span> = get        :: get | <span class="type">set</span> | <span class="literal">result</span> | error,</span><br><span class="line">             xmlns = &lt;&lt;<span class="string">""</span>&gt;&gt;    :: binary(),</span><br><span class="line">             lang  = &lt;&lt;<span class="string">""</span>&gt;&gt;    :: binary(),</span><br><span class="line">             sub_el = <span class="comment">#xmlel&#123;&#125; :: xmlel() | [xmlel()]&#125;).</span></span><br></pre></td></tr></table></figure>
+<h2 id="xmlel"><code>xmlel</code></h2><p>一个XML元素记录, 用于构造自定义XML节</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-09-28T16:10:06.000Z"><a href="/2014/09/29/ejabberd-route-table/">2014-09-29</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/09/29/ejabberd-route-table/">Ejabberd-路由表</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>ejabberd内部模块可以通过一个XMPP名称(<code>-define(PROCNAME, ejabberd_mod_echo).</code>),添加自身到服务器的路由表中,这些模块被称为<code>服务</code>,服务模块必须同时实现<code>gen_server</code>和<code>gen_mod</code>行为</p>
+<h2 id="例子">例子</h2><p><a href="https://github.com/processone/ejabberd/blob/master/src/mod_echo.erl" target="_blank" rel="external">mod_echo.erl</a>是一个使用路由机制的例子.</p>
+<h2 id="API">API</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">ejabberd_router</span>:<span class="value"><span class="function">register_route</span>(Host)</span><br><span class="line">ejabberd_router:<span class="function">unregister_route</span>(Host),</span><br><span class="line">* Host = <span class="function">string</span>()</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="gen_server_API">gen_server API</h3><p>下面上个函数用作模块的API</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">start_link</span><span class="params">(Host, Opts)</span></span> -&gt;</span><br><span class="line">    Proc = gen_mod:<span class="function"><span class="title">get_module_proc</span><span class="params">(Host, ?PROCNAME)</span></span>,</span><br><span class="line">    gen_server:<span class="function"><span class="title">start_link</span><span class="params">(&#123;local, Proc&#125;, ?MODULE, [Host, Opts], [])</span></span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function_or_atom">start</span>(<span class="variable">Host</span>, <span class="variable">Opts</span>) <span class="arrow">-&gt;</span></span><br><span class="line">    <span class="variable">Proc</span> = <span class="function_or_atom">gen_mod:get_module_proc</span>(<span class="variable">Host</span>, <span class="constant">?PROCNAME</span>),</span><br><span class="line">    <span class="variable">ChildSpec</span> = &#123;<span class="variable">Proc</span>,&#123;<span class="constant">?MODULE</span>, <span class="function_or_atom">start_link</span>, [<span class="variable">Host</span>, <span class="variable">Opts</span>]&#125;, <span class="function_or_atom">temporary</span>, <span class="number">1000</span>, <span class="function_or_atom">worker</span>, [<span class="constant">?MODULE</span>]&#125;,</span><br><span class="line">    <span class="function_or_atom">supervisor:start_child</span>(<span class="function_or_atom">ejabberd_sup</span>, <span class="variable">ChildSpec</span>).</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">stop</span><span class="params">(Host)</span></span> -&gt;</span><br><span class="line">    Proc = gen_mod:<span class="function"><span class="title">get_module_proc</span><span class="params">(Host, ?PROCNAME)</span></span>,</span><br><span class="line">    gen_server:<span class="function"><span class="title">call</span><span class="params">(Proc, stop)</span></span>,</span><br><span class="line">    supervisor:<span class="function"><span class="title">terminate_child</span><span class="params">(ejabberd_sup, Proc)</span></span>,</span><br><span class="line">    supervisor:<span class="function"><span class="title">delete_child</span><span class="params">(ejabberd_sup, Proc)</span></span>.</span><br></pre></td></tr></table></figure>
+<h3 id="gen_server_回调">gen_server 回调</h3><p>下面的函数必须定义并导出.</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">init([Host, Opts]) -&gt; &#123;ok, State&#125; <span class="string">|</span></span><br><span class="line">                      &#123;ok, State, Timeout&#125; <span class="string">|</span></span><br><span class="line">                      ignore <span class="string">|</span></span><br><span class="line">                      &#123;stop, Reason&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">handle_info(Info, State) -&gt; <span class="list">&#123;noreply, State&#125;</span> |</span><br><span class="line">                            <span class="list">&#123;noreply, State, Timeout&#125;</span> |</span><br><span class="line">                            <span class="list">&#123;stop, Reason, State&#125;</span></span><br><span class="line">* Info = <span class="list">&#123;route, From, To, Packet&#125;</span></span><br><span class="line">* To = From = #jid (see jlib core module)</span><br><span class="line">* Packet = <span class="list">&#123;xmlelement, Name, Attrs, SubEl&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">terminate</span><span class="params">(Reason, State)</span></span> -&gt; <span class="function"><span class="title">void</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">handle_call</span><span class="params">(stop, <span class="variable">_From</span>, <span class="variable">State</span>)</span> -&gt;</span> <span class="tuple">&#123;stop, normal, ok, <span class="variable">State</span>&#125;</span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">handle_cast</span><span class="params">(<span class="variable">_Msg</span>, <span class="variable">State</span>)</span> -&gt;</span> <span class="tuple">&#123;noreply, <span class="variable">State</span>&#125;</span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">code_change</span><span class="params">(<span class="variable">_OldVsn</span>, <span class="variable">State</span>, <span class="variable">_Extra</span>)</span> -&gt;</span> <span class="tuple">&#123;ok, <span class="variable">State</span>&#125;</span>.</span><br></pre></td></tr></table></figure>
+<p><code>init</code>函数用于初始化模块.<code>Host</code>为模块所在虚拟主机名称,<code>Opts</code>为在配置文件中设置的模块选项,这些选项可以通过<strong><a href="https://www.process-one.net/en/wiki/gen_mod" target="_blank" rel="external">gen_mod:get_opt/3</a></strong>函数获取.<strong><a href="https://www.process-one.net/en/wiki/ejabberd_router" target="_blank" rel="external">ejabberd_router:register_route/1</a></strong>函数在<code>init</code>回调中执行.</p>
+<p><code>terminate/2</code>用于停止模块. <code>ejabberd_router:unregister_route</code>函数在此回调中被调用.</p>
+<p><code>handle_info/2</code>用于获取发送给该模块的XMPP包. <strong><a href="https://www.process-one.net/en/wiki/ejabberd_router" target="_blank" rel="external">ejabberd_router:route/1</a></strong>用于对包进行重新路由.</p>
+<p>All other callbacks can be written as shown above.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-09-28T15:28:55.000Z"><a href="/2014/09/28/ejabberd-iq-handlers/">2014-09-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/09/28/ejabberd-iq-handlers/">Ejabberd-IQ节处理程序</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>Ejabberd内部模块可以注册自身,并使用指定名称空间处理IQ节, 其方法类似于<a href="https://www.process-one.net/en/wiki/ejabberd_events_and_hooks" target="_blank" rel="external">事件和钩子</a>这种机制.</p>
+<p>模块<a href="https://github.com/processone/ejabberd/blob/master/src/mod_last.erl" target="_blank" rel="external">mod_last.erl</a>就使用了这种机制, 同时也使用了<a href="https://www.process-one.net/en/wiki/ejabberd_events_and_hooks" target="_blank" rel="external">事件和钩子</a></p>
+<h2 id="API">API</h2><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">gen_iq_handler:add_iq_handler(Scope, Host, <span class="keyword">Namespace</span>, <span class="keyword">Module</span>, <span class="function"><span class="keyword">Function</span>, <span class="title">IQDisc</span>)</span><br><span class="line"><span class="title">gen_iq_handler</span>:</span>remove_iq_handler(Scope, Host, <span class="keyword">Namespace</span>, <span class="keyword">Module</span>, <span class="function"><span class="keyword">Function</span>, <span class="title">IQDisc</span>)</span><br><span class="line">* <span class="title">Scope</span> = <span class="title">ejabberd_local</span> | <span class="title">ejabberd_sm</span></span><br><span class="line">* <span class="title">Namespace</span> = <span class="title">string</span><span class="params">()</span> <span class="params">(某些名称空间宏定义在jlib.hrl头文件中)</span></span><br><span class="line">* <span class="title">Host</span> = <span class="title">string</span><span class="params">()</span></span><br><span class="line">* <span class="title">Module</span> = <span class="title">atom</span><span class="params">()</span></span><br><span class="line">* <span class="title">Fonction</span> = <span class="title">atom</span><span class="params">()</span></span><br><span class="line">* <span class="title">IQDisc</span> = <span class="title">no_queue</span> | <span class="title">one_queue</span> | <span class="comment">&#123;queues, N&#125;</span> | <span class="title">parallel</span></span><br><span class="line">* <span class="title">N</span> = <span class="title">integer</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+<p><strong>ejabberd_local</strong>作用域用于注册发到服务器本身的<strong>IQ</strong>.<br><strong>ejabberd_sm</strong>作用域用于注册发送到一个账号的<strong>纯JID</strong>(Bare JID)的<strong>IQ</strong>,<strong>Host</strong>为与该<strong>IQ</strong>相关的虚拟主机名称.</p>
+<p><strong>Module</strong>和<strong>Function</strong>描述了一个处理器函数,当收到<strong>指定名称空间的IQ节</strong>时,该函数被调用.该处理器函数必须具有如下声明:</p>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Module</span>:<span class="keyword">Function</span>(<span class="keyword">From</span>, <span class="keyword">To</span>, IQ) -&gt; IQ</span><br><span class="line">* <span class="keyword">From</span> = <span class="keyword">To</span> = <span class="preprocessor">#jid</span></span><br><span class="line">* IQ = <span class="preprocessor">#iq</span></span><br></pre></td></tr></table></figure>
+<p>处理函数返回结果IQ (IQ-result), IQDisc描述当前IQ如何处理:</p>
+<p><strong>no_queue</strong>: 不创建新线程运行该处理程序<br><strong>one_queue</strong>: 创建一个专用线程运行该处理程序<br><strong>{queues, N}</strong>: 创建<strong>N</strong>个线程运行该处理程序<br><strong>parallel</strong>: 对每一个接收到的IQ创建一个线程</p>
+<h2 id="IQ处理模块模板">IQ处理模块模板</h2><p>修改以适应Ejabberd <strong>14.07</strong></p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">-module(mod_iqtest).</span><br><span class="line">-behaviour(gen_mod).</span><br><span class="line">-<span class="keyword">export</span>([start/<span class="number">2</span>, stop/<span class="number">1</span>,</span><br><span class="line">  process_sm_iq/<span class="number">3</span> %% I assume this <span class="keyword">is</span> needed to handle <span class="type">JID</span> to <span class="type">JID</span> communication <span class="keyword">of</span> the <span class="type">IQ</span>?</span><br><span class="line">]).</span><br><span class="line">-<span class="keyword">include</span>(<span class="string">"ejabberd.hrl"</span>).</span><br><span class="line">-<span class="keyword">include</span>(<span class="string">"jlib.hrl"</span>).</span><br><span class="line">-<span class="keyword">include</span>(<span class="string">"logger.hrl"</span>).</span><br><span class="line">-define(<span class="type">NS_TEST</span>, <span class="string">"http://jabber.org/protocol/test"</span>).</span><br><span class="line">-define(<span class="type">NS_TEST2</span>, <span class="string">"http://jabber.org/protocol/test2"</span>).</span><br><span class="line">start(<span class="type">Host</span>, <span class="type">Opts</span>) -&gt;</span><br><span class="line">  <span class="type">IQDisc</span> = gen_mod:get_opt(</span><br><span class="line">    iqdisc,</span><br><span class="line">    <span class="type">Opts</span>,</span><br><span class="line">    fun gen_iq_handler:check_type/<span class="number">1</span>,</span><br><span class="line">    one_queue</span><br><span class="line">  ),</span><br><span class="line">  gen_iq_handler:add_iq_handler(</span><br><span class="line">    ejabberd_sm, <span class="type">Host</span>, ?<span class="type">NS_TEST</span>, ?<span class="type">MODULE</span>, process_sm_iq, <span class="type">IQDisc</span></span><br><span class="line">  ),</span><br><span class="line">  gen_iq_handler:add_iq_handler(</span><br><span class="line">    ejabberd_sm, <span class="type">Host</span>, ?<span class="type">NS_TEST2</span>, ?<span class="type">MODULE</span>, process_sm_iq, <span class="type">IQDisc</span></span><br><span class="line">  ),</span><br><span class="line">  ?<span class="type">INFO_MSG</span>(<span class="string">"Loading module 'mod_iqtest' v.01"</span>, []).</span><br><span class="line">stop(<span class="type">Host</span>) -&gt;</span><br><span class="line">  gen_iq_handler:remove_iq_handler(</span><br><span class="line">    ejabberd_sm, <span class="type">Host</span>, ?<span class="type">NS_TEST</span></span><br><span class="line">  ),</span><br><span class="line">  gen_iq_handler:remove_iq_handler(</span><br><span class="line">    ejabberd_sm, <span class="type">Host</span>, ?<span class="type">NS_TEST2</span></span><br><span class="line">  ),</span><br><span class="line">  ?<span class="type">INFO_MSG</span>(<span class="string">"Stoping module 'mod_iqtest' "</span>, []).</span><br><span class="line">process_sm_iq(_From, _To, <span class="comment">#iq&#123;type = get, xmlns = ?NS_TEST&#125; = IQ) -&gt;</span></span><br><span class="line">  ?<span class="type">INFO_MSG</span>(<span class="string">"Processing IQ Get query:~n ~p"</span>, [<span class="type">IQ</span>]),</span><br><span class="line">  <span class="type">IQ</span><span class="comment">#iq&#123;</span></span><br><span class="line">    <span class="keyword">type</span> = <span class="literal">result</span>, sub_el = [&#123;xmlelement, <span class="string">"value"</span>, [], [&#123;xmlcdata, <span class="string">"Hello World of Testing."</span>&#125;]&#125;]</span><br><span class="line">  &#125;;</span><br><span class="line">process_sm_iq(_From, _To, <span class="comment">#iq&#123;type = get, xmlns = ?NS_TEST2&#125; = IQ) -&gt;</span></span><br><span class="line">  ?<span class="type">INFO_MSG</span>(<span class="string">"Processing IQ Get query of namespace 2:~n ~p"</span>, [<span class="type">IQ</span>]),</span><br><span class="line">  <span class="type">IQ</span><span class="comment">#iq&#123;</span></span><br><span class="line">    <span class="keyword">type</span> = <span class="literal">result</span>, sub_el = [&#123;xmlelement, <span class="string">"value"</span>, [], [&#123;xmlcdata, <span class="string">"Hello World of Test 2."</span>&#125;]&#125;]</span><br><span class="line">  &#125;;</span><br><span class="line">process_sm_iq(_From, _To, <span class="comment">#iq&#123;type = set&#125; = IQ) -&gt;</span></span><br><span class="line">  ?<span class="type">INFO_MSG</span>(<span class="string">"Processing IQ Set: it does nothing"</span>, []),</span><br><span class="line">  <span class="type">IQ</span><span class="comment">#iq&#123;</span></span><br><span class="line">    <span class="keyword">type</span> = <span class="literal">result</span>, sub_el = []</span><br><span class="line">  &#125;;</span><br><span class="line">process_sm_iq(_From, _To, <span class="comment">#iq&#123;sub_el = SubEl&#125; = IQ) -&gt;</span></span><br><span class="line">  ?<span class="type">INFO_MSG</span>(<span class="string">"Processing IQ other type: it does nothing"</span>, []),</span><br><span class="line">  <span class="type">IQ</span><span class="comment">#iq&#123;</span></span><br><span class="line">    <span class="keyword">type</span> = error, sub_el = [<span class="type">SubEl</span>, ?<span class="type">ERR_FEATURE_NOT_IMPLEMENTED</span>]</span><br><span class="line">  &#125;.</span><br></pre></td></tr></table></figure>
+<h2 id="参考资料">参考资料</h2><ol>
+<li>IQ处理程序模板<br><a href="https://www.ejabberd.im/node/5035?q=node/5035" target="_blank" rel="external">https://www.ejabberd.im/node/5035?q=node/5035</a></li>
+<li>Ejabberd事件和钩子<br><a href="https://www.process-one.net/en/wiki/ejabberd_events_and_hooks" target="_blank" rel="external">https://www.process-one.net/en/wiki/ejabberd_events_and_hooks</a></li>
+<li>mod_last模块<br><a href="https://github.com/processone/ejabberd/blob/master/src/mod_last.erl" target="_blank" rel="external">https://github.com/processone/ejabberd/blob/master/src/mod_last.erl</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
         <time datetime="2014-09-28T05:05:43.000Z"><a href="/2014/09/28/ejabberd-jiffy/">2014-09-28</a></time>
       
       
@@ -206,7 +389,7 @@
 <h2 id="客户端认证">客户端认证</h2><p>客户端发送一个<code>&lt;auth&gt;</code>请求认证</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># auth内的文本值无换行和空格,这里为了可读性而格式化</span><br><span class="line"><span class="tag">&lt;<span class="title">auth</span> <span class="attribute">xmlns</span>=<span class="value">'urn:ietf:params:xml:ns:xmpp-sasl'</span> <span class="attribute">mechanism</span>=<span class="value">'SCRAM-SHA-1'</span>&gt;</span></span><br><span class="line">    biwsbj1yb290LHI9ZDQxZDhjZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2U=</span><br><span class="line"><span class="tag">&lt;/<span class="title">auth</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>服务器收到认证请求 并更新内部状态</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 客户端请求认证</span><br><span class="line"><span class="number">2014</span>-<span class="number">09</span>-<span class="number">26</span> <span class="number">05</span>:<span class="number">22</span>:<span class="number">31.543</span> [debug] &lt;<span class="number">0.849</span><span class="number">.0</span>&gt;<span class="annotation">@ejabberd</span><span class="string">_receiver:</span><span class="string">process_data:</span><span class="number">343</span> Received XML on stream = &lt;&lt;<span class="string">"&lt;auth xmlns="</span><span class="string">urn:</span><span class="string">ietf:</span><span class="string">params:</span><span class="string">xml:</span><span class="string">ns:</span>xmpp-sasl<span class="string">" mechanism="</span>SCRAM-SHA-<span class="number">1</span><span class="string">"&gt;biwsbj1yb290LHI9ZDQxZDhjZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2U=&lt;/auth&gt;"</span>&gt;&gt;</span><br><span class="line"># 更新内部状态</span><br><span class="line"><span class="number">2014</span>-<span class="number">09</span>-<span class="number">26</span> <span class="number">05</span>:<span class="number">22</span>:<span class="number">31.543</span> [debug] &lt;<span class="number">0.849</span><span class="number">.0</span>&gt;<span class="annotation">@shaper</span>:<span class="string">update:</span><span class="number">117</span> <span class="string">State:</span> &#123;maxrate,<span class="number">1000</span>,<span class="number">0.0</span>,<span class="number">1411708951528734</span>&#125;, Size=<span class="number">138</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 客户端请求认证</span><br><span class="line"><span class="number">2014</span>-<span class="number">09</span>-<span class="number">26</span> <span class="number">05</span>:<span class="number">22</span>:<span class="number">31.543</span> [debug] &lt;<span class="number">0.849</span>.0&gt;<span class="annotation">@ejabberd</span><span class="string">_receiver:</span><span class="string">process_data:</span><span class="number">343</span> Received XML on stream = &lt;&lt;<span class="string">"&lt;auth xmlns="</span><span class="string">urn:</span><span class="string">ietf:</span><span class="string">params:</span><span class="string">xml:</span><span class="string">ns:</span>xmpp-sasl<span class="string">" mechanism="</span>SCRAM-SHA-<span class="number">1</span><span class="string">"&gt;biwsbj1yb290LHI9ZDQxZDhjZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2U=&lt;/auth&gt;"</span>&gt;&gt;</span><br><span class="line"># 更新内部状态</span><br><span class="line"><span class="number">2014</span>-<span class="number">09</span>-<span class="number">26</span> <span class="number">05</span>:<span class="number">22</span>:<span class="number">31.543</span> [debug] &lt;<span class="number">0.849</span>.0&gt;<span class="annotation">@shaper</span>:<span class="string">update:</span><span class="number">117</span> <span class="string">State:</span> &#123;maxrate,<span class="number">1000</span>,<span class="number">0.0</span>,<span class="number">1411708951528734</span>&#125;, Size=<span class="number">138</span></span><br></pre></td></tr></table></figure>
 <p>此时, <code>ejabberd_c2s</code>状态更新为<code>wait_for_sasl_response</code>, 同时返回<code>&lt;challenge&gt;</code>响应</p>
 <figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># challenge内的文本值无换行和空格,这里为了可读性而格式化</span></span><br><span class="line">&lt;challenge</span><br><span class="line">    <span class="variable">xmlns=</span><span class="string">"urn:ietf:params:xml:ns:xmpp-sasl"</span></span><br><span class="line">    xmlns:<span class="variable">stream=</span><span class="string">"http://etherx.jabber.org/streams"</span> <span class="variable">version=</span><span class="string">"1.0"</span>&gt;</span><br><span class="line">    cj1kNDFkOGNkOThmMDBiMjA0ZTk4MDA5...省略&lt;/challenge&gt;</span><br></pre></td></tr></table></figure>
 <p>客户端响应<code>&lt;challenge&gt;</code></p>
@@ -728,7 +911,14 @@
         
 
 
-        <h2 id="安装Erlang_17-3_(Ubuntu_14-04)">安装Erlang 17.3 (Ubuntu 14.04)</h2><h2 id="配置工作流概要">配置工作流概要</h2><ul>
+        <h2 id="更新">更新</h2><ul>
+<li>2015-03-22 Ejabberd 15.03 新特性<ul>
+<li><code>ejabberdctl</code>新增<code>join_cluster</code>命令添加一个节点到集群中<br><a href="http://docs.ejabberd.im/admin/guide/#adding-a-node-in-a-cluster" target="_blank" rel="external">http://docs.ejabberd.im/admin/guide/#adding-a-node-in-a-cluster</a></li>
+<li>新增Websocket支持<br><a href="http://docs.ejabberd.im/admin/guide/#websocket-support" target="_blank" rel="external">http://docs.ejabberd.im/admin/guide/#websocket-support</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="安装Erlang_17-3_(Ubuntu_14-04)">安装Erlang 17.3 (Ubuntu 14.04)</h2><h2 id="配置工作流概要">配置工作流概要</h2><ul>
 <li>修改两个服务器的HOSTNAME</li>
 <li>修改两个服务器的<code>/etc/hosts</code>(内网)或DNS(外网)</li>
 <li>修改<code>/etc/ejabberd/ejabberd.yml</code>的<code>hosts</code><ul>
@@ -1071,148 +1261,6 @@
 
 
 
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-09-19T06:33:28.000Z"><a href="/2014/09/19/ssh-shortcut/">2014-09-19</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/09/19/ssh-shortcut/">SSH 快捷方式</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>方便地管理服务器的两种方式.</p>
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/09/19/ssh-shortcut/#more" class="more-link">阅读全文</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-09-18T13:17:42.000Z"><a href="/2014/09/18/ejabberd-http-module/">2014-09-18</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/09/18/ejabberd-http-module/">开发一个Ejabberd HTTP模块</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>如何开发一个Ejabberd模块, 本文基于一个实例演示了如何开发一个Ejabberd模块, 以及模块的基本结构.</p>
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/09/18/ejabberd-http-module/#more" class="more-link">阅读全文</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-09-18T09:43:15.000Z"><a href="/2014/09/18/xmpp-connection-manager-node-xmpp-bosh/">2014-09-18</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/09/18/xmpp-connection-manager-node-xmpp-bosh/">XMPP连接管理器 node-xmpp-bosh</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Ejabberd 对Websocket的支持很不好,在Github上搜索到一个nodejs 开发的链接管理器 <code>node-xmpp-bosh</code>支持Websocket,这样我就能在浏览器中分析XMPP协议了,记录一下安装和配置方法,备忘.</p>
-<p>项目地址: <a href="https://github.com/dhruvbird/node-xmpp-bosh">https://github.com/dhruvbird/node-xmpp-bosh</a></p>
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/09/18/xmpp-connection-manager-node-xmpp-bosh/#more" class="more-link">阅读全文</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
 
 <nav id="pagination">
   
@@ -1229,6 +1277,18 @@
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/23/thrift-messing-guide/">Thrift: The Missing Guide</a>
+      </li>
+    
+      <li>
+        <a href="/2015/03/18/ejabberd-os-optimizations/">针对Ejabberd的操作系统C1000K优化</a>
+      </li>
     
       <li>
         <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
@@ -1258,18 +1318,6 @@
         <a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a>
       </li>
     
-      <li>
-        <a href="/2015/03/11/thrift-ex/">thrift_ex</a>
-      </li>
-    
-      <li>
-        <a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">(译) Ejabberd加入了Elixir的变革</a>
-      </li>
-    
-      <li>
-        <a href="/2015/02/25/http2-h2o-get-started/">HTTP/2 尝鲜</a>
-      </li>
-    
   </ul>
 </div>
 
@@ -1289,7 +1337,7 @@
   
     <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
   
-    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>32</small></li>
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>33</small></li>
   
     <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
   
@@ -1315,13 +1363,15 @@
   
     <li><a href="/categories/Testing/">Testing</a><small>1</small></li>
   
+    <li><a href="/categories/Thrift/">Thrift</a><small>1</small></li>
+  
     <li><a href="/categories/Tools/">Tools</a><small>4</small></li>
   
     <li><a href="/categories/Web/">Web</a><small>6</small></li>
   
     <li><a href="/categories/XEP/">XEP</a><small>5</small></li>
   
-    <li><a href="/categories/XMPP/">XMPP</a><small>6</small></li>
+    <li><a href="/categories/XMPP/">XMPP</a><small>7</small></li>
   
     <li><a href="/categories/english/">english</a><small>1</small></li>
   
@@ -1355,7 +1405,7 @@
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 10px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 18px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 17px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 16px;">docker</a><a href="/tags/ejabberd/" style="font-size: 19px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11.11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 15.56px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 16.67px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11.11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 15.56px;">docker</a><a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12.22px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11.11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
   </div>
 </div>
 
