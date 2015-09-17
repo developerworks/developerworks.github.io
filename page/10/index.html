@@ -96,6 +96,378 @@
     <header>
       
         <!--<div class="icon"></div>-->
+        <time datetime="2014-06-27T16:00:00.000Z"><a href="/2014/06/28/angular-best-practice/">2014-06-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/28/angular-best-practice/">Angular 最佳实践</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <ol>
+<li>控制器和<code>Provider</code>(Service,Factory)用于修改数据模型,<strong>而不是HTML</strong></li>
+<li>HTML和指令定义布局,以及到模型的绑定</li>
+<li>如果要在控制器之间共享数据,那么创建一个服务或工厂 - 它们是能在整个应用程序生命周期内共享的单件对象</li>
+<li>如果你需要一个HTML Widget, 应该创建一个指令</li>
+<li>如果你有一些数据,并且需要更新HTML,NO! NO! NO!, 更新模型就可以了,保证HTML绑定到模型就可以了.</li>
+</ol>
+<pre><code><span class="label">TODO::</span>后续有发现继续增加
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-06-25T16:00:00.000Z"><a href="/2014/06/26/creating-asynchronous-alerts-prompts-and-confirms-in-angularjs/">2014-06-26</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/26/creating-asynchronous-alerts-prompts-and-confirms-in-angularjs/">在AngularJS中创建异步Alert Prompts Confirms</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <blockquote>
+<p>本文翻译自如下文章, 因为不是文学作品而是技术文章,因此不遵照<code>信达雅</code>的原则,让人容易理解即可, 没有逐句翻译原文的语言含义,而是根据其含义用更符合汉语的语言习惯来表达.</p>
+</blockquote>
+<p><a href="http://www.bennadel.com/blog/2632-creating-asynchronous-alerts-prompts-and-confirms-in-angularjs.htm">http://www.bennadel.com/blog/2632-creating-asynchronous-alerts-prompts-and-confirms-in-angularjs.htm</a></p>
+<h2 id="问题">问题</h2><p>有过在前端编程经验的人都知道,调用<code>alert()</code>, <code>prompt()</code>, 和<code>confirm()</code>会阻塞浏览器执行后续的Javascript代码,直到用户做出反应. 这个问题会让前端开发变得比较棘手.<br>比如,一个常见的问题是当<code>alert()</code>这类阻塞操作促发的时候,假设浏览器后台每隔N秒会向服务器请求更新数据,那么后台的Ajax更新也会被阻塞, 通常解决此类问题的方式转换到使用模态对话框.这种转换并不容易.因此促使原作者创建<code>alert()</code>,<code>prompt()</code>和<code>confirm()</code>的<code>promise</code>异步处理模式的非阻塞版本.</p>
+<blockquote>
+<p>理解本文的关键是要理解<code>promise</code>异步处理模式, 关于什么是<code>promise</code>异步处理模式,这里不做解释,请自行Google/百度</p>
+</blockquote>
+<p>本文的项目地址为: <a href="http://bennadel.github.io/JavaScript-Demos/demos/creating-asynchronous-prompts-angularjs/">http://bennadel.github.io/JavaScript-Demos/demos/creating-asynchronous-prompts-angularjs/</a></p>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/06/26/creating-asynchronous-alerts-prompts-and-confirms-in-angularjs/#more" class="more-link">阅读全文</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-06-21T16:00:00.000Z"><a href="/2014/06/22/angular-authentication-with-cookies-vs-token/">2014-06-22</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/22/angular-authentication-with-cookies-vs-token/">Angular.js 基于JSON Token的认证</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/">https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/
+</a></p>
+<h2 id="简介">简介</h2><p>实现服务器认证有两种基本的方法:</p>
+<ul>
+<li>采用最多的一中方法, <code>基于Cookie的认证</code>(你可以在<a href="http://frederiknakstad.com/authentication-in-single-page-applications-with-angular-js/">这里</a>找到例子), 每次请求时,其采用服务器端<code>Cookie</code>认证用户</li>
+<li>一个新方法是<code>基于Token的认证</code>. 依赖于一个每次请求时向服务器发送一个签名的Token.</li>
+</ul>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/06/22/angular-authentication-with-cookies-vs-token/#more" class="more-link">阅读全文</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-06-17T16:00:00.000Z"><a href="/2014/06/18/request-module-as-proxy-in-nodes/">2014-06-18</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/18/request-module-as-proxy-in-nodes/">使用request模块做跨域代理</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>有时候跨域请求RESTFUL API做测试目的,使用<code>cors</code>模块又比较麻烦,下面的几行代码使用<code>request</code>模块作为Express的中间件实现Web代理的功能,简单,小巧.</p>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/06/18/request-module-as-proxy-in-nodes/#more" class="more-link">阅读全文</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-06-15T16:00:00.000Z"><a href="/2014/06/16/node-webkit-package/">2014-06-16</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/16/node-webkit-package/">如何打包和分发node-webkit桌面应用程序</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="准备额外的文件">准备额外的文件</h2><p>下面的子目录可以放到应用程序的根目录:</p>
+<ul>
+<li><code>node_modules</code> 任何你想要同应用程序一起打包的Node.js模块都可以放在这里</li>
+<li><code>plugins</code> NPAPI插件文件</li>
+</ul>
+<p>不需要打包 <code>nwsnapshot</code> 文件</p>
+<p><strong>警告</strong>:<br>do not assume your <code>node_modules</code> that target one platform work as is in all platforms. For instance <code>node-email-templates</code> has specific Windows &amp; Mac os x <code>npm install</code> commands. Besides, it requires python to install properly, which is not installed by default on Windows.</p>
+<p>As a rule of thumb npm install your package.json on each platform you target to ensure everything works as expected.</p>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/06/16/node-webkit-package/#more" class="more-link">阅读全文</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-06-15T16:00:00.000Z"><a href="/2014/06/16/node-webkit-manifest/">2014-06-16</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/16/node-webkit-manifest/">node-webkit Manifest 文件格式</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Every app package should contain a manifest file named <code>package.json</code>, it will tell <code>node-webkit</code> how to open the app and control how the browser behaves.</p>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/06/16/node-webkit-manifest/#more" class="more-link">阅读全文</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-06-15T16:00:00.000Z"><a href="/2014/06/16/static-site-generators/">2014-06-16</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/16/static-site-generators/">静态站点生成器</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>静态站点流行度排名<br><a href="http://staticsitegenerators.net/" target="_blank" rel="external">http://staticsitegenerators.net/</a></p>
+<p>Static web site with Markdown (GitHub pages actually) / Jekyll alternatives<br><a href="http://stackoverflow.com/questions/16504449/static-web-site-with-markdown-github-pages-actually-jekyll-alternatives" target="_blank" rel="external">http://stackoverflow.com/questions/16504449/static-web-site-with-markdown-github-pages-actually-jekyll-alternatives</a></p>
+<p>开源静态站生成器列表<br><a href="http://www.staticgen.com/" target="_blank" rel="external">http://www.staticgen.com/</a></p>
+<h2 id="Node-js">Node.js</h2><p><a href="http://blog.bmannconsulting.com/node-static-site-generators" target="_blank" rel="external">http://blog.bmannconsulting.com/node-static-site-generators</a></p>
+<p>docpad<br><a href="http://docpad.org" target="_blank" rel="external">http://docpad.org</a></p>
+<p>Hexo<br><a href="https://github.com/tommy351/hexo" target="_blank" rel="external">https://github.com/tommy351/hexo</a></p>
+<p>generator-pencil<br><a href="http://www.html-js.com/topic/722" target="_blank" rel="external">http://www.html-js.com/topic/722</a></p>
+<p>Heckle<br><a href="https://github.com/marijnh/heckle" target="_blank" rel="external">https://github.com/marijnh/heckle</a><br><a href="http://thechangelog.com/heckle-the-jekyll-clone-in-node-js/" target="_blank" rel="external">http://thechangelog.com/heckle-the-jekyll-clone-in-node-js/</a></p>
+<p>Wintersmith<br><a href="http://wintersmith.io/" target="_blank" rel="external">http://wintersmith.io/</a></p>
+<h2 id="Ruby">Ruby</h2><p>Jekyll<br><a href="http://jekyllrb.com/" target="_blank" rel="external">http://jekyllrb.com/</a></p>
+<p>Octopress<br><a href="http://octopress.org/" target="_blank" rel="external">http://octopress.org/</a></p>
+<p>Nanoc<br><a href="http://nanoc.ws/" target="_blank" rel="external">http://nanoc.ws/</a></p>
+<h2 id="PHP">PHP</h2>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
         <time datetime="2014-06-15T16:00:00.000Z"><a href="/2014/06/16/node-webkit-get-gpu-infomration/">2014-06-16</a></time>
       
       
@@ -114,6 +486,56 @@
         
           <div class="alignleft">
             <a href="/2014/06/16/node-webkit-get-gpu-infomration/#more" class="more-link">阅读全文</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-06-15T16:00:00.000Z"><a href="/2014/06/16/node-webkit-clipboard/">2014-06-16</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/16/node-webkit-clipboard/">node-webkit 剪切板</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Clipboard API 需要 node-webkit <code>&gt;= v0.3.0</code> 的支持</p>
+<blockquote>
+<p><code>Clipboard</code> 是一个剪切板(Windows,GTK)和粘贴板(Mac)的抽象,当前它仅支持在系统剪切板中读写纯文本.</p>
+</blockquote>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/06/16/node-webkit-clipboard/#more" class="more-link">阅读全文</a>
           </div>
         
         
@@ -255,7 +677,7 @@
       
         <h2 id="1-_grunt-peon-gui">1. grunt-peon-gui</h2><p><a href="https://www.npmjs.org/package/grunt-peon-gui">https://www.npmjs.org/package/grunt-peon-gui</a></p>
 <p><code>grunt-peon-gui</code>是一个grunt插件,基于Web,运行<code>grunt-peon-gui</code>的时候会自动启动一个监听在<code>8080</code>端口的<code>Node.js</code>Web服务器,并自动打开浏览器显示当前项</p>
-<h3 id="1-1_安装和使用">1.1 安装和使用</h3><h4 id="1-1-1_安装">1.1.1 安装</h4><figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install grunt-peon-gui --<span class="built_in">save</span>-<span class="built_in">dev</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-1_安装和使用">1.1 安装和使用</h3><h4 id="1-1-1_安装">1.1.1 安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install grunt-peon-gui --save-dev</span><br></pre></td></tr></table></figure>
 <p><img src="https://raw.github.com/voceconnect/grunt-peon-gui/master/app/assets/img/screen.png" width="750px" /></p>
       
     </div>
@@ -352,7 +774,7 @@
       
         <p>本文说明如何使用Google的PageSpeed Insights服务,node.js的PSI模块,以及自动build工具Grunt,Gulp把Web性能测试融入到项目构建过程中, 并生成性能分析报告.</p>
 <h2 id="安装">安装</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save psi</span><br></pre></td></tr></table></figure>
-<h2 id="使用">使用</h2><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">var</span> psi <span class="subst">=</span> <span class="keyword">require</span>(<span class="string">'psi'</span>);</span><br><span class="line">psi(&#123;</span><br><span class="line">    <span class="comment">// key: '...', optional</span></span><br><span class="line">    url: <span class="string">'http://html5rocks.com'</span>,</span><br><span class="line">    paths: <span class="string">''</span>,           <span class="comment">// optional</span></span><br><span class="line">    <span class="built_in">locale</span>: <span class="string">'en_GB'</span>,     <span class="comment">// optional</span></span><br><span class="line">    strategy: <span class="string">'mobile'</span>,  <span class="comment">// optional</span></span><br><span class="line">    threshold: <span class="number">80</span>        <span class="comment">// optional</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="使用">使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var psi = require(&#39;psi&#39;);&#10;psi(&#123;&#10;    // key: &#39;...&#39;, optional&#10;    url: &#39;http://html5rocks.com&#39;,&#10;    paths: &#39;&#39;,           // optional&#10;    locale: &#39;en_GB&#39;,     // optional&#10;    strategy: &#39;mobile&#39;,  // optional&#10;    threshold: 80        // optional&#10;&#125;);</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer>
@@ -411,12 +833,12 @@
 </ol>
 <p>读取保存在文件中的环境变量,并同步到注册表:</p>
 <p><strong>env.erl</strong></p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% Created: 2011-5-26</span></span><br><span class="line"><span class="comment">%% Description: TODO: Add description to env</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="pp"><span class="keyword">-module</span><span class="params">(env)</span></span>.</span><br><span class="line"><span class="comment">%% There are six entry points in the Windows registry,</span></span><br><span class="line"><span class="comment">%% top level keys. They can be abbreviated in the win32reg module as:</span></span><br><span class="line"><span class="comment">%% Abbrev.          Registry key</span></span><br><span class="line"><span class="comment">%% =======          ============</span></span><br><span class="line"><span class="comment">%% hkcr             HKEY_CLASSES_ROOT</span></span><br><span class="line"><span class="comment">%% current_user     HKEY_CURRENT_USER</span></span><br><span class="line"><span class="comment">%% hkcu             HKEY_CURRENT_USER</span></span><br><span class="line"><span class="comment">%% local_machine    HKEY_LOCAL_MACHINE</span></span><br><span class="line"><span class="comment">%% hklm             HKEY_LOCAL_MACHINE</span></span><br><span class="line"><span class="comment">%% users            HKEY_USERS</span></span><br><span class="line"><span class="comment">%% hku              HKEY_USERS</span></span><br><span class="line"><span class="comment">%% current_config   HKEY_CURRENT_CONFIG</span></span><br><span class="line"><span class="comment">%% hkcc             HKEY_CURRENT_CONFIG</span></span><br><span class="line"><span class="comment">%% dyn_data         HKEY_DYN_DATA</span></span><br><span class="line"><span class="comment">%% hkdd             HKEY_DYN_DATA</span></span><br><span class="line"><span class="comment">% 顶级路径必须小写</span></span><br><span class="line"><span class="pp"><span class="keyword">-define</span><span class="params">(<span class="variable">CURRENT_USER</span>, <span class="string">"\\hkey_current_user\\Environment"</span>)</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-define</span><span class="params">(<span class="variable">CURRENT_USER_TEST</span>, <span class="string">"\\hkey_current_user\\EnvironmentTest"</span>)</span></span>.</span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="comment">%% Exported Functions</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="pp"><span class="keyword">-export</span><span class="params">([environments/<span class="number">0</span>])</span></span>.</span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="comment">%% Local Functions</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="function"><span class="title">environments</span><span class="params">()</span> -&gt;</span></span><br><span class="line">    <span class="comment">% 以读写模式打开注册表</span></span><br><span class="line">    <span class="tuple">&#123;ok, <span class="variable">Reg</span>&#125;</span> = <span class="function_name">win32reg:open</span>([write]),</span><br><span class="line">    <span class="comment">% 设置当前Key</span></span><br><span class="line">    <span class="keyword">case</span> <span class="function_name">win32reg:change_key</span>(<span class="variable">Reg</span>, ?<span class="variable">CURRENT_USER</span>) <span class="keyword">of</span></span><br><span class="line">        ok -&gt;</span><br><span class="line">            <span class="comment">% Change key, 如果不存在就创建</span></span><br><span class="line">            <span class="function_name">win32reg:change_key_create</span>(<span class="variable">Reg</span>, ?<span class="variable">CURRENT_USER_TEST</span>),</span><br><span class="line">            <span class="comment">% 从文件中读取Tuples</span></span><br><span class="line">            <span class="tuple">&#123;ok, <span class="variable">Envs</span>&#125;</span> = <span class="function_name">file:consult</span>(<span class="string">"./win32reg/env.config"</span>),</span><br><span class="line">            <span class="comment">% 逐条创建注册表Item</span></span><br><span class="line">            <span class="variable">Result</span> = <span class="function_name">lists:foreach</span>(<span class="keyword">fun</span>(<span class="tuple">&#123;<span class="variable">Key</span>, <span class="variable">Value</span>&#125;</span>) -&gt;</span><br><span class="line">                <span class="function_name">win32reg:set_value</span>(<span class="variable">Reg</span>, <span class="variable">Key</span>, <span class="variable">Value</span>) <span class="keyword">end</span>, <span class="variable">Envs</span>),</span><br><span class="line">            <span class="comment">% 关闭注册表</span></span><br><span class="line">            <span class="function_name">win32reg:close</span>(<span class="variable">Reg</span>),</span><br><span class="line">            <span class="comment">% 返回值</span></span><br><span class="line">            <span class="variable">Result</span>;</span><br><span class="line">        <span class="variable">_</span> -&gt;</span><br><span class="line">            <span class="literal">false</span></span><br><span class="line">    <span class="keyword">end</span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% Created: 2011-5-26&#10;%% Description: TODO: Add description to env&#10;%%&#10;-module(env).&#10;%% There are six entry points in the Windows registry,&#10;%% top level keys. They can be abbreviated in the win32reg module as:&#10;%% Abbrev.          Registry key&#10;%% =======          ============&#10;%% hkcr             HKEY_CLASSES_ROOT&#10;%% current_user     HKEY_CURRENT_USER&#10;%% hkcu             HKEY_CURRENT_USER&#10;%% local_machine    HKEY_LOCAL_MACHINE&#10;%% hklm             HKEY_LOCAL_MACHINE&#10;%% users            HKEY_USERS&#10;%% hku              HKEY_USERS&#10;%% current_config   HKEY_CURRENT_CONFIG&#10;%% hkcc             HKEY_CURRENT_CONFIG&#10;%% dyn_data         HKEY_DYN_DATA&#10;%% hkdd             HKEY_DYN_DATA&#10;% &#39030;&#32423;&#36335;&#24452;&#24517;&#39035;&#23567;&#20889;&#10;-define(CURRENT_USER, &#34;\\hkey_current_user\\Environment&#34;).&#10;-define(CURRENT_USER_TEST, &#34;\\hkey_current_user\\EnvironmentTest&#34;).&#10;%%&#10;%% Exported Functions&#10;%%&#10;-export([environments/0]).&#10;%%&#10;%% Local Functions&#10;%%&#10;environments() -&#62;&#10;    % &#20197;&#35835;&#20889;&#27169;&#24335;&#25171;&#24320;&#27880;&#20876;&#34920;&#10;    &#123;ok, Reg&#125; = win32reg:open([write]),&#10;    % &#35774;&#32622;&#24403;&#21069;Key&#10;    case win32reg:change_key(Reg, ?CURRENT_USER) of&#10;        ok -&#62;&#10;            % Change key, &#22914;&#26524;&#19981;&#23384;&#22312;&#23601;&#21019;&#24314;&#10;            win32reg:change_key_create(Reg, ?CURRENT_USER_TEST),&#10;            % &#20174;&#25991;&#20214;&#20013;&#35835;&#21462;Tuples&#10;            &#123;ok, Envs&#125; = file:consult(&#34;./win32reg/env.config&#34;),&#10;            % &#36880;&#26465;&#21019;&#24314;&#27880;&#20876;&#34920;Item&#10;            Result = lists:foreach(fun(&#123;Key, Value&#125;) -&#62;&#10;                win32reg:set_value(Reg, Key, Value) end, Envs),&#10;            % &#20851;&#38381;&#27880;&#20876;&#34920;&#10;            win32reg:close(Reg),&#10;            % &#36820;&#22238;&#20540;&#10;            Result;&#10;        _ -&#62;&#10;            false&#10;    end.</span><br></pre></td></tr></table></figure>
 <p>保存在文件中的环境变量, 以Erlang Term的格式:</p>
 <p><strong>env.config</strong></p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tuple">&#123;<span class="string">"ANDROID"</span>,<span class="string">"D:\\usr\\android-sdk-windows\\platform-tools"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"ANT_HOME"</span>,<span class="string">"D:\\usr\\apache-ant-1.8.0"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"ARCHDIR"</span>,<span class="string">"windows"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"CAKE"</span>,<span class="string">"D:\\chaw\\cakephp\\cake\\console"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"CEAN_SERVER"</span>,<span class="string">"http://cean.process-one.net"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"ERLANG_HOME"</span>,<span class="string">"D:\\usr\\erl5.9.1"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"ffmpeg"</span>,<span class="string">"D:\\usr\\ffmpeg-git-9d4cb45-32-bit-shared\\bin"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"GETTEXT_TOOLS"</span>,<span class="string">"D:\\usr\\gettext-tools-0.13.1.bin.woe32"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"GIT"</span>,<span class="string">"D:\\usr\\Git\\bin"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"Haskell"</span>,<span class="string">"D:\\usr\\Haskell\\2011.2.0.1"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"HOME"</span>,<span class="string">"C:\\Documents and Settings\\Administrator"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"HTMLHELP"</span>,<span class="string">"D:\\Program Files\\HTML Help Workshop"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"JAVA_HOME"</span>,<span class="string">"D:\\Program Files\\Java\\jdk1.6.0_24"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"LUA_HOME"</span>,<span class="string">"D:\\usr\\lua\\Lua\\5.1"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"M2_HOME"</span>,<span class="string">"D:\\usr\\apache-maven-3.0.3"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"MAVEN_OPTS"</span>,<span class="string">"-Xms256m -Xmx512m"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"MongoDB"</span>,<span class="string">"D:\\usr\\MongoDb\\mongodb-win32-i386-1.8.1\\bin"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"MYSQL"</span>,<span class="string">"D:\\usr\\mariadb-5.2.6-win32\\bin"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"NODE_PATH"</span>,<span class="string">"C:\\Documents and Settings\\Administrator\\Application Data\\npm\\node_modules;"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"PANDOC"</span>,<span class="string">"D:\\Program Files\\Pandoc\\bin"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"PHP_HOME"</span>,<span class="string">"D:\\usr\\php"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"PROTO_BUFFER"</span>,<span class="string">"D:\\usr\\protoc-2.4.1-win32"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"PYJAMAS_HOME"</span>,<span class="string">"G:\\pyjamas-0.8.1~+alpha1"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"PYTHON_HOME"</span>,<span class="string">"D:\\usr\\python26"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"RabbitMQ"</span>,<span class="string">"D:\\usr\\RabbitMQ Server\\rabbitmq_server-2.4.1\\sbin"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"RABBITMQ_CONSOLE_LOG"</span>,<span class="string">"new"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"SVN"</span>,<span class="string">"D:\\usr\\svn-win32-1.6.6\\bin"</span>&#125;</span>.</span><br><span class="line"><span class="tuple">&#123;<span class="string">"TITANIUM_HOME"</span>,<span class="string">"C:\\Documents and Settings\\Administrator\\Application Data\\Titanium\\mobilesdk\\win32\\1.7.2"</span>&#125;</span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#34;ANDROID&#34;,&#34;D:\\usr\\android-sdk-windows\\platform-tools&#34;&#125;.&#10;&#123;&#34;ANT_HOME&#34;,&#34;D:\\usr\\apache-ant-1.8.0&#34;&#125;.&#10;&#123;&#34;ARCHDIR&#34;,&#34;windows&#34;&#125;.&#10;&#123;&#34;CAKE&#34;,&#34;D:\\chaw\\cakephp\\cake\\console&#34;&#125;.&#10;&#123;&#34;CEAN_SERVER&#34;,&#34;http://cean.process-one.net&#34;&#125;.&#10;&#123;&#34;ERLANG_HOME&#34;,&#34;D:\\usr\\erl5.9.1&#34;&#125;.&#10;&#123;&#34;ffmpeg&#34;,&#34;D:\\usr\\ffmpeg-git-9d4cb45-32-bit-shared\\bin&#34;&#125;.&#10;&#123;&#34;GETTEXT_TOOLS&#34;,&#34;D:\\usr\\gettext-tools-0.13.1.bin.woe32&#34;&#125;.&#10;&#123;&#34;GIT&#34;,&#34;D:\\usr\\Git\\bin&#34;&#125;.&#10;&#123;&#34;Haskell&#34;,&#34;D:\\usr\\Haskell\\2011.2.0.1&#34;&#125;.&#10;&#123;&#34;HOME&#34;,&#34;C:\\Documents and Settings\\Administrator&#34;&#125;.&#10;&#123;&#34;HTMLHELP&#34;,&#34;D:\\Program Files\\HTML Help Workshop&#34;&#125;.&#10;&#123;&#34;JAVA_HOME&#34;,&#34;D:\\Program Files\\Java\\jdk1.6.0_24&#34;&#125;.&#10;&#123;&#34;LUA_HOME&#34;,&#34;D:\\usr\\lua\\Lua\\5.1&#34;&#125;.&#10;&#123;&#34;M2_HOME&#34;,&#34;D:\\usr\\apache-maven-3.0.3&#34;&#125;.&#10;&#123;&#34;MAVEN_OPTS&#34;,&#34;-Xms256m -Xmx512m&#34;&#125;.&#10;&#123;&#34;MongoDB&#34;,&#34;D:\\usr\\MongoDb\\mongodb-win32-i386-1.8.1\\bin&#34;&#125;.&#10;&#123;&#34;MYSQL&#34;,&#34;D:\\usr\\mariadb-5.2.6-win32\\bin&#34;&#125;.&#10;&#123;&#34;NODE_PATH&#34;,&#34;C:\\Documents and Settings\\Administrator\\Application Data\\npm\\node_modules;&#34;&#125;.&#10;&#123;&#34;PANDOC&#34;,&#34;D:\\Program Files\\Pandoc\\bin&#34;&#125;.&#10;&#123;&#34;PHP_HOME&#34;,&#34;D:\\usr\\php&#34;&#125;.&#10;&#123;&#34;PROTO_BUFFER&#34;,&#34;D:\\usr\\protoc-2.4.1-win32&#34;&#125;.&#10;&#123;&#34;PYJAMAS_HOME&#34;,&#34;G:\\pyjamas-0.8.1~+alpha1&#34;&#125;.&#10;&#123;&#34;PYTHON_HOME&#34;,&#34;D:\\usr\\python26&#34;&#125;.&#10;&#123;&#34;RabbitMQ&#34;,&#34;D:\\usr\\RabbitMQ Server\\rabbitmq_server-2.4.1\\sbin&#34;&#125;.&#10;&#123;&#34;RABBITMQ_CONSOLE_LOG&#34;,&#34;new&#34;&#125;.&#10;&#123;&#34;SVN&#34;,&#34;D:\\usr\\svn-win32-1.6.6\\bin&#34;&#125;.&#10;&#123;&#34;TITANIUM_HOME&#34;,&#34;C:\\Documents and Settings\\Administrator\\Application Data\\Titanium\\mobilesdk\\win32\\1.7.2&#34;&#125;.</span><br></pre></td></tr></table></figure>
 <p>Windows的环境变量修改起来很坑,那个对话框不能最大化,看不到完整的东西.有时候变量路径又很长.</p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% Created: 2011-5-26</span></span><br><span class="line"><span class="comment">%% Description: TODO: Add description to env</span></span><br><span class="line"><span class="pp"><span class="keyword">-module</span><span class="params">(env)</span></span>.</span><br><span class="line"><span class="pp"><span class="keyword">-define</span><span class="params">(<span class="variable">CURRENT_USER</span>, <span class="string">"\\hkey_current_user\\environment"</span>)</span></span>.</span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="comment">%% Include files</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="comment">%% Exported Functions</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="pp"><span class="keyword">-export</span><span class="params">([environments/<span class="number">0</span>])</span></span>.</span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="comment">%% API Functions</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="comment">%% Local Functions</span></span><br><span class="line"><span class="comment">%%</span></span><br><span class="line"><span class="function"><span class="title">environments</span><span class="params">()</span> -&gt;</span></span><br><span class="line">    <span class="comment">% 打开注册表</span></span><br><span class="line">    <span class="tuple">&#123;ok, <span class="variable">Reg</span>&#125;</span> = <span class="function_name">win32reg:open</span>([read]),</span><br><span class="line">    <span class="comment">% 设置当前Key</span></span><br><span class="line">    <span class="keyword">case</span> <span class="function_name">win32reg:change_key</span>(<span class="variable">Reg</span>, ?<span class="variable">CURRENT_USER</span>) <span class="keyword">of</span></span><br><span class="line">        ok -&gt;</span><br><span class="line">            <span class="comment">% 读取当前Key下的所有值</span></span><br><span class="line">            <span class="tuple">&#123;ok, <span class="variable">KVs</span>&#125;</span> = <span class="function_name">win32reg:values</span>(<span class="variable">Reg</span>),</span><br><span class="line">            <span class="comment">% 打开文件</span></span><br><span class="line">            <span class="tuple">&#123;ok, <span class="variable">S</span>&#125;</span> = <span class="function_name">file:open</span>(<span class="string">"data1.dat"</span>, write),</span><br><span class="line">            <span class="function_name">lists:foreach</span>(<span class="keyword">fun</span>(<span class="tuple">&#123;<span class="variable">KK</span>,<span class="variable">VV</span>&#125;</span>) -&gt;</span><br><span class="line">                              <span class="function_name">io:format</span>(<span class="variable">S</span>, <span class="string">"~p = ~p~n"</span>,[<span class="variable">KK</span>, <span class="variable">VV</span>]) <span class="comment">% 写入</span></span><br><span class="line">                       <span class="keyword">end</span>, <span class="variable">KVs</span>),</span><br><span class="line">            <span class="comment">% 关闭注册表</span></span><br><span class="line">            <span class="function_name">win32reg:close</span>(<span class="variable">Reg</span>),</span><br><span class="line">            <span class="comment">% 关闭文件</span></span><br><span class="line">            <span class="function_name">file:close</span>(<span class="variable">S</span>);</span><br><span class="line">        <span class="variable">_</span> -&gt;</span><br><span class="line">            <span class="literal">false</span></span><br><span class="line">    <span class="keyword">end</span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% Created: 2011-5-26&#10;%% Description: TODO: Add description to env&#10;-module(env).&#10;-define(CURRENT_USER, &#34;\\hkey_current_user\\environment&#34;).&#10;%%&#10;%% Include files&#10;%%&#10;%%&#10;%% Exported Functions&#10;%%&#10;-export([environments/0]).&#10;%%&#10;%% API Functions&#10;%%&#10;%%&#10;%% Local Functions&#10;%%&#10;environments() -&#62;&#10;    % &#25171;&#24320;&#27880;&#20876;&#34920;&#10;    &#123;ok, Reg&#125; = win32reg:open([read]),&#10;    % &#35774;&#32622;&#24403;&#21069;Key&#10;    case win32reg:change_key(Reg, ?CURRENT_USER) of&#10;        ok -&#62;&#10;            % &#35835;&#21462;&#24403;&#21069;Key&#19979;&#30340;&#25152;&#26377;&#20540;&#10;            &#123;ok, KVs&#125; = win32reg:values(Reg),&#10;            % &#25171;&#24320;&#25991;&#20214;&#10;            &#123;ok, S&#125; = file:open(&#34;data1.dat&#34;, write),&#10;            lists:foreach(fun(&#123;KK,VV&#125;) -&#62;&#10;                              io:format(S, &#34;~p = ~p~n&#34;,[KK, VV]) % &#20889;&#20837;&#10;                       end, KVs),&#10;            % &#20851;&#38381;&#27880;&#20876;&#34920;&#10;            win32reg:close(Reg),&#10;            % &#20851;&#38381;&#25991;&#20214;&#10;            file:close(S);&#10;        _ -&#62;&#10;            false&#10;    end.</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer>
@@ -465,27 +887,27 @@
 
 
         <p>Changlogs<br>2011-06-20 添加测试报告, 在另一台服务器上测试,1W并发,首页index.php无Cache,512M内存的VPS能达到这个程度也算不错.并发几千还是能承载的.就是没几个人来访问,哎^_*!</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="annotation">@localhost</span> webbench-<span class="number">1.5</span>]# .<span class="regexp">/webbench -c 10000 -t 30 http:/</span><span class="regexp">/www.hezhiqiang.info/</span>index.php</span><br><span class="line">Webbench - Simple Web Benchmark <span class="number">1.5</span></span><br><span class="line">Copyright (c) Radim Kolar <span class="number">1997</span>-<span class="number">2004</span>, GPL Open Source Software.</span><br><span class="line"><span class="string">Benchmarking:</span> GET <span class="string">http:</span><span class="comment">//www.hezhiqiang.info/index.php</span></span><br><span class="line"><span class="number">10000</span> clients, running <span class="number">30</span> sec.</span><br><span class="line">Speed=<span class="number">21030</span> pages<span class="regexp">/min, 3073918 bytes/</span>sec.</span><br><span class="line"><span class="string">Requests:</span> <span class="number">8441</span> susceed, <span class="number">2074</span> failed.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost webbench-1.5]# ./webbench -c 10000 -t 30 http://www.hezhiqiang.info/index.php&#10;Webbench - Simple Web Benchmark 1.5&#10;Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.&#10;Benchmarking: GET http://www.hezhiqiang.info/index.php&#10;10000 clients, running 30 sec.&#10;Speed=21030 pages/min, 3073918 bytes/sec.&#10;Requests: 8441 susceed, 2074 failed.</span><br></pre></td></tr></table></figure>
 <p><a href="http://www.varnish-cache.org" target="_blank" rel="external">Varnish</a> 有内置的负载均衡支持. 如果有多个源服务器,使用起来非常简易.通过声明多个后端服务器启动Varnish,同时设置后端服务器的probe属性来监控后端服务器的健康状况.</p>
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 如果VCL定义文件内容太多可以分离到单独的文件,并包含进来 */</span></span><br><span class="line"><span class="comment">#include "backends.vcl";</span></span><br><span class="line"><span class="comment">#include "ban.vcl";</span></span><br><span class="line">backend default &#123;</span><br><span class="line">	.<span class="variable">host =</span> <span class="string">"127.0.0.1"</span>;</span><br><span class="line">	.<span class="variable">port =</span> <span class="string">"8080"</span>;</span><br><span class="line">	<span class="comment">/* Varnish 到后端服务器的连接超时, */</span></span><br><span class="line">	.<span class="variable">connect_timeout =</span> <span class="number">1</span>s;</span><br><span class="line">    <span class="comment">/* 和后端服务器建立连接后,即进入等待接收响应状态,如果响应的第一个字节在5s内没有到达,被认为超时*/</span></span><br><span class="line">	.<span class="variable">first_byte_timeout =</span> <span class="number">5</span>s;</span><br><span class="line">    <span class="comment">/* 第一个字节到达后, 如果后续字节在2s内没有到达,被认为是超时 */</span></span><br><span class="line">	.<span class="variable">between_bytes_timeout =</span> <span class="number">2</span>s;</span><br><span class="line">	.<span class="variable">probe =</span> &#123;</span><br><span class="line">		.<span class="variable">url =</span> <span class="string">"/"</span>;</span><br><span class="line">		.<span class="variable">interval =</span> <span class="number">5</span>s;</span><br><span class="line">		.<span class="variable">timeout =</span> <span class="number">1</span> s;</span><br><span class="line">		.<span class="variable">window =</span> <span class="number">5</span>;</span><br><span class="line">		.<span class="variable">threshold =</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">backend default8081 &#123;</span><br><span class="line">	.<span class="variable">host =</span> <span class="string">"127.0.0.1"</span>;</span><br><span class="line">	.<span class="variable">port =</span> <span class="string">"8081"</span>;</span><br><span class="line">	.<span class="variable">connect_timeout =</span> <span class="number">1</span>s;</span><br><span class="line">	.<span class="variable">first_byte_timeout =</span> <span class="number">5</span>s;</span><br><span class="line">	.<span class="variable">between_bytes_timeout =</span> <span class="number">2</span>s;</span><br><span class="line">	.<span class="variable">probe =</span> &#123;</span><br><span class="line">		.<span class="variable">url =</span> <span class="string">"/"</span>;</span><br><span class="line">		.<span class="variable">interval =</span> <span class="number">5</span>s;</span><br><span class="line">		.<span class="variable">timeout =</span> <span class="number">1</span> s;</span><br><span class="line">		.<span class="variable">window =</span> <span class="number">5</span>;</span><br><span class="line">		.<span class="variable">threshold =</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/* &#22914;&#26524;VCL&#23450;&#20041;&#25991;&#20214;&#20869;&#23481;&#22826;&#22810;&#21487;&#20197;&#20998;&#31163;&#21040;&#21333;&#29420;&#30340;&#25991;&#20214;,&#24182;&#21253;&#21547;&#36827;&#26469; */&#10;#include &#34;backends.vcl&#34;;&#10;#include &#34;ban.vcl&#34;;&#10;backend default &#123;&#10;&#9;.host = &#34;127.0.0.1&#34;;&#10;&#9;.port = &#34;8080&#34;;&#10;&#9;/* Varnish &#21040;&#21518;&#31471;&#26381;&#21153;&#22120;&#30340;&#36830;&#25509;&#36229;&#26102;, */&#10;&#9;.connect_timeout = 1s;&#10;    /* &#21644;&#21518;&#31471;&#26381;&#21153;&#22120;&#24314;&#31435;&#36830;&#25509;&#21518;,&#21363;&#36827;&#20837;&#31561;&#24453;&#25509;&#25910;&#21709;&#24212;&#29366;&#24577;,&#22914;&#26524;&#21709;&#24212;&#30340;&#31532;&#19968;&#20010;&#23383;&#33410;&#22312;5s&#20869;&#27809;&#26377;&#21040;&#36798;,&#34987;&#35748;&#20026;&#36229;&#26102;*/&#10;&#9;.first_byte_timeout = 5s;&#10;    /* &#31532;&#19968;&#20010;&#23383;&#33410;&#21040;&#36798;&#21518;, &#22914;&#26524;&#21518;&#32493;&#23383;&#33410;&#22312;2s&#20869;&#27809;&#26377;&#21040;&#36798;,&#34987;&#35748;&#20026;&#26159;&#36229;&#26102; */&#10;&#9;.between_bytes_timeout = 2s;&#10;&#9;.probe = &#123;&#10;&#9;&#9;.url = &#34;/&#34;;&#10;&#9;&#9;.interval = 5s;&#10;&#9;&#9;.timeout = 1 s;&#10;&#9;&#9;.window = 5;&#10;&#9;&#9;.threshold = 3;&#10;    &#125;&#10;&#125;&#10;backend default8081 &#123;&#10;&#9;.host = &#34;127.0.0.1&#34;;&#10;&#9;.port = &#34;8081&#34;;&#10;&#9;.connect_timeout = 1s;&#10;&#9;.first_byte_timeout = 5s;&#10;&#9;.between_bytes_timeout = 2s;&#10;&#9;.probe = &#123;&#10;&#9;&#9;.url = &#34;/&#34;;&#10;&#9;&#9;.interval = 5s;&#10;&#9;&#9;.timeout = 1 s;&#10;&#9;&#9;.window = 5;&#10;&#9;&#9;.threshold = 3;&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p>有了两个后端服务器定义, default 和 default8081 . probe对象指出,Varnish应该每隔5秒去获取一次 / 的内容.如果超过一秒还没有得到内容,被认为是失败.如果五次获取有三次成功,那么认为后端服务器状态被认为是健康. 健康状态检查的详细信息请查看 <a href="http://www.varnish-cache.org/trac/wiki/BackendPolling" target="_blank" rel="external">backend health polling</a></p>
 <p>probe 在Varnish源码中定义为一个C Struct:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> vrt_backend_probe &#123;</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span>	*url;</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span>	*request;</span><br><span class="line">	<span class="keyword">double</span>		timeout;</span><br><span class="line">	<span class="keyword">double</span>		interval;</span><br><span class="line">	<span class="keyword">unsigned</span>	exp_status;</span><br><span class="line">	<span class="keyword">unsigned</span>	window;</span><br><span class="line">	<span class="keyword">unsigned</span>	threshold;</span><br><span class="line">	<span class="keyword">unsigned</span>	initial;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">struct vrt_backend_probe &#123;&#10;&#9;const char&#9;*url;&#10;&#9;const char&#9;*request;&#10;&#9;double&#9;&#9;timeout;&#10;&#9;double&#9;&#9;interval;&#10;&#9;unsigned&#9;exp_status;&#10;&#9;unsigned&#9;window;&#10;&#9;unsigned&#9;threshold;&#10;&#9;unsigned&#9;initial;&#10;&#125;;</span><br></pre></td></tr></table></figure>
 <p>Director 是一个或多个后端服务器的逻辑组, 在启用健康检查的情况下,当有后端服务器不可用时, 它会自动切换到另一个后端服务器上去. 这在需要系统宕机维护, 同时又不能中断服务的情况下是非常有用的, 比如,凌晨2:00,系统维护,可以关闭一台后端服务器,维护完成后再启动,接着维护下一台,以此类推.</p>
 <p>现在这两个后端需要被包含在一个逻辑的 director 中.被作为一个虚拟的后端,称之为 hezhiqiang:</p>
-<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">directory hezhiqiang round-robin </span><span class="expression">&#123;</span><br><span class="line">	&#123;<span class="variable">.backend</span> = <span class="variable"><span class="keyword">default</span></span>;&#125;</span><span class="xml"></span><br><span class="line">	</span><span class="expression">&#123;<span class="variable">.backend</span> = <span class="variable"><span class="keyword">default</span></span>8081;&#125;</span><span class="xml"></span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">directory hezhiqiang round-robin &#123;&#10;&#9;&#123;.backend = default;&#125;&#10;&#9;&#123;.backend = default8081;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p>关键字 <em>round-robin</em> 指出,请求会以轮询的方式分布到后端服务器.当前(varnish 3.0)还支持另外的director, 包括 simple, hash, random, dns, client.</p>
 <p>这些支持的后端负载均衡方式可以在源代码 <em>cache_backend_cfg.c</em> 文件中看到.</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">void</span><br><span class="line">VRT_init_dir(struct <span class="keyword">cli</span> *<span class="keyword">cli</span>, struct director **<span class="keyword">dir</span>, <span class="keyword">const</span> <span class="keyword">char</span> *name,</span><br><span class="line">    int idx, <span class="keyword">const</span> void *priv)</span><br><span class="line">&#123;</span><br><span class="line">	ASSERT_CLI();</span><br><span class="line">	<span class="keyword">if</span> (!strcmp(name, <span class="string">"simple"</span>))</span><br><span class="line">		VRT_init_dir_simple(<span class="keyword">cli</span>, <span class="keyword">dir</span>, idx, priv);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (!strcmp(name, <span class="string">"hash"</span>))</span><br><span class="line">		VRT_init_dir_hash(<span class="keyword">cli</span>, <span class="keyword">dir</span>, idx, priv);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (!strcmp(name, <span class="string">"random"</span>))</span><br><span class="line">		VRT_init_dir_random(<span class="keyword">cli</span>, <span class="keyword">dir</span>, idx, priv);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (!strcmp(name, <span class="string">"dns"</span>))</span><br><span class="line">		VRT_init_dir_dns(<span class="keyword">cli</span>, <span class="keyword">dir</span>, idx, priv);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (!strcmp(name, <span class="string">"round-robin"</span>))</span><br><span class="line">		VRT_init_dir_round_robin(<span class="keyword">cli</span>, <span class="keyword">dir</span>, idx, priv);</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (!strcmp(name, <span class="string">"client"</span>))</span><br><span class="line">		VRT_init_dir_client(<span class="keyword">cli</span>, <span class="keyword">dir</span>, idx, priv);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		INCOMPL();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void&#10;VRT_init_dir(struct cli *cli, struct director **dir, const char *name,&#10;    int idx, const void *priv)&#10;&#123;&#10;&#9;ASSERT_CLI();&#10;&#9;if (!strcmp(name, &#34;simple&#34;))&#10;&#9;&#9;VRT_init_dir_simple(cli, dir, idx, priv);&#10;&#9;else if (!strcmp(name, &#34;hash&#34;))&#10;&#9;&#9;VRT_init_dir_hash(cli, dir, idx, priv);&#10;&#9;else if (!strcmp(name, &#34;random&#34;))&#10;&#9;&#9;VRT_init_dir_random(cli, dir, idx, priv);&#10;&#9;else if (!strcmp(name, &#34;dns&#34;))&#10;&#9;&#9;VRT_init_dir_dns(cli, dir, idx, priv);&#10;&#9;else if (!strcmp(name, &#34;round-robin&#34;))&#10;&#9;&#9;VRT_init_dir_round_robin(cli, dir, idx, priv);&#10;&#9;else if (!strcmp(name, &#34;client&#34;))&#10;&#9;&#9;VRT_init_dir_client(cli, dir, idx, priv);&#10;&#9;else&#10;&#9;&#9;INCOMPL();&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p>现在可以把特定的请求定向到后端服务器了. 在 vcl_recv , 如下:</p>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="sub"><span class="keyword">sub</span> vcl_recv &#123;</span></span><br><span class="line">	<span class="comment"># 把后端服务器指向上面定义的 directory</span></span><br><span class="line">	set req.backend = hezhiqiang;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub vcl_recv &#123;&#10;&#9;# &#25226;&#21518;&#31471;&#26381;&#21153;&#22120;&#25351;&#21521;&#19978;&#38754;&#23450;&#20041;&#30340; directory&#10;&#9;set req.backend = hezhiqiang;&#10;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="Client_director">Client director</h2><p>Client director 在 Vanish 2.1.3以及之后版本可用.</p>
 <p>如果基于客户端提供的信息做负载均衡,比如IP地址, HTTP 头, 或则请求URL, 那么就可以使用client director</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sub vcl_recv &#123;</span><br><span class="line">	<span class="comment">/* Set which backend will be used  */</span></span><br><span class="line">	<span class="operator"><span class="keyword">set</span> req.backend = hezhiqiang;</span></span><br><span class="line">	<span class="comment">/* Load balance by user agent */</span></span><br><span class="line">	<span class="operator"><span class="keyword">set</span> client.<span class="keyword">identity</span> = req.url;</span></span><br><span class="line">	<span class="comment">/* Load balance by user agent */</span></span><br><span class="line">	#<span class="operator"><span class="keyword">set</span> client.<span class="keyword">identity</span> = client.ip;</span></span><br><span class="line">	<span class="comment">/* Load balance by user agent */</span></span><br><span class="line">	#<span class="operator"><span class="keyword">set</span> client.<span class="keyword">identity</span> = req.http.<span class="keyword">user</span>-agent;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub vcl_recv &#123;&#10;&#9;/* Set which backend will be used  */&#10;&#9;set req.backend = hezhiqiang;&#10;&#9;/* Load balance by user agent */&#10;&#9;set client.identity = req.url;&#10;&#9;/* Load balance by user agent */&#10;&#9;#set client.identity = client.ip;&#10;&#9;/* Load balance by user agent */&#10;&#9;#set client.identity = req.http.user-agent;&#10;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="DNS_Director">DNS Director</h2><p>指定384个后端服务器,其中全部在80端口监听, 0.4秒超时.</p>
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">director directorname dns &#123;</span><br><span class="line">	.<span class="variable">list =</span> &#123;</span><br><span class="line">		.<span class="variable">host_header =</span> <span class="string">"www.example.com"</span>;</span><br><span class="line">		.<span class="variable">port =</span> <span class="string">"80"</span>;</span><br><span class="line">		.<span class="variable">connect_timeout =</span> <span class="number">0.4</span>;</span><br><span class="line">		<span class="comment">/* 使用掩码标识的网段作为后端 */</span></span><br><span class="line">		<span class="string">"192.168.15.0"</span>/<span class="number">24</span>;</span><br><span class="line">		<span class="string">"192.168.16.128"</span>/<span class="number">25</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/* 指定DNS查询的缓存时间 */</span></span><br><span class="line">	.<span class="variable">ttl =</span> <span class="number">5</span>m;</span><br><span class="line">	<span class="comment">/* 追加到客户端提供的主机头后面 */</span></span><br><span class="line">	.<span class="variable">suffix =</span> <span class="string">"internal.example.net"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">director directorname dns &#123;&#10;&#9;.list = &#123;&#10;&#9;&#9;.host_header = &#34;www.example.com&#34;;&#10;&#9;&#9;.port = &#34;80&#34;;&#10;&#9;&#9;.connect_timeout = 0.4;&#10;&#9;&#9;/* &#20351;&#29992;&#25513;&#30721;&#26631;&#35782;&#30340;&#32593;&#27573;&#20316;&#20026;&#21518;&#31471; */&#10;&#9;&#9;&#34;192.168.15.0&#34;/24;&#10;&#9;&#9;&#34;192.168.16.128&#34;/25;&#10;&#9;&#125;&#10;&#9;/* &#25351;&#23450;DNS&#26597;&#35810;&#30340;&#32531;&#23384;&#26102;&#38388; */&#10;&#9;.ttl = 5m;&#10;&#9;/* &#36861;&#21152;&#21040;&#23458;&#25143;&#31471;&#25552;&#20379;&#30340;&#20027;&#26426;&#22836;&#21518;&#38754; */&#10;&#9;.suffix = &#34;internal.example.net&#34;;&#10;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="一个完整的配置">一个完整的配置</h2><p>采用round-robin双Nginx后端.搭建在Linode的Plan512 VPS节点上,同时采用XCache作为PHP的加速器,Percona MySQL 服务器.</p>
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*import std;*/</span></span><br><span class="line">backend default &#123;</span><br><span class="line">	.<span class="variable">host =</span> <span class="string">"127.0.0.1"</span>;</span><br><span class="line">	.<span class="variable">port =</span> <span class="string">"8080"</span>;</span><br><span class="line">	<span class="comment">/* Varnish 到后端服务器的连接超时, */</span></span><br><span class="line">	.<span class="variable">connect_timeout =</span> <span class="number">1</span>s;</span><br><span class="line">    <span class="comment">/* 和后端服务器建立连接后,即进入等待接收响应状态,如果响应的第一个字节在5s内没有到达,被认为超时*/</span></span><br><span class="line">	.<span class="variable">first_byte_timeout =</span> <span class="number">5</span>s;</span><br><span class="line">    <span class="comment">/* 第一个字节到达后, 如果后续字节在2s内没有到达,被认为是超时 */</span></span><br><span class="line">	.<span class="variable">between_bytes_timeout =</span> <span class="number">2</span>s;</span><br><span class="line">	.<span class="variable">probe =</span> &#123;</span><br><span class="line">		<span class="comment">/* 健康检查的目标URL */</span></span><br><span class="line">		.<span class="variable">url =</span> <span class="string">"/index.html"</span>;</span><br><span class="line">		<span class="comment">/* 每次检查间隔 */</span></span><br><span class="line">		.<span class="variable">interval =</span> <span class="number">5</span>s;</span><br><span class="line">		<span class="comment">/* 超时 */</span></span><br><span class="line">		.<span class="variable">timeout =</span> <span class="number">1</span> s;</span><br><span class="line">		<span class="comment">/* 检查次数 */</span></span><br><span class="line">		.<span class="variable">window =</span> <span class="number">5</span>;</span><br><span class="line">		<span class="comment">/* 成功次数 */</span></span><br><span class="line">		.<span class="variable">threshold =</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">backend default8081 &#123;</span><br><span class="line">	.<span class="variable">host =</span> <span class="string">"127.0.0.1"</span>;</span><br><span class="line">	.<span class="variable">port =</span> <span class="string">"8081"</span>;</span><br><span class="line">	.<span class="variable">connect_timeout =</span> <span class="number">1</span>s;</span><br><span class="line">	.<span class="variable">first_byte_timeout =</span> <span class="number">5</span>s;</span><br><span class="line">	.<span class="variable">between_bytes_timeout =</span> <span class="number">2</span>s;</span><br><span class="line">	.<span class="variable">probe =</span> &#123;</span><br><span class="line">		.<span class="variable">url =</span> <span class="string">"/"</span>;</span><br><span class="line">		.<span class="variable">interval =</span> <span class="number">5</span>s;</span><br><span class="line">		.<span class="variable">timeout =</span> <span class="number">1</span> s;</span><br><span class="line">		.<span class="variable">window =</span> <span class="number">5</span>;</span><br><span class="line">		.<span class="variable">threshold =</span> <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">director hezhiqiang round-robin &#123;</span><br><span class="line">	&#123;.<span class="variable">backend =</span> default;&#125;</span><br><span class="line">	&#123;.<span class="variable">backend =</span> default8081;&#125;</span><br><span class="line">&#125;</span><br><span class="line">sub vcl_recv &#123;</span><br><span class="line">	set req.<span class="variable">backend =</span> hezhiqiang;</span><br><span class="line">	<span class="comment"># Load balance by url</span></span><br><span class="line">	set client.<span class="variable">identity =</span> req.url;</span><br><span class="line">	<span class="comment"># Load balance by client ip</span></span><br><span class="line">	<span class="comment">#set client.identity = client.ip;</span></span><br><span class="line">	<span class="comment"># Load balance by user agent</span></span><br><span class="line">	<span class="comment">#set client.identity = req.http.user-agent;</span></span><br><span class="line">	<span class="comment"># std.log("fishy is going on with the vhost" + req.http.host);</span></span><br><span class="line">	<span class="keyword">if</span> (req.<span class="variable">request =</span>= <span class="string">"GET"</span> &amp;&amp; req.url ~ <span class="string">"\.(gif|jpg|png|swf|css|js)$"</span>) &#123;</span><br><span class="line">		unset req.http.Cookie;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment"># do not cache the /tag, /textpattern, and /category</span></span><br><span class="line">	<span class="keyword">if</span> ( req.url ~ <span class="string">"^/tag/"</span> ) &#123;</span><br><span class="line">		return (pass);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ( req.url ~ <span class="string">"^/textpattern/"</span>) &#123;</span><br><span class="line">		return (pass);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ( req.url ~ <span class="string">"^/category/"</span> ) &#123;</span><br><span class="line">		return (pass);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ( req.url ~ <span class="string">"^/html/"</span>) &#123;</span><br><span class="line">		return (pass);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">sub vcl_deliver &#123;</span><br><span class="line">	<span class="comment"># add debugging headers, so we can see what's cached</span></span><br><span class="line">	set resp.http.<span class="variable">X-Served-By =</span> server.hostname;</span><br><span class="line">	<span class="keyword">if</span> (obj.hits &gt; <span class="number">0</span>) &#123;</span><br><span class="line">		set resp.http.<span class="variable">X-Cache =</span> <span class="string">"HIT"</span>;</span><br><span class="line">		set resp.http.<span class="variable">X-Cache-Hits =</span> obj.hits;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		set resp.http.<span class="variable">X-Cache =</span> <span class="string">"MISS"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment"># remove some headers added by varnish</span></span><br><span class="line">	<span class="comment"># unset resp.http.Via;</span></span><br><span class="line">	<span class="comment"># unset resp.http.X-Varnish;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/*import std;*/&#10;backend default &#123;&#10;&#9;.host = &#34;127.0.0.1&#34;;&#10;&#9;.port = &#34;8080&#34;;&#10;&#9;/* Varnish &#21040;&#21518;&#31471;&#26381;&#21153;&#22120;&#30340;&#36830;&#25509;&#36229;&#26102;, */&#10;&#9;.connect_timeout = 1s;&#10;    /* &#21644;&#21518;&#31471;&#26381;&#21153;&#22120;&#24314;&#31435;&#36830;&#25509;&#21518;,&#21363;&#36827;&#20837;&#31561;&#24453;&#25509;&#25910;&#21709;&#24212;&#29366;&#24577;,&#22914;&#26524;&#21709;&#24212;&#30340;&#31532;&#19968;&#20010;&#23383;&#33410;&#22312;5s&#20869;&#27809;&#26377;&#21040;&#36798;,&#34987;&#35748;&#20026;&#36229;&#26102;*/&#10;&#9;.first_byte_timeout = 5s;&#10;    /* &#31532;&#19968;&#20010;&#23383;&#33410;&#21040;&#36798;&#21518;, &#22914;&#26524;&#21518;&#32493;&#23383;&#33410;&#22312;2s&#20869;&#27809;&#26377;&#21040;&#36798;,&#34987;&#35748;&#20026;&#26159;&#36229;&#26102; */&#10;&#9;.between_bytes_timeout = 2s;&#10;&#9;.probe = &#123;&#10;&#9;&#9;/* &#20581;&#24247;&#26816;&#26597;&#30340;&#30446;&#26631;URL */&#10;&#9;&#9;.url = &#34;/index.html&#34;;&#10;&#9;&#9;/* &#27599;&#27425;&#26816;&#26597;&#38388;&#38548; */&#10;&#9;&#9;.interval = 5s;&#10;&#9;&#9;/* &#36229;&#26102; */&#10;&#9;&#9;.timeout = 1 s;&#10;&#9;&#9;/* &#26816;&#26597;&#27425;&#25968; */&#10;&#9;&#9;.window = 5;&#10;&#9;&#9;/* &#25104;&#21151;&#27425;&#25968; */&#10;&#9;&#9;.threshold = 3;&#10;    &#125;&#10;&#125;&#10;backend default8081 &#123;&#10;&#9;.host = &#34;127.0.0.1&#34;;&#10;&#9;.port = &#34;8081&#34;;&#10;&#9;.connect_timeout = 1s;&#10;&#9;.first_byte_timeout = 5s;&#10;&#9;.between_bytes_timeout = 2s;&#10;&#9;.probe = &#123;&#10;&#9;&#9;.url = &#34;/&#34;;&#10;&#9;&#9;.interval = 5s;&#10;&#9;&#9;.timeout = 1 s;&#10;&#9;&#9;.window = 5;&#10;&#9;&#9;.threshold = 3;&#10;    &#125;&#10;&#125;&#10;director hezhiqiang round-robin &#123;&#10;&#9;&#123;.backend = default;&#125;&#10;&#9;&#123;.backend = default8081;&#125;&#10;&#125;&#10;sub vcl_recv &#123;&#10;&#9;set req.backend = hezhiqiang;&#10;&#9;# Load balance by url&#10;&#9;set client.identity = req.url;&#10;&#9;# Load balance by client ip&#10;&#9;#set client.identity = client.ip;&#10;&#9;# Load balance by user agent&#10;&#9;#set client.identity = req.http.user-agent;&#10;&#9;# std.log(&#34;fishy is going on with the vhost&#34; + req.http.host);&#10;&#9;if (req.request == &#34;GET&#34; &#38;&#38; req.url ~ &#34;\.(gif|jpg|png|swf|css|js)$&#34;) &#123;&#10;&#9;&#9;unset req.http.Cookie;&#10;&#9;&#125;&#10;&#9;# do not cache the /tag, /textpattern, and /category&#10;&#9;if ( req.url ~ &#34;^/tag/&#34; ) &#123;&#10;&#9;&#9;return (pass);&#10;&#9;&#125;&#10;&#9;if ( req.url ~ &#34;^/textpattern/&#34;) &#123;&#10;&#9;&#9;return (pass);&#10;&#9;&#125;&#10;&#9;if ( req.url ~ &#34;^/category/&#34; ) &#123;&#10;&#9;&#9;return (pass);&#10;&#9;&#125;&#10;&#9;if ( req.url ~ &#34;^/html/&#34;) &#123;&#10;&#9;&#9;return (pass);&#10;&#9;&#125;&#10;&#125;&#10;sub vcl_deliver &#123;&#10;&#9;# add debugging headers, so we can see what&#39;s cached&#10;&#9;set resp.http.X-Served-By = server.hostname;&#10;&#9;if (obj.hits &#62; 0) &#123;&#10;&#9;&#9;set resp.http.X-Cache = &#34;HIT&#34;;&#10;&#9;&#9;set resp.http.X-Cache-Hits = obj.hits;&#10;&#9;&#125;&#10;&#9;else &#123;&#10;&#9;&#9;set resp.http.X-Cache = &#34;MISS&#34;;&#10;&#9;&#125;&#10;&#9;# remove some headers added by varnish&#10;&#9;# unset resp.http.Via;&#10;&#9;# unset resp.http.X-Varnish;&#10;&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -544,38 +966,38 @@
 </ul>
 </li>
 </ul>
-<h2 id="Example">Example</h2><figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="pp"><span class="keyword">-module</span><span class="params">(kvs)</span></span>.</span><br><span class="line"><span class="comment">%% Include files</span></span><br><span class="line"><span class="comment">%% Exported Functions</span></span><br><span class="line"><span class="pp"><span class="keyword">-export</span><span class="params">([start/<span class="number">0</span>, store/<span class="number">2</span>, lookup/<span class="number">1</span>])</span></span>.</span><br><span class="line"><span class="comment">%% API Functions</span></span><br><span class="line"><span class="function"><span class="title">start</span><span class="params">()</span> -&gt;</span></span><br><span class="line">    <span class="function_name">io:format</span>(<span class="string">"starting server...~n"</span>),</span><br><span class="line">    <span class="comment">% 启动kvs服务,派生一个新进程,进入循环</span></span><br><span class="line">    <span class="function_name">register</span>(kvs, <span class="function_name">spawn</span>(<span class="keyword">fun</span>()-&gt; <span class="function_name">loop</span>() <span class="keyword">end</span>)).</span><br><span class="line"><span class="function"><span class="title">store</span><span class="params">(<span class="variable">Key</span>, <span class="variable">Value</span>)</span> -&gt;</span></span><br><span class="line">    <span class="function_name">io:format</span>(<span class="string">"store~n"</span>),</span><br><span class="line">    <span class="function_name">rpc</span>(<span class="tuple">&#123;store, <span class="variable">Key</span>, <span class="variable">Value</span>&#125;</span>).</span><br><span class="line"><span class="function"><span class="title">lookup</span><span class="params">(<span class="variable">Key</span>)</span> -&gt;</span></span><br><span class="line">    <span class="function_name">io:format</span>(<span class="string">"call lookup~n"</span>),</span><br><span class="line">    <span class="function_name">rpc</span>(<span class="tuple">&#123;lookup, <span class="variable">Key</span>&#125;</span>).</span><br><span class="line"><span class="comment">% Local Functions</span></span><br><span class="line"><span class="comment">% 消息代理函数</span></span><br><span class="line"><span class="function"><span class="title">rpc</span><span class="params">(<span class="variable">Q</span>)</span> -&gt;</span></span><br><span class="line">    <span class="function_name">io:format</span>(<span class="string">"rpc~n"</span>),</span><br><span class="line">    <span class="comment">% 向进程kvs发送消息 &#123;self(), Q&#125;,其中self()表示当前进程Pid, Q为参数</span></span><br><span class="line">    kvs ! <span class="tuple">&#123;<span class="function_name">self</span>(), <span class="variable">Q</span>&#125;</span>,</span><br><span class="line">    <span class="keyword">receive</span></span><br><span class="line">        <span class="tuple">&#123;kvs, <span class="variable">Reply</span>&#125;</span> -&gt;</span><br><span class="line">            <span class="variable">Reply</span></span><br><span class="line">    <span class="keyword">end</span>.</span><br><span class="line"><span class="function"><span class="title">loop</span><span class="params">()</span> -&gt;</span></span><br><span class="line">    <span class="function_name">io:format</span>(<span class="string">"entering loop...~n"</span>),</span><br><span class="line">    <span class="keyword">receive</span></span><br><span class="line">        <span class="tuple">&#123;<span class="variable">From</span>, <span class="tuple">&#123;store, <span class="variable">Key</span>, <span class="variable">Value</span>&#125;</span>&#125;</span> -&gt;</span><br><span class="line">            <span class="function_name">io:format</span>(<span class="string">"value ~p with ~p stored~n"</span>, [<span class="variable">Value</span>, <span class="variable">Key</span>]),</span><br><span class="line">            <span class="function_name">put</span>(<span class="variable">Key</span>, <span class="tuple">&#123;ok,<span class="variable">Value</span>&#125;</span>),</span><br><span class="line">            <span class="variable">From</span> ! <span class="tuple">&#123;kvs, true&#125;</span>,</span><br><span class="line">            <span class="function_name">loop</span>();</span><br><span class="line">        <span class="tuple">&#123;<span class="variable">From</span>, <span class="tuple">&#123;lookup, <span class="variable">Key</span>&#125;</span>&#125;</span> -&gt;</span><br><span class="line">            <span class="function_name">io:format</span>(<span class="string">"get the value of key: ~p~n"</span>, [<span class="variable">Key</span>]),</span><br><span class="line">            <span class="variable">From</span> ! <span class="tuple">&#123;kvs, <span class="function_name">get</span>(<span class="variable">Key</span>)&#125;</span>,</span><br><span class="line">            <span class="function_name">loop</span>()</span><br><span class="line">    <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h2 id="Example">Example</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-module(kvs).&#10;%% Include files&#10;%% Exported Functions&#10;-export([start/0, store/2, lookup/1]).&#10;%% API Functions&#10;start() -&#62;&#10;    io:format(&#34;starting server...~n&#34;),&#10;    % &#21551;&#21160;kvs&#26381;&#21153;,&#27966;&#29983;&#19968;&#20010;&#26032;&#36827;&#31243;,&#36827;&#20837;&#24490;&#29615;&#10;    register(kvs, spawn(fun()-&#62; loop() end)).&#10;store(Key, Value) -&#62;&#10;    io:format(&#34;store~n&#34;),&#10;    rpc(&#123;store, Key, Value&#125;).&#10;lookup(Key) -&#62;&#10;    io:format(&#34;call lookup~n&#34;),&#10;    rpc(&#123;lookup, Key&#125;).&#10;% Local Functions&#10;% &#28040;&#24687;&#20195;&#29702;&#20989;&#25968;&#10;rpc(Q) -&#62;&#10;    io:format(&#34;rpc~n&#34;),&#10;    % &#21521;&#36827;&#31243;kvs&#21457;&#36865;&#28040;&#24687; &#123;self(), Q&#125;,&#20854;&#20013;self()&#34920;&#31034;&#24403;&#21069;&#36827;&#31243;Pid, Q&#20026;&#21442;&#25968;&#10;    kvs ! &#123;self(), Q&#125;,&#10;    receive&#10;        &#123;kvs, Reply&#125; -&#62;&#10;            Reply&#10;    end.&#10;loop() -&#62;&#10;    io:format(&#34;entering loop...~n&#34;),&#10;    receive&#10;        &#123;From, &#123;store, Key, Value&#125;&#125; -&#62;&#10;            io:format(&#34;value ~p with ~p stored~n&#34;, [Value, Key]),&#10;            put(Key, &#123;ok,Value&#125;),&#10;            From ! &#123;kvs, true&#125;,&#10;            loop();&#10;        &#123;From, &#123;lookup, Key&#125;&#125; -&#62;&#10;            io:format(&#34;get the value of key: ~p~n&#34;, [Key]),&#10;            From ! &#123;kvs, get(Key)&#125;,&#10;            loop()&#10;    end</span><br></pre></td></tr></table></figure>
 <h2 id="操作步骤">操作步骤</h2><ul>
 <li>启动两个终端, 分别输入</li>
 </ul>
-<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">erl -sname <span class="keyword">server</span></span><br><span class="line">erl -sname <span class="keyword">client</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erl -sname server&#10;erl -sname client</span><br></pre></td></tr></table></figure>
 <ul>
 <li>在真实的分布式环境中,请使用</li>
 </ul>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">erl -<span class="property">name</span> server</span><br><span class="line">erl -<span class="property">name</span> client</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erl -name server&#10;erl -name client</span><br></pre></td></tr></table></figure>
 <p><code>-name</code>需要使用到DNS服务,而<code>-sname</code>不需要使用DNS,可用于本机测试,局域网也可以使用<code>-sname</code>启动Erlang系统.</p>
 <p>启动服务器, 派生一个新进程,立即进入循环</p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(server@localhost) &gt; kvs:start().</span><br><span class="line">starting server...</span><br><span class="line">entering loop...</span><br><span class="line"><span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(server@localhost) &#62; kvs:start().&#10;starting server...&#10;entering loop...&#10;true</span><br></pre></td></tr></table></figure>
 <ul>
 <li>客户端通过RPC调用服务器函数 store 存储一个值</li>
 </ul>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(client@localhost) &gt; rpc:<span class="function"><span class="title">call</span><span class="params">(<span class="string">'server@localhost'</span>,kvs,store,[google, <span class="string">"http://www.google.com"</span>])</span></span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(client@localhost) &#62; rpc:call(&#39;server@localhost&#39;,kvs,store,[google, &#34;http://www.google.com&#34;]).</span><br></pre></td></tr></table></figure>
 <ul>
 <li>服务器输出,再次进入loop等待下一个消息:</li>
 </ul>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(server<span class="property">@localhost</span>) &gt; value <span class="string">"http://www.google.com"</span> <span class="reserved">with</span> google stored</span><br><span class="line">(server<span class="property">@localhost</span>) &gt; <span class="keyword">loop</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(server@localhost) &#62; value &#34;http://www.google.com&#34; with google stored&#10;(server@localhost) &#62; loop</span><br></pre></td></tr></table></figure>
 <ul>
 <li>客户端查询</li>
 </ul>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="tag">client</span><span class="at_rule">@<span class="keyword">localhost)</span> &gt; rpc:<span class="function">call</span>(<span class="string">'server@localhost'</span>,kvs,lookup,[google]).</span><br><span class="line">call lookup</span><br><span class="line">rpc</span><br><span class="line"></span>&#123;<span class="tag">ok</span>,"<span class="rule"><span class="attribute">http</span>:<span class="value">//www.google.com<span class="string">"&#125;</span></span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(client@localhost) &#62; rpc:call(&#39;server@localhost&#39;,kvs,lookup,[google]).&#10;call lookup&#10;rpc&#10;&#123;ok,&#34;http://www.google.com&#34;&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>服务器输出</li>
 </ul>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(server<span class="property">@localhost</span>) &gt; get the value <span class="keyword">of</span> <span class="attribute">key</span>: google</span><br><span class="line">(server<span class="property">@localhost</span>) &gt; <span class="keyword">loop</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(server@localhost) &#62; get the value of key: google&#10;(server@localhost) &#62; loop</span><br></pre></td></tr></table></figure>
 <ul>
 <li>本地调用实际上也是通过rpc向kvs服务器发送消息</li>
 </ul>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(server@localhost)<span class="number">2</span>&gt; kvs:lookup(google).</span><br><span class="line">call lookup</span><br><span class="line">rpc</span><br><span class="line"><span class="built_in">get</span> <span class="operator">the</span> <span class="built_in">value</span> <span class="operator">of</span> key: google</span><br><span class="line">loop</span><br><span class="line">&#123;ok,<span class="string">"http://www.google.com"</span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(server@localhost)2&#62; kvs:lookup(google).&#10;call lookup&#10;rpc&#10;get the value of key: google&#10;loop&#10;&#123;ok,&#34;http://www.google.com&#34;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="消息传递图示">消息传递图示</h2><p><img src="/assets/images/process-message-passing.png" alt="消息传递图示"></p>
 <h2 id="结语">结语</h2><ul>
 <li>本文使用进程字典作为Key,Value存储仅作为示例,真实环境中是不可能的.切忌照搬.</li>
@@ -630,13 +1052,13 @@
         
 
 
-        <figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Eshell V5<span class="built_in">.8</span>  (<span class="keyword">abort</span> <span class="keyword">with</span> ^G)</span><br><span class="line"><span class="subst">%</span> 最长单个匹配</span><br><span class="line">regexp:<span class="keyword">match</span>(<span class="string">"linux,windows,erlang,php,mysql"</span>, <span class="string">"[a-z]+"</span>)<span class="built_in">.</span><br><span class="line"></span>&#123;<span class="keyword">match</span>,<span class="number">7</span>,<span class="number">7</span>&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% 首个匹配</span><br><span class="line"><span class="rule"><span class="attribute">regexp</span>:<span class="value"><span class="function">first_match</span>(<span class="string">"linux,erlang,mysql,mnesia"</span>, <span class="string">"[a-z]+"</span>).</span><br><span class="line">&#123;match,<span class="number">1</span>,<span class="number">5</span>&#125;</span></span></span><br></pre></td></tr></table></figure>
-<figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">% 匹配,并获取linux子串</span></span><br><span class="line"><span class="prompt">1&gt; </span>&#123;<span class="variable">M</span>,<span class="variable">L</span>&#125; = <span class="function_or_atom">regexp:matches</span>(<span class="string">"linux,erlang,mysql,mnesia"</span>, <span class="string">"[a-z]+"</span>),</span><br><span class="line"><span class="prompt">1&gt; </span>&#123;<span class="variable">Start</span>, <span class="variable">Length</span>&#125; = <span class="function_or_atom">lists:nth</span>(<span class="number">1</span>, <span class="variable">L</span>),</span><br><span class="line"><span class="prompt">1&gt; </span><span class="variable">Substring</span> = <span class="function_or_atom">string:substr</span>(<span class="string">"linux,erlang,mysql,mnesia"</span>,<span class="variable">Start</span>,<span class="variable">Length</span>),</span><br><span class="line"><span class="prompt">1&gt; </span><span class="function_or_atom">io:format</span>(<span class="string">"The first substring is ~p~n"</span>, [<span class="variable">Substring</span>]).</span><br><span class="line"><span class="variable">The</span> <span class="function_or_atom">first</span> <span class="function_or_atom">substring</span> <span class="function_or_atom">is</span> <span class="string">"linux"</span></span><br><span class="line"><span class="ok">ok</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% 替换</span><br><span class="line">regexp:<span class="sub"><span class="keyword">sub</span>("webmaster@gmail.com", "@[a-z\.]+", "@163.com").</span><br><span class="line">&#123;</span>ok,<span class="string">"webmaster<span class="variable">@163</span>.com"</span>,<span class="number">1</span>&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% 全局替换</span><br><span class="line">regexp:gsub(<span class="string">"webmaster<span class="variable">@gmail</span>.com,admin<span class="variable">@gmail</span>.com"</span>, <span class="string">"<span class="variable">@[</span>a-z\.]+"</span>, <span class="string">"<span class="variable">@163</span>.com"</span>).</span><br><span class="line">&#123;ok,<span class="string">"webmaster<span class="variable">@163</span>.com,admin<span class="variable">@163</span>.com"</span>,<span class="number">2</span>&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">% 切分</span><br><span class="line">regexp:<span class="keyword">split</span>(<span class="string">"webmaster<span class="variable">@gmail</span>.com admin<span class="variable">@gmail</span>.com"</span>, <span class="string">"\s"</span>).</span><br><span class="line">&#123;ok,[<span class="string">"webmaster<span class="variable">@gmail</span>.com"</span>,<span class="string">"admin<span class="variable">@gmail</span>.com"</span>]&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">% 解析(编译)一次正则表达式,使之能够到处重用,类似Python的re.compile</span></span><br><span class="line"><span class="prompt">7&gt; </span><span class="variable">RE</span> = <span class="function_or_atom">regexp:parse</span>(<span class="string">"[a-z]+"</span>).</span><br><span class="line">&#123;<span class="ok">ok</span>,&#123;<span class="function_or_atom">pclosure</span>,&#123;<span class="function_or_atom">char_class</span>,[&#123;<span class="number">97</span>,<span class="number">122</span>&#125;]&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Eshell V5.8  (abort with ^G)&#10;% &#26368;&#38271;&#21333;&#20010;&#21305;&#37197;&#10;regexp:match(&#34;linux,windows,erlang,php,mysql&#34;, &#34;[a-z]+&#34;).&#10;&#123;match,7,7&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% &#39318;&#20010;&#21305;&#37197;&#10;regexp:first_match(&#34;linux,erlang,mysql,mnesia&#34;, &#34;[a-z]+&#34;).&#10;&#123;match,1,5&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% &#21305;&#37197;,&#24182;&#33719;&#21462;linux&#23376;&#20018;&#10;1&#62; &#123;M,L&#125; = regexp:matches(&#34;linux,erlang,mysql,mnesia&#34;, &#34;[a-z]+&#34;),&#10;1&#62; &#123;Start, Length&#125; = lists:nth(1, L),&#10;1&#62; Substring = string:substr(&#34;linux,erlang,mysql,mnesia&#34;,Start,Length),&#10;1&#62; io:format(&#34;The first substring is ~p~n&#34;, [Substring]).&#10;The first substring is &#34;linux&#34;&#10;ok</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% &#26367;&#25442;&#10;regexp:sub(&#34;webmaster@gmail.com&#34;, &#34;@[a-z\.]+&#34;, &#34;@163.com&#34;).&#10;&#123;ok,&#34;webmaster@163.com&#34;,1&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% &#20840;&#23616;&#26367;&#25442;&#10;regexp:gsub(&#34;webmaster@gmail.com,admin@gmail.com&#34;, &#34;@[a-z\.]+&#34;, &#34;@163.com&#34;).&#10;&#123;ok,&#34;webmaster@163.com,admin@163.com&#34;,2&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% &#20999;&#20998;&#10;regexp:split(&#34;webmaster@gmail.com admin@gmail.com&#34;, &#34;\s&#34;).&#10;&#123;ok,[&#34;webmaster@gmail.com&#34;,&#34;admin@gmail.com&#34;]&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% &#35299;&#26512;(&#32534;&#35793;)&#19968;&#27425;&#27491;&#21017;&#34920;&#36798;&#24335;,&#20351;&#20043;&#33021;&#22815;&#21040;&#22788;&#37325;&#29992;,&#31867;&#20284;Python&#30340;re.compile&#10;7&#62; RE = regexp:parse(&#34;[a-z]+&#34;).&#10;&#123;ok,&#123;pclosure,&#123;char_class,[&#123;97,122&#125;]&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer>
@@ -690,19 +1112,19 @@
 </ol>
 <p><img src="/assets/images/git-clone-and-compile-rebar.png" alt="下载Rebar源码并编译"><br><img src="/assets/images/rebar-commands.png" alt="rebar命令"><br><img src="/assets/images/rebar-help.png" alt="选项"></p>
 <p><a href="https://github.com/rebar/rebar/wiki/Getting-started" target="_blank" rel="external">https://bitbucket.org/basho/rebar/wiki/GettingStarted</a>这篇文章是直接下载二进制的rabar,建议从源代码进行编译,可以了解rebar的更多信息.还有现成的rebar.config配置文件,下载编译过程很简单,请看图一</p>
-<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">debian:</span>~/erlang<span class="preprocessor"># hg clone https://bitbucket.org/basho/rebar</span></span><br><span class="line"><span class="label">debian:</span>~/erlang<span class="preprocessor"># cd rebar</span></span><br><span class="line"><span class="label">debian:</span>~/erlang<span class="preprocessor"># ./bootstrap</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">debian:~/erlang# hg clone https://bitbucket.org/basho/rebar&#10;debian:~/erlang# cd rebar&#10;debian:~/erlang# ./bootstrap</span><br></pre></td></tr></table></figure>
 <p>在src/myapp_app.erl文件的-export()指令后面添加如下行:</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-<span class="function"><span class="title">ifdef</span><span class="params">(TEST)</span></span>.</span><br><span class="line">-<span class="function"><span class="title">include_lib</span><span class="params">(<span class="string">"eunit/include/eunit.hrl"</span>)</span></span>.</span><br><span class="line">-endif.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-ifdef(TEST).&#10;-include_lib(&#34;eunit/include/eunit.hrl&#34;).&#10;-endif.</span><br></pre></td></tr></table></figure>
 <p>在文件的末尾添加如下行:</p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="pp"><span class="keyword">-ifdef</span><span class="params">(<span class="variable">TEST</span>)</span></span>.</span><br><span class="line"><span class="function"><span class="title">simple_test</span><span class="params">()</span> -&gt;</span></span><br><span class="line">    ok = <span class="function_name">application:start</span>(myapp),</span><br><span class="line">    ?<span class="function_name">assertNot</span>(undefined == <span class="function_name">whereis</span>(myapp_sup)).</span><br><span class="line"><span class="pp"><span class="keyword">-endif</span></span>.</span><br></pre></td></tr></table></figure>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">debian:~<span class="regexp">/erlang/</span>rebar<span class="regexp">/myapp# ./</span>rebat <span class="keyword">compile</span> eunit</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-ifdef(TEST).&#10;simple_test() -&#62;&#10;    ok = application:start(myapp),&#10;    ?assertNot(undefined == whereis(myapp_sup)).&#10;-endif.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">debian:~/erlang/rebar/myapp# ./rebat compile eunit</span><br></pre></td></tr></table></figure>
 <p>输出</p>
-<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">debian:~/erlang/rebar/myapp# ./rebar compile eunit</span><br><span class="line">=<span class="ruby"><span class="status">=&gt;</span> myapp (compile)</span><br><span class="line"></span>=<span class="ruby"><span class="status">=&gt;</span> myapp (eunit)</span><br><span class="line"></span>  Test passed.</span><br><span class="line">Cover analysis: /var/root/erlang/rebar/myapp/.eunit/index.html</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">debian:~/erlang/rebar/myapp# ./rebar compile eunit&#10;==&#62; myapp (compile)&#10;==&#62; myapp (eunit)&#10;  Test passed.&#10;Cover analysis: /var/root/erlang/rebar/myapp/.eunit/index.html</span><br></pre></td></tr></table></figure>
 <p><code>.eunit</code>目录中包含了一些调试信息.</p>
 <p>在rebar.config中添加如下行,让rebar为我们生成代码覆盖率信息.</p>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;cover_enabled, <span class="literal">true</span>&#125;.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;cover_enabled, true&#125;.</span><br></pre></td></tr></table></figure>
 <p>执行:</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">debian:</span><span class="regexp">~/erlang/</span>rebar<span class="regexp">/myapp# ./</span>rebar clean</span><br><span class="line"><span class="string">debian:</span><span class="regexp">~/erlang/</span>rebar<span class="regexp">/myapp# ./</span>rebar compile eunit</span><br><span class="line">==&gt; myapp (compile)</span><br><span class="line">==&gt; myapp (eunit)</span><br><span class="line">  Test passed.</span><br><span class="line">Cover <span class="string">analysis:</span> <span class="regexp">/var/</span>root<span class="regexp">/erlang/</span>rebar<span class="regexp">/myapp/</span>.eunit/index.html</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">debian:~/erlang/rebar/myapp# ./rebar clean&#10;debian:~/erlang/rebar/myapp# ./rebar compile eunit&#10;==&#62; myapp (compile)&#10;==&#62; myapp (eunit)&#10;  Test passed.&#10;Cover analysis: /var/root/erlang/rebar/myapp/.eunit/index.html</span><br></pre></td></tr></table></figure>
 <p>覆盖率报告html文件生成了.</p>
 <h3 id="命令">命令</h3><p>Rebar提供了开发过程中大多数功能, 包括:</p>
 <ul>
@@ -813,39 +1235,39 @@
 <li>支持在运行时改变Appender的格式和级别.</li>
 </ul>
 <h2 id="Step1-_Checkout_from_repository">Step1. Checkout from repository</h2><p>你可以从 -Google code 或者- Github上获取Log4erl的源代码, <em>Google code上的代码已经旧了,建议从Github上clone 代码</em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git://github.com/ahmednawras/<span class="built_in">log</span>4erl.git <span class="built_in">log</span>4erl</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git://github.com/ahmednawras/log4erl.git log4erl</span><br></pre></td></tr></table></figure>
 <p><img src="/assets/images/clone-log4erl.png" alt="Clone a copy from github"><br><img src="/assets/images/checkout-log4erl.png" alt="Checkout a copy from google code"><br><img src="/assets/images/log4erl-directory-structure.png" alt="Log4erl目录结构"><br><img src="/assets/images/compile-log4erl.png" alt="编译Log4erl"></p>
 <h2 id="Step2-_编译">Step2. 编译</h2><p>如图4, 进入Log4erl源代码目录src执行:</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make:<span class="function"><span class="title">all</span><span class="params">([&#123;outdir, <span class="string">"../ebin"</span>&#125;])</span></span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make:all([&#123;outdir, &#34;../ebin&#34;&#125;]).</span><br></pre></td></tr></table></figure>
 <h2 id="Step3-_安装">Step3. 安装</h2><p>你要让Erlang能够找到Log4erl,两种方式</p>
 <ol>
 <li>把整个Log4erl目录复制到$ERLANG_HOME/lib目录下面.看上面第三张图.</li>
 <li>命令行指定</li>
 </ol>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erl -pz /path/<span class="keyword">to</span>/log4erl</span><br></pre></td></tr></table></figure>
-<h2 id="Step4-_使用">Step4. 使用</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">application:<span class="function"><span class="title">start</span><span class="params">(log4erl)</span></span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erl -pz /path/to/log4erl</span><br></pre></td></tr></table></figure>
+<h2 id="Step4-_使用">Step4. 使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">application:start(log4erl).</span><br></pre></td></tr></table></figure>
 <p>创建配置文件并调用log4erl:conf(file)初始化</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log4erl:<span class="function"><span class="title">conf</span><span class="params">(<span class="string">"priv/log4erl.conf"</span>)</span></span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log4erl:conf(&#34;priv/log4erl.conf&#34;).</span><br></pre></td></tr></table></figure>
 <p>同样你可以用编程的方式对Log4erl进行配置</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">log4erl:<span class="function"><span class="title">add_logger</span><span class="params">(messages_log)</span></span>.</span><br><span class="line">log4erl:<span class="function"><span class="title">add_console_appender</span><span class="params">(messages_log, cmd_logs, &#123;warn, <span class="string">"[%L] %l%n"</span>&#125;)</span></span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log4erl:add_logger(messages_log).&#10;log4erl:add_console_appender(messages_log, cmd_logs, &#123;warn, &#34;[%L] %l%n&#34;&#125;).</span><br></pre></td></tr></table></figure>
 <p>好了,现在可以使用它了.</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log4erl:<span class="function"><span class="title">info</span><span class="params">(<span class="string">"Information message"</span>)</span></span>.</span><br></pre></td></tr></table></figure>
-<h2 id="Log4erl配置文件格式">Log4erl配置文件格式</h2><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">logger <span class="annotation">[&lt;name&gt;]</span> &#123;</span><br><span class="line">       ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log4erl:info(&#34;Information message&#34;).</span><br></pre></td></tr></table></figure>
+<h2 id="Log4erl配置文件格式">Log4erl配置文件格式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">logger [&#60;name&#62;] &#123;&#10;       ...&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p><code>&lt;name&gt;</code> 指定了Logger的名称,你可以去任意你喜欢的名字.如果不指定任何名字,那么log4erl将把它作为默认的Logger使用,例如:</p>
-<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">%</span><span class="preprocessor">%</span> default logger</span><br><span class="line">logger &#123;</span><br><span class="line">       ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% default logger&#10;logger &#123;&#10;       ...&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p>在一个Logger中,可以有一到多个Appender,例如</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">%% Default logger</span><br><span class="line">%% it includes a <span class="keyword">file</span> appender and a console appender</span><br><span class="line">logger&#123;</span><br><span class="line">	file_appender app2&#123;</span><br><span class="line">		<span class="keyword">dir</span> = <span class="string">"."</span>,</span><br><span class="line">		level = info,</span><br><span class="line">		<span class="keyword">file</span> = my_app,</span><br><span class="line">		<span class="keyword">type</span> = size,</span><br><span class="line">		max = 100000,</span><br><span class="line">		suffix = <span class="keyword">log</span>,</span><br><span class="line">		rotation = 5,</span><br><span class="line">		<span class="keyword">format</span> = '[%<span class="keyword">L</span>] %I %<span class="keyword">l</span>%<span class="keyword">n</span>'</span><br><span class="line">	&#125;</span><br><span class="line">	console_appender app1&#123;</span><br><span class="line">		level = warn,</span><br><span class="line">		<span class="keyword">format</span> = '%T %j [%<span class="keyword">L</span>] %<span class="keyword">l</span>%<span class="keyword">n</span>'</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% Default logger&#10;%% it includes a file appender and a console appender&#10;logger&#123;&#10;&#9;file_appender app2&#123;&#10;&#9;&#9;dir = &#34;.&#34;,&#10;&#9;&#9;level = info,&#10;&#9;&#9;file = my_app,&#10;&#9;&#9;type = size,&#10;&#9;&#9;max = 100000,&#10;&#9;&#9;suffix = log,&#10;&#9;&#9;rotation = 5,&#10;&#9;&#9;format = &#39;[%L] %I %l%n&#39;&#10;&#9;&#125;&#10;&#9;console_appender app1&#123;&#10;&#9;&#9;level = warn,&#10;&#9;&#9;format = &#39;%T %j [%L] %l%n&#39;&#10;&#9;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p>Appender的配置格式如下</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">appender_type</span>&gt;</span> <span class="tag">&lt;<span class="title">name</span>&gt;</span> &#123;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;appender_type&#62; &#60;name&#62; &#123;&#10;&#9;...&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p>在Appender中你可以用’property=value’的格式来设置Appender的属性,属性剑以’,’逗号分隔.每种Appender有不同的属性集合.</p>
 <p>公共属性:</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">level   = &lt;<span class="type">Level</span>&gt;     =&gt; 日志级别 (例如: warn)</span><br><span class="line">format  = &lt;<span class="type">F</span>&gt;		  =&gt; 输出格式 (查看 <span class="symbol">'Appenders</span>.txt')</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">level   = &#60;Level&#62;     =&#62; &#26085;&#24535;&#32423;&#21035; (&#20363;&#22914;: warn)&#10;format  = &#60;F&#62;&#9;&#9;  =&#62; &#36755;&#20986;&#26684;&#24335; (&#26597;&#30475; &#39;Appenders.txt&#39;)</span><br></pre></td></tr></table></figure>
 <p><strong>file_appender</strong></p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dir         =&gt; 输出路径 (例如: /var/<span class="built_in">log</span>/my_app)</span><br><span class="line"><span class="keyword">file</span>        =&gt; 日志文件名称 (例如: my_app_log)</span><br><span class="line"><span class="keyword">type</span>        =&gt; <span class="built_in">size</span>,time. 当前仅实现了基于<span class="built_in">size</span>的日志滚动</span><br><span class="line"><span class="built_in">max</span>         =&gt; 每次日志滚动的最大文件大小</span><br><span class="line">suffix      =&gt; 日志文件后缀 (例如: <span class="built_in">log</span>)</span><br><span class="line">rotation    =&gt; 循环滚动次数,例如为<span class="number">5</span>, 当滚动到第五个日志文件并且日志文件达到指定<span class="built_in">size</span>的时候就会覆盖前面的日志文件,依次循环</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dir         =&#62; &#36755;&#20986;&#36335;&#24452; (&#20363;&#22914;: /var/log/my_app)&#10;file        =&#62; &#26085;&#24535;&#25991;&#20214;&#21517;&#31216; (&#20363;&#22914;: my_app_log)&#10;type        =&#62; size,time. &#24403;&#21069;&#20165;&#23454;&#29616;&#20102;&#22522;&#20110;size&#30340;&#26085;&#24535;&#28378;&#21160;&#10;max         =&#62; &#27599;&#27425;&#26085;&#24535;&#28378;&#21160;&#30340;&#26368;&#22823;&#25991;&#20214;&#22823;&#23567;&#10;suffix      =&#62; &#26085;&#24535;&#25991;&#20214;&#21518;&#32512; (&#20363;&#22914;: log)&#10;rotation    =&#62; &#24490;&#29615;&#28378;&#21160;&#27425;&#25968;,&#20363;&#22914;&#20026;5, &#24403;&#28378;&#21160;&#21040;&#31532;&#20116;&#20010;&#26085;&#24535;&#25991;&#20214;&#24182;&#19988;&#26085;&#24535;&#25991;&#20214;&#36798;&#21040;&#25351;&#23450;size&#30340;&#26102;&#20505;&#23601;&#20250;&#35206;&#30422;&#21069;&#38754;&#30340;&#26085;&#24535;&#25991;&#20214;,&#20381;&#27425;&#24490;&#29615;</span><br></pre></td></tr></table></figure>
 <p><strong>smtp_appender</strong></p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ip          =&gt; <span class="type">SMTP</span>服务器<span class="type">IP</span>地址</span><br><span class="line">port        =&gt; <span class="type">SMTP</span>服务器端口</span><br><span class="line">no_auth</span><br><span class="line">username    =&gt; 用户名</span><br><span class="line">password    =&gt; 密码</span><br><span class="line">from        =&gt; 寄信人地址</span><br><span class="line"><span class="keyword">to</span>          =&gt; 收信人地址</span><br><span class="line">tilte       =&gt; 邮件标题</span><br><span class="line">msg         =&gt; 邮件内容</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip          =&#62; SMTP&#26381;&#21153;&#22120;IP&#22320;&#22336;&#10;port        =&#62; SMTP&#26381;&#21153;&#22120;&#31471;&#21475;&#10;no_auth&#10;username    =&#62; &#29992;&#25143;&#21517;&#10;password    =&#62; &#23494;&#30721;&#10;from        =&#62; &#23492;&#20449;&#20154;&#22320;&#22336;&#10;to          =&#62; &#25910;&#20449;&#20154;&#22320;&#22336;&#10;tilte       =&#62; &#37038;&#20214;&#26631;&#39064;&#10;msg         =&#62; &#37038;&#20214;&#20869;&#23481;</span><br></pre></td></tr></table></figure>
 <p><strong>syslog_appender</strong></p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">facility =&gt; Facility (例如: ftp)</span><br><span class="line">host =&gt; 发送syslog消息的目标主机 [可选]</span><br><span class="line">port =&gt; syslog 端口[可选]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">facility =&#62; Facility (&#20363;&#22914;: ftp)&#10;host =&#62; &#21457;&#36865;syslog&#28040;&#24687;&#30340;&#30446;&#26631;&#20027;&#26426; [&#21487;&#36873;]&#10;port =&#62; syslog &#31471;&#21475;[&#21487;&#36873;]</span><br></pre></td></tr></table></figure>
 <p>本文源码:</p>
 <p><a href="https://github.com/developerworks/skypebot/tree/master/src/erlang/log4erl_example" target="_blank" rel="external">https://github.com/developerworks/skypebot/tree/master/src/erlang/log4erl_example</a></p>
 <p>参考资料:</p>
@@ -884,43 +1306,43 @@
   <ul class="entry">
     
       <li>
+        <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/05/uftp/">UFTP - 基于UDP的加密文件多播传输协议</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/html5-web-cryptography-api-hashing/">Web加密API - 散列(Hashing)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/the-3-modes-of-http-protocol/">HTTP协议的三种模式</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/21/ejabberd-with-elixir-packet-filters/">Ejabberd 用Elixir开发一个包过滤模块</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/chrome-dev-get-started/">Chrome 开发入门</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/html5-web-cryptography-api-tutorial/">Web加密API指南</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/17/html5-battery-status/">HTML5获取电池状态</a>
+      </li>
+    
+      <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
       </li>
     
       <li>
         <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/23/thrift-messing-guide/">Thrift: The Missing Guide</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/ejabberd-os-optimizations/">针对Ejabberd的操作系统C1000K优化</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
       </li>
     
   </ul>
@@ -936,23 +1358,29 @@
   
     <li><a href="/categories/API/">API</a><small>3</small></li>
   
+    <li><a href="/categories/Chrome/">Chrome</a><small>1</small></li>
+  
     <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
   
     <li><a href="/categories/Database/">Database</a><small>1</small></li>
   
     <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
   
-    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>34</small></li>
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>36</small></li>
   
     <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
   
     <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
   
+    <li><a href="/categories/HTML5/">HTML5</a><small>3</small></li>
+  
+    <li><a href="/categories/HTTP/">HTTP</a><small>1</small></li>
+  
     <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
   
     <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
   
-    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+    <li><a href="/categories/Linux/">Linux</a><small>4</small></li>
   
     <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
   
@@ -1010,7 +1438,7 @@
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11.11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 16.67px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11.11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 15.56px;">docker</a><a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12.22px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11.11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a> <a href="/tags/API/" style="font-size: 11.11px;">API</a> <a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a> <a href="/tags/Battery-Status/" style="font-size: 10px;">Battery Status</a> <a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a> <a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a> <a href="/tags/CURL/" style="font-size: 10px;">CURL</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a> <a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a> <a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a> <a href="/tags/ETS/" style="font-size: 10px;">ETS</a> <a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a> <a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a> <a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a> <a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a> <a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a> <a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a> <a href="/tags/H2O/" style="font-size: 10px;">H2O</a> <a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a> <a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a> <a href="/tags/Howto/" style="font-size: 10px;">Howto</a> <a href="/tags/Http-modes/" style="font-size: 10px;">Http modes</a> <a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a> <a href="/tags/I18n/" style="font-size: 10px;">I18n</a> <a href="/tags/IAB/" style="font-size: 10px;">IAB</a> <a href="/tags/ID3/" style="font-size: 10px;">ID3</a> <a href="/tags/IO/" style="font-size: 10px;">IO</a> <a href="/tags/IOT/" style="font-size: 10px;">IOT</a> <a href="/tags/IoT/" style="font-size: 10px;">IoT</a> <a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a> <a href="/tags/MUC/" style="font-size: 10px;">MUC</a> <a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a> <a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a> <a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a> <a href="/tags/Modules/" style="font-size: 10px;">Modules</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a> <a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a> <a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/PM2/" style="font-size: 10px;">PM2</a> <a href="/tags/Performance/" style="font-size: 10px;">Performance</a> <a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a> <a href="/tags/Pool/" style="font-size: 10px;">Pool</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a> <a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a> <a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a> <a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a> <a href="/tags/Regex/" style="font-size: 10px;">Regex</a> <a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/SSL/" style="font-size: 10px;">SSL</a> <a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a> <a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a> <a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a> <a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a> <a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a> <a href="/tags/Task/" style="font-size: 10px;">Task</a> <a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a> <a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a> <a href="/tags/UBF/" style="font-size: 10px;">UBF</a> <a href="/tags/UFTP/" style="font-size: 10px;">UFTP</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a> <a href="/tags/VAST/" style="font-size: 10px;">VAST</a> <a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a> <a href="/tags/Web-Cryptography-API/" style="font-size: 11.11px;">Web Cryptography API</a> <a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a> <a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angular/" style="font-size: 16.67px;">angular</a> <a href="/tags/application/" style="font-size: 10px;">application</a> <a href="/tags/blockies/" style="font-size: 10px;">blockies</a> <a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a> <a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a> <a href="/tags/ci/" style="font-size: 10px;">ci</a> <a href="/tags/container/" style="font-size: 11.11px;">container</a> <a href="/tags/data-management/" style="font-size: 10px;">data management</a> <a href="/tags/data-volume/" style="font-size: 10px;">data volume</a> <a href="/tags/debugging/" style="font-size: 10px;">debugging</a> <a href="/tags/devtools/" style="font-size: 10px;">devtools</a> <a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a> <a href="/tags/doc/" style="font-size: 10px;">doc</a> <a href="/tags/docker/" style="font-size: 15.56px;">docker</a> <a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a> <a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a> <a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a> <a href="/tags/encoding/" style="font-size: 10px;">encoding</a> <a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a> <a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a> <a href="/tags/faq/" style="font-size: 10px;">faq</a> <a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a> <a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a> <a href="/tags/gettext/" style="font-size: 10px;">gettext</a> <a href="/tags/git/" style="font-size: 12.22px;">git</a> <a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a> <a href="/tags/grunt/" style="font-size: 10px;">grunt</a> <a href="/tags/hero/" style="font-size: 10px;">hero</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a> <a href="/tags/iq/" style="font-size: 10px;">iq</a> <a href="/tags/jabber/" style="font-size: 10px;">jabber</a> <a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a> <a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a> <a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a> <a href="/tags/library/" style="font-size: 10px;">library</a> <a href="/tags/linking/" style="font-size: 10px;">linking</a> <a href="/tags/lists/" style="font-size: 10px;">lists</a> <a href="/tags/load-balance/" style="font-size: 10px;">load balance</a> <a href="/tags/log4er/" style="font-size: 10px;">log4er</a> <a href="/tags/manage-images/" style="font-size: 10px;">manage images</a> <a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a> <a href="/tags/muc/" style="font-size: 10px;">muc</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a> <a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a> <a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a> <a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a> <a href="/tags/notification/" style="font-size: 10px;">notification</a> <a href="/tags/npm/" style="font-size: 11.11px;">npm</a> <a href="/tags/performance/" style="font-size: 10px;">performance</a> <a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a> <a href="/tags/polymer/" style="font-size: 10px;">polymer</a> <a href="/tags/port/" style="font-size: 10px;">port</a> <a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a> <a href="/tags/rebar/" style="font-size: 10px;">rebar</a> <a href="/tags/record/" style="font-size: 10px;">record</a> <a href="/tags/recursion/" style="font-size: 10px;">recursion</a> <a href="/tags/regexp/" style="font-size: 10px;">regexp</a> <a href="/tags/relx/" style="font-size: 10px;">relx</a> <a href="/tags/screen/" style="font-size: 10px;">screen</a> <a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/stanza/" style="font-size: 10px;">stanza</a> <a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a> <a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a> <a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a> <a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a> <a href="/tags/testing/" style="font-size: 10px;">testing</a> <a href="/tags/tls/" style="font-size: 10px;">tls</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/tsung/" style="font-size: 10px;">tsung</a> <a href="/tags/upstart/" style="font-size: 10px;">upstart</a> <a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a> <a href="/tags/varnish/" style="font-size: 10px;">varnish</a> <a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a> <a href="/tags/vt/" style="font-size: 10px;">vt</a> <a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a> <a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a> <a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a> <a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
   </div>
 </div>
 

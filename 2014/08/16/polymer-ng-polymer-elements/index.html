@@ -11,7 +11,7 @@
 
 Web组件使编写封装的视图片段和独立于任何框架的逻辑成为可能. 目前支持核心元素(core)和paper元素.
 例如, 下面的代码把&amp;lt;paper-input&amp;gt;元素的inputValue属性和Angular作用域的myText属性进行双向绑定
-1&amp;lt;paper-input ng-model=&quot;myText&quot;&amp;gt;&amp;lt;/paper-input&amp;gt;">
+1&amp;#60;paper-input ng-model=&amp;#34;myText&amp;#34;&amp;#62;&amp;#60;/paper-input&amp;#62;">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -126,19 +126,19 @@ Web组件使编写封装的视图片段和独立于任何框架的逻辑成为�
 </blockquote>
 <p>Web组件使<code>编写封装的视图片段</code>和<code>独立于任何框架的逻辑</code>成为可能. 目前支持核心元素(<code>core</code>)和<code>paper</code>元素.</p>
 <p>例如, 下面的代码把<code>&lt;paper-input&gt;</code>元素的<code>inputValue</code>属性和<code>Angular</code>作用域的<code>myText</code>属性进行双向绑定</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">paper-input</span> <span class="attribute">ng-model</span>=<span class="value">"myText"</span>&gt;</span><span class="tag">&lt;/<span class="title">paper-input</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;paper-input ng-model=&#34;myText&#34;&#62;&#60;/paper-input&#62;</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <h2 id="安装">安装</h2><p><code>ng-polymer-elements</code> 可以通过 <code>bower</code> 安装:</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bower <span class="keyword">install</span> ng-polymer-elements</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bower install ng-polymer-elements</span><br></pre></td></tr></table></figure>
 <h2 id="使用">使用</h2><p>添加脚本到HTML页面</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"ng-polymer-elements.js"</span>&gt;</span><span class="undefined"></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;script type=&#34;text/javascript&#34; src=&#34;ng-polymer-elements.js&#34;&#62;</span><br></pre></td></tr></table></figure>
 <p>注意:</p>
 <blockquote>
 <p>ng-polymer-elements 要求在启动Angular应用之前加载完成. 如果使用自动启动形式, 比如 <code>&lt;html ng-app=&quot;myModule&quot;&gt;</code>,<br><code>ng-polymer-elements</code> 会自动处理. 如果是手动启动需要保证在 <code>polymer-ready</code> 事件之后执行.</p>
 </blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'polymer-ready'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    angular.bootstrap(wrap(<span class="built_in">document</span>), [<span class="string">'myModule'</span>]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window.addEventListener(&#39;polymer-ready&#39;, function() &#123;&#10;    angular.bootstrap(wrap(document), [&#39;myModule&#39;]);&#10;&#125;);</span><br></pre></td></tr></table></figure>
 <p>添加<code>ng-polymer-elements</code>模块作为angular应用程序依赖模块</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">angular.<span class="keyword">module</span>(<span class="symbol">'myModule'</span>, [<span class="symbol">'ng</span>-polymer-elements']);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">angular.module(&#39;myModule&#39;, [&#39;ng-polymer-elements&#39;]);</span><br></pre></td></tr></table></figure>
 <p>下面的组件通过<code>ng-model</code>支持简单值的双向绑定:</p>
 <ul>
 <li><a href="http://www.polymer-project.org/docs/elements/core-elements.html#core-input" target="_blank" rel="external">core-input</a></li>
@@ -153,7 +153,7 @@ Web组件使编写封装的视图片段和独立于任何框架的逻辑成为�
 <li><a href="http://www.polymer-project.org/docs/elements/paper-elements.html#paper-slider" target="_blank" rel="external">paper-slider</a></li>
 </ul>
 <p>对于 <a href="http://www.polymer-project.org/docs/elements/core-elements.html#core-list" target="_blank" rel="external">core-list</a>, <code>ng-model</code>用于绑定列表数据, <code>ng-tap</code>用于绑定<code>tap</code>事件, 同时把事件<code>$event</code>暴露出来.</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;core-list ng-model=<span class="string">"arrayData"</span> ng-tap=<span class="string">"onTap($event)"</span>&gt;</span><br><span class="line">    &lt;<span class="keyword">template</span>&gt;</span><br><span class="line">        &lt;<span class="keyword">div</span>&gt;&#123;&#123;text&#125;&#125;&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">    &lt;/<span class="keyword">template</span>&gt;</span><br><span class="line">&lt;/core-list&gt;</span><br><span class="line">$scope.arrayData = [&#123;text: 'one'&#125;, &#123;text: 'two'&#125;, &#123;text: 'three'&#125;];</span><br><span class="line">$scope.onTap = function(event) &#123;</span><br><span class="line">    <span class="keyword">var</span> tappedItem = event.details.data;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;core-list ng-model=&#34;arrayData&#34; ng-tap=&#34;onTap($event)&#34;&#62;&#10;    &#60;template&#62;&#10;        &#60;div&#62;&#123;&#123;text&#125;&#125;&#60;/div&#62;&#10;    &#60;/template&#62;&#10;&#60;/core-list&#62;&#10;$scope.arrayData = [&#123;text: &#39;one&#39;&#125;, &#123;text: &#39;two&#39;&#125;, &#123;text: &#39;three&#39;&#125;];&#10;$scope.onTap = function(event) &#123;&#10;    var tappedItem = event.details.data;&#10;&#125;;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -205,43 +205,43 @@ Web组件使编写封装的视图片段和独立于任何框架的逻辑成为�
   <ul class="entry">
     
       <li>
+        <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/05/uftp/">UFTP - 基于UDP的加密文件多播传输协议</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/html5-web-cryptography-api-hashing/">Web加密API - 散列(Hashing)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/the-3-modes-of-http-protocol/">HTTP协议的三种模式</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/21/ejabberd-with-elixir-packet-filters/">Ejabberd 用Elixir开发一个包过滤模块</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/chrome-dev-get-started/">Chrome 开发入门</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/html5-web-cryptography-api-tutorial/">Web加密API指南</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/17/html5-battery-status/">HTML5获取电池状态</a>
+      </li>
+    
+      <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
       </li>
     
       <li>
         <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/23/thrift-messing-guide/">Thrift: The Missing Guide</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/ejabberd-os-optimizations/">针对Ejabberd的操作系统C1000K优化</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
       </li>
     
   </ul>
@@ -257,23 +257,29 @@ Web组件使编写封装的视图片段和独立于任何框架的逻辑成为�
   
     <li><a href="/categories/API/">API</a><small>3</small></li>
   
+    <li><a href="/categories/Chrome/">Chrome</a><small>1</small></li>
+  
     <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
   
     <li><a href="/categories/Database/">Database</a><small>1</small></li>
   
     <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
   
-    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>34</small></li>
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>36</small></li>
   
     <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
   
     <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
   
+    <li><a href="/categories/HTML5/">HTML5</a><small>3</small></li>
+  
+    <li><a href="/categories/HTTP/">HTTP</a><small>1</small></li>
+  
     <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
   
     <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
   
-    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+    <li><a href="/categories/Linux/">Linux</a><small>4</small></li>
   
     <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
   
@@ -331,7 +337,7 @@ Web组件使编写封装的视图片段和独立于任何框架的逻辑成为�
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11.11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 16.67px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11.11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 15.56px;">docker</a><a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12.22px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11.11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a> <a href="/tags/API/" style="font-size: 11.11px;">API</a> <a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a> <a href="/tags/Battery-Status/" style="font-size: 10px;">Battery Status</a> <a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a> <a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a> <a href="/tags/CURL/" style="font-size: 10px;">CURL</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a> <a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a> <a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a> <a href="/tags/ETS/" style="font-size: 10px;">ETS</a> <a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a> <a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a> <a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a> <a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a> <a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a> <a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a> <a href="/tags/H2O/" style="font-size: 10px;">H2O</a> <a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a> <a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a> <a href="/tags/Howto/" style="font-size: 10px;">Howto</a> <a href="/tags/Http-modes/" style="font-size: 10px;">Http modes</a> <a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a> <a href="/tags/I18n/" style="font-size: 10px;">I18n</a> <a href="/tags/IAB/" style="font-size: 10px;">IAB</a> <a href="/tags/ID3/" style="font-size: 10px;">ID3</a> <a href="/tags/IO/" style="font-size: 10px;">IO</a> <a href="/tags/IOT/" style="font-size: 10px;">IOT</a> <a href="/tags/IoT/" style="font-size: 10px;">IoT</a> <a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a> <a href="/tags/MUC/" style="font-size: 10px;">MUC</a> <a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a> <a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a> <a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a> <a href="/tags/Modules/" style="font-size: 10px;">Modules</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a> <a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a> <a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/PM2/" style="font-size: 10px;">PM2</a> <a href="/tags/Performance/" style="font-size: 10px;">Performance</a> <a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a> <a href="/tags/Pool/" style="font-size: 10px;">Pool</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a> <a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a> <a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a> <a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a> <a href="/tags/Regex/" style="font-size: 10px;">Regex</a> <a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/SSL/" style="font-size: 10px;">SSL</a> <a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a> <a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a> <a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a> <a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a> <a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a> <a href="/tags/Task/" style="font-size: 10px;">Task</a> <a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a> <a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a> <a href="/tags/UBF/" style="font-size: 10px;">UBF</a> <a href="/tags/UFTP/" style="font-size: 10px;">UFTP</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a> <a href="/tags/VAST/" style="font-size: 10px;">VAST</a> <a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a> <a href="/tags/Web-Cryptography-API/" style="font-size: 11.11px;">Web Cryptography API</a> <a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a> <a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angular/" style="font-size: 16.67px;">angular</a> <a href="/tags/application/" style="font-size: 10px;">application</a> <a href="/tags/blockies/" style="font-size: 10px;">blockies</a> <a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a> <a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a> <a href="/tags/ci/" style="font-size: 10px;">ci</a> <a href="/tags/container/" style="font-size: 11.11px;">container</a> <a href="/tags/data-management/" style="font-size: 10px;">data management</a> <a href="/tags/data-volume/" style="font-size: 10px;">data volume</a> <a href="/tags/debugging/" style="font-size: 10px;">debugging</a> <a href="/tags/devtools/" style="font-size: 10px;">devtools</a> <a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a> <a href="/tags/doc/" style="font-size: 10px;">doc</a> <a href="/tags/docker/" style="font-size: 15.56px;">docker</a> <a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a> <a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a> <a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a> <a href="/tags/encoding/" style="font-size: 10px;">encoding</a> <a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a> <a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a> <a href="/tags/faq/" style="font-size: 10px;">faq</a> <a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a> <a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a> <a href="/tags/gettext/" style="font-size: 10px;">gettext</a> <a href="/tags/git/" style="font-size: 12.22px;">git</a> <a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a> <a href="/tags/grunt/" style="font-size: 10px;">grunt</a> <a href="/tags/hero/" style="font-size: 10px;">hero</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a> <a href="/tags/iq/" style="font-size: 10px;">iq</a> <a href="/tags/jabber/" style="font-size: 10px;">jabber</a> <a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a> <a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a> <a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a> <a href="/tags/library/" style="font-size: 10px;">library</a> <a href="/tags/linking/" style="font-size: 10px;">linking</a> <a href="/tags/lists/" style="font-size: 10px;">lists</a> <a href="/tags/load-balance/" style="font-size: 10px;">load balance</a> <a href="/tags/log4er/" style="font-size: 10px;">log4er</a> <a href="/tags/manage-images/" style="font-size: 10px;">manage images</a> <a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a> <a href="/tags/muc/" style="font-size: 10px;">muc</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a> <a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a> <a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a> <a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a> <a href="/tags/notification/" style="font-size: 10px;">notification</a> <a href="/tags/npm/" style="font-size: 11.11px;">npm</a> <a href="/tags/performance/" style="font-size: 10px;">performance</a> <a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a> <a href="/tags/polymer/" style="font-size: 10px;">polymer</a> <a href="/tags/port/" style="font-size: 10px;">port</a> <a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a> <a href="/tags/rebar/" style="font-size: 10px;">rebar</a> <a href="/tags/record/" style="font-size: 10px;">record</a> <a href="/tags/recursion/" style="font-size: 10px;">recursion</a> <a href="/tags/regexp/" style="font-size: 10px;">regexp</a> <a href="/tags/relx/" style="font-size: 10px;">relx</a> <a href="/tags/screen/" style="font-size: 10px;">screen</a> <a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/stanza/" style="font-size: 10px;">stanza</a> <a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a> <a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a> <a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a> <a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a> <a href="/tags/testing/" style="font-size: 10px;">testing</a> <a href="/tags/tls/" style="font-size: 10px;">tls</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/tsung/" style="font-size: 10px;">tsung</a> <a href="/tags/upstart/" style="font-size: 10px;">upstart</a> <a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a> <a href="/tags/varnish/" style="font-size: 10px;">varnish</a> <a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a> <a href="/tags/vt/" style="font-size: 10px;">vt</a> <a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a> <a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a> <a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a> <a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
   </div>
 </div>
 

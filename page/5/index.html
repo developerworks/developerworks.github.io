@@ -96,6 +96,645 @@
     <header>
       
         <!--<div class="icon"></div>-->
+        <time datetime="2014-11-01T15:28:15.000Z"><a href="/2014/11/01/elixir-deps/">2014-11-01</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/01/elixir-deps/">依赖管理</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p><img src="/assets/images/52787527-EA9C-40CA-9D9E-5950298E6EA0.png" alt="Elixir依赖管理命令"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix deps            # &#26174;&#31034;&#25152;&#26377;&#20381;&#36182;&#21253;&#26497;&#20854;&#29366;&#24577;&#10;mix deps.get        # &#19979;&#36733;&#26410;&#23433;&#35013;&#30340;&#20381;&#36182;&#21253;&#10;mix deps.compile    # &#32534;&#35793;&#20381;&#36182;&#21253;&#10;mix deps.update     # &#26356;&#26032;&#20381;&#36182;&#21253;&#10;mix deps.clean      # &#21024;&#38500;&#25152;&#26377;&#20381;&#36182;&#25991;&#20214;&#10;mix deps.unlock     # &#35299;&#38145;&#20381;&#36182;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-10-31T06:13:57.000Z"><a href="/2014/10/31/elixir-mix-and-otp-ch8-task-and-gen-tcp/">2014-10-31</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/31/elixir-mix-and-otp-ch8-task-and-gen-tcp/">Mix 和 OTP 任务以及gen_tcp</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>这章将学习如何使用Erlang的<code>:gen_tcp</code>模块处理请求. 后续章节我们会扩展服务器使之能处理命令. 还提供了一个极好的机会探索Elixir的<code>Task</code>模块</p>
+<h2 id="Echo服务器">Echo服务器</h2><p>首先通过实现一个echo服务器,开始学习TCP服务器. 它只是把接收到的文本返回给客户端. 我们慢慢的改进服务器直到它能够处理多个连接.</p>
+<p>一个TCP服务器, 大致会执行如下步骤:</p>
+<ul>
+<li>监听端口并获得套接字</li>
+<li>等待客户端连接该端口,并Accept.</li>
+<li>读取客户端请求并回写响应</li>
+</ul>
+<p>下面来实现这些步骤, 转到<code>apps/kv_server</code>应用程序, 打开<code>lib/kv_server.ex</code>,添加下面的函数:</p>
+<pre><code><span class="function"><span class="keyword">def</span> <span class="title">accept</span></span>(port) <span class="keyword">do</span>
+  <span class="comment"># The options below mean:</span>
+  <span class="comment">#</span>
+  <span class="comment"># 1. `:binary` - receives data as binaries (instead of lists)</span>
+  <span class="comment"># 2. `packet: :line` - receives data line by line</span>
+  <span class="comment"># 3. `active: false` - block on `:gen_tcp.recv/2` until data is available</span>
+  <span class="comment">#</span>
+  {<span class="symbol">:ok</span>, socket} = <span class="symbol">:gen_tcp</span>.listen(port,
+                    [<span class="symbol">:binary</span>, <span class="symbol">packet:</span> <span class="symbol">:line</span>, <span class="symbol">active:</span> <span class="keyword">false</span>])
+  <span class="constant">IO.</span>puts <span class="string">"Accepting connections on port <span class="subst">#{port}</span>"</span>
+  loop_acceptor(socket)
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
+  serve(client)
+  loop_acceptor(socket)
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">defp</span> <span class="title">serve</span></span>(client) <span class="keyword">do</span>
+  client
+  |&gt; read_line()
+  |&gt; write_line(client)
+  serve(client)
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">defp</span> <span class="title">read_line</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, data} = <span class="symbol">:gen_tcp</span>.recv(socket, <span class="number">0</span>)
+  data
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">defp</span> <span class="title">write_line</span></span>(line, socket) <span class="keyword">do</span>
+  <span class="symbol">:gen_tcp</span>.send(socket, line)
+<span class="keyword">end</span>
+</code></pre><p>调用<code>KVServer.accept(4040)</code>启动服务器, <code>4040</code>为端口. 在<code>accept/1</code>中第一步是监听端口直到获得一个可用的套接字, 然后调用<code>loop_acceptor/1</code>. <code>loop_acceptor/1</code>仅仅是循环地接受客户端连接. 对于每个接受的连接, 调用<code>serve/1</code>.</p>
+<p><code>serve/1</code>是另一个循环调用, 其从套接字读取一行数据并把读取到的行写回套接字. 注意函数<code>serve/1</code>使用管道操作符 <code>|&gt;</code> 来表达操作流.管道操作符对左边的表达式求值并把结果作为右侧函数的第一个参数传递. 上面的例子:</p>
+<pre><code>socket |<span class="string">&gt; read_line() </span>|<span class="string">&gt; write_line(socket)</span>
+</code></pre><p>等同于:</p>
+<pre><code>write_line<span class="list">(<span class="keyword">read_line</span><span class="list">(<span class="keyword">socket</span>)</span>, socket)</span>
+</code></pre><p>当使用 <code>|&gt;</code> 操作符时, 由于操作符优先级的问题, 给函数调用添加必要的括号是非常重要的, 特别是, 这段代码:</p>
+<pre><code><span class="number">1.</span><span class="number">.10</span> |&gt; Enum.filter &amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>) |&gt; Enum.<span class="built_in">map</span> &amp;(&amp;<span class="number">1</span> * <span class="number">2</span>)
+</code></pre><p>实际上会转换为:</p>
+<pre><code><span class="number">1.</span><span class="number">.10</span> |&gt; Enum.filter(&amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>) |&gt; Enum.<span class="built_in">map</span>(&amp;(&amp;<span class="number">1</span> * <span class="number">2</span>)))
+</code></pre><p>这不是我们想要的结果, 因为传递给<code>Enum.filter/2</code>的函数作为给<code>Enum.map/2</code>的第一个参数传递, 解决办法是使用括号:</p>
+<pre><code><span class="preprocessor"># 译注: 虽然Elixir的函数调用通常情况下可以不使用括号,</span>
+<span class="preprocessor"># 但是为了避免歧义或不必要的问题,建议所有函数调用其他语言中必须的括号风格</span>
+<span class="number">1.</span><span class="number">.10</span> |&gt; Enum.filter(&amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>)) |&gt; Enum.<span class="built_in">map</span>(&amp;(&amp;<span class="number">1</span> * <span class="number">2</span>))
+</code></pre><p><code>read_line/1</code>函数实现使用<code>:gen_tcp.recv/2</code>从套接字接收数据,  <code>write_line/2</code>使用<code>:gen_tcp.send/2</code>向套接字写入数据.</p>
+<p>使用命令<code>iex -S mix</code>在<code>kv_server</code>应用程序中启动一个iex会话. 在IEx中运行:</p>
+<pre><code>iex&gt; KVServer.<span class="function"><span class="title">accept</span><span class="params">(<span class="number">4040</span>)</span></span>
+</code></pre><p>服务器现在开始运行, 终端被阻塞. 我们使用 <code>telnet</code>客户端访问我们的服务器. 它在大多数操作系统中都有, 其命令行参数通常类似:</p>
+<pre><code>$ telnet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">4040</span>
+Trying <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>...
+Connected <span class="keyword">to</span> localhost.
+Escape <span class="property">character</span> <span class="keyword">is</span> '^]'.
+hello
+hello
+<span class="keyword">is</span> <span class="keyword">it</span> <span class="keyword">me</span>
+<span class="keyword">is</span> <span class="keyword">it</span> <span class="keyword">me</span>
+you are looking <span class="keyword">for</span>?
+you are looking <span class="keyword">for</span>?
+</code></pre><p>键入<code>hello</code>, 并敲击回车, 你会的到服务器的<code>hello</code>响应, 太棒了!</p>
+<p>我的telnet客户端可以通过键入<code>ctrl + ]</code>, <code>quit</code>, 并敲击 <code>&lt;Enter&gt;</code>退出, 你的客户端可能有不同的步骤:</p>
+<p>退出telnet客户端后, 你可能会在IEx(Elixir Shell)会话中看到如下错误:</p>
+<pre><code>** (<span class="constant">MatchError</span>) no match <span class="keyword">of</span> right hand side <span class="symbol">value:</span> {<span class="symbol">:error</span>, <span class="symbol">:closed</span>}
+    (kv_server) <span class="class"><span class="keyword">lib</span>/<span class="title">kv_server</span>.<span class="title">ex</span>:41: <span class="title">KVServer</span>.<span class="title">read_line</span>/1</span>
+    (kv_server) <span class="class"><span class="keyword">lib</span>/<span class="title">kv_server</span>.<span class="title">ex</span>:33: <span class="title">KVServer</span>.<span class="title">serve</span>/1</span>
+    (kv_server) <span class="class"><span class="keyword">lib</span>/<span class="title">kv_server</span>.<span class="title">ex</span>:27: <span class="title">KVServer</span>.<span class="title">loop_acceptor</span>/1</span>
+</code></pre><p>这是因为我们期望从<code>:gen_tcp.recv/2</code>接收数据,但是客户端关闭了连接. 服务器后续的版本修订需要更好的处理这种情况.</p>
+<p>现在有一个更重要的Bug要解决: 如果TCP acceptor崩溃会发生什么? 因为没有监视进程, 服务器异常退出并且不能处理更多后续的请求, 因为它没有重启. 这就是为什么必须把服务器放在监控树当中.</p>
+<h2 id="Tasks">Tasks</h2><p>我们已经学习过了代理(Agents), 通用服务器(Generic Servers), 以及事件管理器(Event Managers), 它们全部是适合处理多个消息或管理状态. 但是, 当我们只需要执行一些任务时,我们使用什么?</p>
+<p><a href="http://elixir-lang.org/docs/stable/elixir/Task.html" title="Task模块" target="_blank" rel="external">Task模块</a>恰好提供了这个功能. 例如, 其有一个<code>start_link/3</code>函数, 其接受一个模块, 函数和参数, 作为监控树(Supervision tree)的一部分允许我们运行一个给定的函数.</p>
+<p>让我们试一下. 打开<code>lib/kv_server.ex</code>, 修改<code>start/2</code>中的监控进程为如下:</p>
+<pre><code><span class="function"><span class="keyword">def</span> <span class="title">start</span></span>(_type, _args) <span class="keyword">do</span>
+  import <span class="constant">Supervisor</span>.<span class="constant">Spec</span>
+  children = [
+    worker(<span class="constant">Task</span>, [<span class="constant">KVServer</span>, <span class="symbol">:accept</span>, [<span class="number">4040</span>]])
+  ]
+  opts = [<span class="symbol">strategy:</span> <span class="symbol">:one_for_one</span>, <span class="symbol">name:</span> <span class="constant">KVServer</span>.<span class="constant">Supervisor</span>]
+  <span class="constant">Supervisor</span>.start_link(children, opts)
+<span class="keyword">end</span>
+</code></pre><p>With this change, we are saying that we want to run KVServer.accept(4040) as a worker.<br>We are hardcoding the port for now, but we will discuss ways in which this could be changed later.</p>
+<p>现在我们向把<code>KVServer.accept(4040)</code>作为一个worker运行. 现在我们硬编码了端口号, 但我们将会讨论能在以后修改的方法.</p>
+<p>现在服务器作为监控数的一部分, 当运行应用程序的时候它应该自动地启动. 在终端中键入命令<code>mix run --no-halt</code>, 再次使用<code>telnet</code>客户端验证一切仍能工作:</p>
+<pre><code>$ telnet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">4040</span>
+Trying <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>...
+Connected <span class="keyword">to</span> localhost.
+Escape <span class="property">character</span> <span class="keyword">is</span> '^]'.
+<span class="command">say</span> you
+<span class="command">say</span> you
+<span class="command">say</span> <span class="keyword">me</span>
+<span class="command">say</span> <span class="keyword">me</span>
+</code></pre><p>Yes, 仍然可以工作. 如果你杀掉客户端, 将导致整个服务器崩溃, 你会看到另一个服务器进程立即启动.</p>
+<p>同时连接两个客户端, 再次测试, 你发现第二个客户端并没有echo:</p>
+<pre><code>$ <span class="atom">telnet</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">4040</span>
+<span class="name">Trying</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>...
+<span class="name">Connected</span> <span class="atom">to</span> <span class="atom">localhost</span>.
+<span class="name">Escape</span> <span class="atom">character</span> <span class="atom">is</span> <span class="string">'^]'</span>.
+<span class="atom">hello</span>
+<span class="atom">hello</span>?
+<span class="name">HELLOOOOOO</span>?
+</code></pre><p>这是因为我们在同一个进程中处理接受连接并处理请求. 一个客户端连接后, 同一时刻就不能在接受其他的客户端的连接了, 直到之前的请求处理完成.</p>
+<h2 id="任务监视器(Task_supervisor)">任务监视器(Task supervisor)</h2><p>为了使服务器能处理并发连接, 需要一个进程作为acceptor, 生成(spawns)一个额外的进程来处理请求. 解决办法是修改下面的代码:</p>
+<pre><code><span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
+  serve(client)
+  loop_acceptor(socket)
+<span class="keyword">end</span>
+</code></pre><p>使用 <code>Task.start_link/1</code>, 类似于 <code>Task.start_link/3</code>, 它接受一个匿名函数作为参数, 而非模块,函数,参数:</p>
+<pre><code><span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
+  <span class="constant">Task.</span>start_link(<span class="keyword">fn</span> -&gt; serve(client) <span class="keyword">end</span>)
+  loop_acceptor(socket)
+<span class="keyword">end</span>
+</code></pre><p>我们已经犯了一次这样的错误. 记得么?</p>
+<p>这个错误类似于当我们从registry调用<code>KV.Bucket.start_link/0</code>所犯的错误. 在任何bucket中的失败将带来整个registry当机.</p>
+<p>上面的胆码有同样的瑕疵: 如果我们连接<code>serve(client)</code>任务到acceptor, 当处理一个请求的时候将导致acceptor崩溃, 结果所有其他的连接,断开(down)</p>
+<blockquote>
+<p>We fixed the issue for the registry by using a simple one for one supervisor. We are going to use the same tactic here,<br>except that this pattern is so common with tasks that tasks already come with a solution: a simple one for one supervisor with temporary workers that we can just use in our supervision tree!</p>
+</blockquote>
+<p><del>使用一个<code>simple_one_for_one</code>监视进程(supervisor)解决这个问题. 我们将使用相同的策略,except that this pattern is so common with tasks that tasks already come with a solution: 可以在监控树种使用一个<code>simple_one_for_one</code>监视器和临时的workers.</del></p>
+<p>再次修改<code>start/2</code>, 添加一个监视进程到进程树:</p>
+<pre><code>def start(_type, _args) <span class="keyword">do</span>
+  import Supervisor.Spec
+
+  children = [
+    supervisor(Task.Supervisor, <span class="string">[[name: KVServer.TaskSupervisor]]</span>),
+    worker(Task, [KVServer, :accept, [<span class="number">4040</span>]])
+  ]
+
+  opts = [strategy: :one_for_one, name: KVServer.Supervisor]
+  Supervisor.start_link(children, opts)
+<span class="keyword">end</span>
+</code></pre><p>使用名称<code>KVServer.TaskSupervisor</code>启动一个<a href="http://elixir-lang.org/docs/stable/elixir/Task.Supervisor.html" title="Task.Supervisor" target="_blank" rel="external">Task.Supervisor</a>进程. 记住, 因为acceptor任务依赖此监视进程, 该监视检查必须首先启动.</p>
+<p>现在只需要修改<code>loop_acceptor/2</code>使用<code>Task.Supervisor</code>来处理每一个请求:</p>
+<pre><code><span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
+  <span class="constant">Task.Supervisor.</span>start_child(<span class="constant">KVServer.TaskSupervisor,</span> <span class="keyword">fn</span> -&gt; serve(client) <span class="keyword">end</span>)
+  loop_acceptor(socket)
+<span class="keyword">end</span>
+</code></pre><p>使用命令<code>mix run --no-halt</code>启动一个新的服务器, 然后可以打开多个并发的telnet客户端连接. 你还注意到退出一个客户端后并不会导致acceptor崩溃. 太棒了!</p>
+<p>这里是完整的echo服务器在单个模块中的实现:</p>
+<pre><code><span class="class"><span class="keyword">defmodule</span> <span class="title">KVServer</span></span> <span class="keyword">do</span>
+  <span class="keyword">use</span> <span class="constant">Application</span>
+
+  <span class="variable">@doc</span> <span class="keyword">false</span>
+  <span class="function"><span class="keyword">def</span> <span class="title">start</span></span>(<span class="constant">_type,</span> <span class="constant">_args)</span> <span class="keyword">do</span>
+    import <span class="constant">Supervisor.Spec</span>
+
+    children = [
+      supervisor(<span class="constant">Task.Supervisor,</span> [[<span class="symbol">name:</span> <span class="constant">KVServer.TaskSupervisor]</span>]),
+      worker(<span class="constant">Task,</span> [<span class="constant">KVServer,</span> <span class="symbol">:accept</span>, [<span class="number">4040</span>]])
+    ]
+
+    opts = [<span class="symbol">strategy:</span> <span class="symbol">:one_for_one</span>, <span class="symbol">name:</span> <span class="constant">KVServer.Supervisor]</span>
+    <span class="constant">Supervisor.</span>start_link(children, opts)
+  <span class="keyword">end</span>
+
+  <span class="variable">@doc</span> <span class="string">""</span><span class="string">"
+  Starts accepting connections on the given `port`.
+  "</span><span class="string">""</span>
+  <span class="function"><span class="keyword">def</span> <span class="title">accept</span></span>(port) <span class="keyword">do</span>
+    {<span class="symbol">:ok</span>, socket} = <span class="symbol">:gen_tcp</span>.listen(port,
+                      [<span class="symbol">:binary</span>, <span class="symbol">packet:</span> <span class="symbol">:line</span>, <span class="symbol">active:</span> <span class="keyword">false</span>])
+    <span class="constant">IO.</span>puts <span class="string">"Accepting connections on port <span class="subst">#{port}</span>"</span>
+    loop_acceptor(socket)
+  <span class="keyword">end</span>
+
+  <span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+    {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
+    <span class="constant">Task.Supervisor.</span>start_child(<span class="constant">KVServer.TaskSupervisor,</span> <span class="keyword">fn</span> -&gt; serve(client) <span class="keyword">end</span>)
+    loop_acceptor(socket)
+  <span class="keyword">end</span>
+
+  <span class="function"><span class="keyword">defp</span> <span class="title">serve</span></span>(socket) <span class="keyword">do</span>
+    socket
+    |&gt; read_line()
+    |&gt; write_line(socket)
+
+    serve(socket)
+  <span class="keyword">end</span>
+
+  <span class="function"><span class="keyword">defp</span> <span class="title">read_line</span></span>(socket) <span class="keyword">do</span>
+    {<span class="symbol">:ok</span>, data} = <span class="symbol">:gen_tcp</span>.recv(socket, <span class="number">0</span>)
+    data
+  <span class="keyword">end</span>
+
+  <span class="function"><span class="keyword">defp</span> <span class="title">write_line</span></span>(line, socket) <span class="keyword">do</span>
+    <span class="symbol">:gen_tcp</span>.send(socket, line)
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</code></pre><p>因为我们已经修改了supervisor规范, 我们需要问: 我们的supervision策略仍然正确么?</p>
+<p>在这种情形下, 答案是yes: 如果acceptor崩溃, 并不会导致现有的连接中断.从另一方面讲, 如果任务监视器(task supervisor)崩溃, 也不会导致acceptor崩溃. 对比registry, 最初每次registry崩溃的时候也会导致supervisor崩溃, 直到使用ETS来对状态持久化.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-10-30T17:16:12.000Z"><a href="/2014/10/31/elixir-mix-and-otp-ch6-ets/">2014-10-31</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/31/elixir-mix-and-otp-ch6-ets/">Mix 和 OTP - ETS</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ETS"><span class="toc-number">1.</span> <span class="toc-text">ETS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#作为缓存的ETS"><span class="toc-number">1.1.</span> <span class="toc-text">作为缓存的ETS</span></a></li></ol></li></ol>
+        </div>
+        
+
+
+        <h2 id="ETS">ETS</h2><p>每次我们需要查询一个<code>bucket</code>, 我们需要发送一个消息给<code>registry</code>. 在有些应用程序中这意味着<code>registry</code>也许变成瓶颈.</p>
+<p>本章中,我们将学习学习ETS(Erlang Term Storage),以及如何把它用作一个缓存机制. 稍后我们将扩展其用途,持久化从监视进程到子进程的持久化数据,即使是在崩溃的时候.</p>
+<blockquote>
+<p>警告! 别过早的使用ETS作为缓存! 记录并分析你的应用程序性能,识别哪部分是瓶颈. 这样你才知道是否应该使用缓存,以及应该缓存什么.一旦你决定了需求, 本章可作为一个如何使用ETS的例子.</p>
+</blockquote>
+<h3 id="作为缓存的ETS">作为缓存的ETS</h3><p>ETS允许我们在内存表中存储任何Erlang/Elixir项式. 通过erlang的<code>:ets</code>模块处理ETS表:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iex&#62; table = :ets.new(:buckets_registry, [:set, :protected])&#10;8207&#10;iex&#62; :ets.insert(table, &#123;&#34;foo&#34;, self&#125;)&#10;true&#10;iex&#62; :ets.lookup(table, &#34;foo&#34;)&#10;[&#123;&#34;foo&#34;, #PID&#60;0.41.0&#62;&#125;]</span><br></pre></td></tr></table></figure>
+<p>当创建ETS表时, 要求两个必须的参数: 表的名称, 以及一组选项. 在可用的选项中,我们传递了表类型以及其访问规则. 我们选定了<code>:set</code>类型,表示其键在ETS表中是不能重复的.我们还设置了表的访问类型为<code>:protected</code>, 其含义为仅允许<code>创建该表的进程</code>可以对其进行写操作. 但允许所有其他进程对该ETS表进行读操作.</p>
+<p>ETS表还可以有名称, 允许我们通过一个给定的名称来访问ETS表.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iex&#62; :ets.new(:buckets_registry, [:named_table])&#10;:buckets_registry&#10;iex&#62; :ets.insert(:buckets_registry, &#123;&#34;foo&#34;, self&#125;)&#10;true&#10;iex&#62; :ets.lookup(:buckets_registry, &#34;foo&#34;)&#10;[&#123;&#34;foo&#34;, #PID&#60;0.41.0&#62;&#125;]</span><br></pre></td></tr></table></figure>
+<p>让我们修改<code>KV.Registry</code>使用ETS表. 我们将使用与事件管理器, buckets supervisor相同的技术, 以及传递ETS表名称给<code>start_link</code>. 记住, 与服务器名称一样, 任何知道ETSB表名称的本地进程都可以方位该表.</p>
+<p>打开<code>lib/kv/registry.ex</code>, 并修改其实现. 我们在被修改的部分添加了注释, 以标记我们所做的修改.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule KV.Registry do&#10;  use GenServer&#10;  ## &#23458;&#25143;&#31471; API&#10;  @doc &#34;&#34;&#34;&#10;  &#21551;&#21160;&#27880;&#20876;&#34920;.&#10;  &#34;&#34;&#34;&#10;  def start_link(table, event_manager, buckets, opts \\ []) do&#10;    # 1. &#29616;&#22312;&#25105;&#20204;&#26399;&#26395;&#35813;&#34920;&#20316;&#20026;&#21442;&#25968;&#20256;&#36882;&#32473;&#26381;&#21153;&#22120;&#10;    GenServer.start_link(__MODULE__, &#123;table, event_manager, buckets&#125;, opts)&#10;  end&#10;  @doc &#34;&#34;&#34;&#10;  &#26597;&#35810;&#23384;&#20648;&#22312;`table`&#20013;&#30340;`name`&#30340;bucket pid.&#10;  Returns `&#123;:ok, pid&#125;` if a bucket exists, `:error` otherwise.&#10;  &#34;&#34;&#34;&#10;  def lookup(table, name) do&#10;    # 2. lookup now expects a table and looks directly into ETS.&#10;    #    No request is sent to the server.&#10;    case :ets.lookup(table, name) do&#10;      [&#123;^name, bucket&#125;] -&#62; &#123;:ok, bucket&#125;&#10;      [] -&#62; :error&#10;    end&#10;  end&#10;  @doc &#34;&#34;&#34;&#10;  &#30830;&#20445;&#22312;`server`&#20013;&#26377;&#19968;&#20010;&#19982;&#32473;&#23450;&#30340;`name`&#30456;&#20851;&#30340;bucket.&#10;  &#34;&#34;&#34;&#10;  def create(server, name) do&#10;    GenServer.cast(server, &#123;:create, name&#125;)&#10;  end&#10;  ## &#26381;&#21153;&#22120;&#22238;&#35843;&#10;  def init(&#123;table, events, buckets&#125;) do&#10;    # 3. We have replaced the names HashDict by the ETS table&#10;    ets  = :ets.new(table, [:named_table, read_concurrency: true])&#10;    refs = HashDict.new&#10;    &#123;:ok, %&#123;names: ets, refs: refs, events: events, buckets: buckets&#125;&#125;&#10;  end&#10;  # 4. The previous handle_call callback for lookup was removed&#10;  def handle_cast(&#123;:create, name&#125;, state) do&#10;    # 5. Read and write to the ETS table instead of the HashDict&#10;    case lookup(state.names, name) do&#10;      &#123;:ok, _pid&#125; -&#62;&#10;        &#123;:noreply, state&#125;&#10;      :error -&#62;&#10;        &#123;:ok, pid&#125; = KV.Bucket.Supervisor.start_bucket(state.buckets)&#10;        ref = Process.monitor(pid)&#10;        refs = HashDict.put(state.refs, ref, name)&#10;        :ets.insert(state.names, &#123;name, pid&#125;)&#10;        GenEvent.sync_notify(state.events, &#123;:create, name, pid&#125;)&#10;        &#123;:noreply, %&#123;state | refs: refs&#125;&#125;&#10;    end&#10;  end&#10;  def handle_info(&#123;:DOWN, ref, :process, pid, _reason&#125;, state) do&#10;    # 6. Delete from the ETS table instead of the HashDict&#10;    &#123;name, refs&#125; = HashDict.pop(state.refs, ref)&#10;    :ets.delete(state.names, name)&#10;    GenEvent.sync_notify(state.events, &#123;:exit, name, pid&#125;)&#10;    &#123;:noreply, %&#123;state | refs: refs&#125;&#125;&#10;  end&#10;  def handle_info(_msg, state) do&#10;    &#123;:noreply, state&#125;&#10;  end&#10;end</span><br></pre></td></tr></table></figure>
+<p>注意:<br>在修改<code>KV.Registry.lookup/2</code>实现从服务器请求之前, 暂时直接从ETS表中读取, 多进程共享. 这是我们要实现的缓存机制的主要思路.</p>
+<p>为了使缓存机制可以工作, 创建的ETS表需要有 <code>:protected</code>(默认), 这样所有的客户端才能够读取,并且仅有<code>KV.Registry</code>进程能够写. 当启动的时候,我们还设置了<code>read_concurrency: true</code>,以优化表在并发读操作场景下的性能.</p>
+<p>The changes we have performed above have definitely broken our tests. For starters,<br>there is a new argument we need to pass to <code>KV.Registry.start_link/3</code>. Let’s start amending our tests in <code>test/kv/registry_test.exs</code> by rewriting the <code>setup</code> callback:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-10-30T06:45:30.000Z"><a href="/2014/10/30/elixir-defdelegate/">2014-10-30</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/30/elixir-defdelegate/">函数委派</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <h2 id="函数委派">函数委派</h2><p>可以通过在当前模块中通过<code>defdelegate</code>定义一个函数,并把对该函数的调用委派给<code>目标函数</code>, 一个有用的场景是:</p>
+<ul>
+<li>把特定应用需要调用的底层模块的函数,封装到一个单独的应用模块中.</li>
+</ul>
+<p>下图是<code>defdelegate</code>在Elixir内核中的<a href="http://elixir-lang.org/docs/stable/elixir/Kernel.html#defdelegate/2" target="_blank" rel="external">定义</a></p>
+<p><img src="/assets/images/elixir-defdelegate.png" alt="`defdelegate`在Elixir内核中的定义"></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-10-25T07:59:06.000Z"><a href="/2014/10/25/elixir-collect-user-input/">2014-10-25</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/25/elixir-collect-user-input/">收集用户输入</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>在控制台程序中收集用户的输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># &#33719;&#21462;&#29992;&#25143;&#21517;&#10;input_username = IO.gets(&#34;Please input your username: &#34;)&#10;username = String.strip(input)&#10;first = String.first(username)&#10;# &#33719;&#21462;&#24180;&#40836;&#10;input_age = IO.gets(&#34;Please input your age:&#34;)&#10;age_str = String.strip(input_age)&#10;age = String.to_integer(age_str)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-10-24T08:47:07.000Z"><a href="/2014/10/24/ejabberd-client-disconnect-by-kill/">2014-10-24</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/24/ejabberd-client-disconnect-by-kill/">Ejabberd客户连接状态变化的服务器日志分析</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>客户端进程被杀掉的服务器连接处理日志</p>
+
+<!--￼0-->
+
+
+<p>客户端正常退出,服务器会收到一个流关闭标记<code>&lt;/stream:stream&gt;</code>(下图右侧第一行日志), 而客户端被杀死收到不到流关闭标记(左侧).<br>还未分析客户端连接超时或断开的情况.</p>
+<p><img src="/assets/images/CA275FA1-0736-445C-AFA1-959C88A4EA33.png" alt="客户端正常退出和网络突然断开,服务器日志对比"></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-10-24T02:56:12.000Z"><a href="/2014/10/24/elixir-learn-in-n-minutes/">2014-10-24</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/24/elixir-learn-in-n-minutes/">N分钟学习Elixir</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#注释"><span class="toc-number">1.</span> <span class="toc-text">注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本类型"><span class="toc-number">2.</span> <span class="toc-text">基本类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作符"><span class="toc-number">3.</span> <span class="toc-text">操作符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#控制流"><span class="toc-number">4.</span> <span class="toc-text">控制流</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模块和函数"><span class="toc-number">5.</span> <span class="toc-text">模块和函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结构和异常"><span class="toc-number">6.</span> <span class="toc-text">结构和异常</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#并发"><span class="toc-number">7.</span> <span class="toc-text">并发</span></a></li></ol>
+        </div>
+        
+
+
+        <p>获取代码: <a href="http://learnxinyminutes.com/docs/files/learnelixir.ex" target="_blank" rel="external">learnelixir.ex</a></p>
+<p>Elixir 是构建在Erlang虚拟机上的现代函数编程语言.完全和Erlang兼容,对很多标准语法进行了扩展,并提供了更多的功能.</p>
+<p>翻译了一部分发现,已经有中文版了, <a href="http://learnxinyminutes.com/docs/zh-cn/elixir-cn" target="_blank" rel="external">在这里</a></p>
+<h2 id="注释">注释</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># &#21333;&#34892;&#27880;&#37322;&#20197;&#19968;&#20010;#&#21495;&#24320;&#22987;.&#10;# &#27809;&#26377;&#22810;&#34892;&#27880;&#37322;,&#20294;&#21487;&#20197;&#27880;&#37322;&#22810;&#34892;.&#10;# &#35201;&#20351;&#29992;elixir shell&#20351;&#29992;`iex`&#21629;&#20196;.&#10;# &#32534;&#35793;&#27169;&#22359;&#20351;&#29992;`elixirc`&#21629;&#20196;.&#10;# &#22914;&#26524;elixir&#27491;&#30830;&#23433;&#35013;,&#24212;&#35813;&#37117;&#22312;PATH&#20013;.</span><br></pre></td></tr></table></figure>
+<h2 id="基本类型">基本类型</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># &#36825;&#20123;&#26159;&#25968;&#23383;&#10;3    # &#25972;&#25968;&#10;0x1F # &#25972;&#25968;&#10;3.0  # &#28014;&#28857;&#25968;&#10;# Atoms, that are literals, a constant with name. They start with `:`.&#10;# &#21407;&#23376;,&#26159;&#23383;&#38754;&#30340;,&#19968;&#20010;&#21629;&#21517;&#24120;&#37327;. &#20197;`:`&#24320;&#22987;.&#10;:hello # atom&#10;# &#20803;&#32452;&#22312;&#20869;&#23384;&#20013;&#26159;&#36830;&#32493;&#22320;&#23384;&#20648;&#30340;&#10;&#123;1,2,3&#125; # tuple&#10;# &#21487;&#20197;&#20351;&#29992;`elem`&#20989;&#25968;&#35775;&#38382;&#19968;&#20010;&#20803;&#32452;&#20013;&#30340;&#20803;&#32032;&#10;elem(&#123;1, 2, 3&#125;, 0) #=&#62; 1&#10;# Lists that are implemented as linked lists.&#10;[1,2,3] # list&#10;# We can access the head and tail of a list as follows:&#10;[head | tail] = [1,2,3]&#10;head #=&#62; 1&#10;tail #=&#62; [2,3]&#10;# In elixir, just like in Erlang, the `=` denotes pattern matching and&#10;# not an assignment.&#10;#&#10;# This means that the left-hand side (pattern) is matched against a&#10;# right-hand side.&#10;#&#10;# This is how the above example of accessing the head and tail of a list works.&#10;# A pattern match will error when the sides don&#39;t match, in this example&#10;# the tuples have different sizes.&#10;# &#123;a, b, c&#125; = &#123;1, 2&#125; #=&#62; ** (MatchError) no match of right hand side value: &#123;1,2&#125;&#10;# There are also binaries&#10;&#60;&#60;1,2,3&#62;&#62; # binary&#10;# Strings and char lists&#10;&#34;hello&#34; # string&#10;&#39;hello&#39; # char list&#10;# Multi-line strings&#10;&#34;&#34;&#34;&#10;I&#39;m a multi-line&#10;string.&#10;&#34;&#34;&#34;&#10;#=&#62; &#34;I&#39;m a multi-line\nstring.\n&#34;&#10;# Strings are all encoded in UTF-8:&#10;&#34;h&#233;ll&#242;&#34; #=&#62; &#34;h&#233;ll&#242;&#34;&#10;# Strings are really just binaries, and char lists are just lists.&#10;&#60;&#60;?a, ?b, ?c&#62;&#62; #=&#62; &#34;abc&#34;&#10;[?a, ?b, ?c]   #=&#62; &#39;abc&#39;&#10;# `?a` in elixir returns the ASCII integer for the letter `a`&#10;?a #=&#62; 97&#10;# To concatenate lists use `++`, for binaries use `&#60;&#62;`&#10;[1,2,3] ++ [4,5]     #=&#62; [1,2,3,4,5]&#10;&#39;hello &#39; ++ &#39;world&#39;  #=&#62; &#39;hello world&#39;&#10;&#60;&#60;1,2,3&#62;&#62; &#60;&#62; &#60;&#60;4,5&#62;&#62; #=&#62; &#60;&#60;1,2,3,4,5&#62;&#62;&#10;&#34;hello &#34; &#60;&#62; &#34;world&#34;  #=&#62; &#34;hello world&#34;</span><br></pre></td></tr></table></figure>
+<h2 id="操作符">操作符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># Some math&#10;1 + 1  #=&#62; 2&#10;10 - 5 #=&#62; 5&#10;5 * 2  #=&#62; 10&#10;10 / 2 #=&#62; 5.0&#10;# In elixir the operator `/` always returns a float.&#10;# To do integer division use `div`&#10;div(10, 2) #=&#62; 5&#10;# To get the division remainder use `rem`&#10;rem(10, 3) #=&#62; 1&#10;# There are also boolean operators: `or`, `and` and `not`.&#10;# These operators expect a boolean as their first argument.&#10;true and true #=&#62; true&#10;false or true #=&#62; true&#10;# 1 and true    #=&#62; ** (ArgumentError) argument error&#10;# Elixir also provides `||`, `&#38;&#38;` and `!` which accept arguments of any type.&#10;# All values except `false` and `nil` will evaluate to true.&#10;1 || true  #=&#62; 1&#10;false &#38;&#38; 1 #=&#62; false&#10;nil &#38;&#38; 20  #=&#62; nil&#10;!true #=&#62; false&#10;# For comparisons we have: `==`, `!=`, `===`, `!==`, `&#60;=`, `&#62;=`, `&#60;` and `&#62;`&#10;1 == 1 #=&#62; true&#10;1 != 1 #=&#62; false&#10;1 &#60; 2  #=&#62; true&#10;# `===` and `!==` are more strict when comparing integers and floats:&#10;1 == 1.0  #=&#62; true&#10;1 === 1.0 #=&#62; false&#10;# We can also compare two different data types:&#10;1 &#60; :hello #=&#62; true&#10;# The overall sorting order is defined below:&#10;# number &#60; atom &#60; reference &#60; functions &#60; port &#60; pid &#60; tuple &#60; list &#60; bit string&#10;# To quote Joe Armstrong on this: &#34;The actual order is not important,&#10;# but that a total ordering is well defined is important.&#34;</span><br></pre></td></tr></table></figure>
+<h2 id="控制流">控制流</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># `if` expression&#10;if false do&#10;  &#34;This will never be seen&#34;&#10;else&#10;  &#34;This will&#34;&#10;end&#10;# There&#39;s also `unless`&#10;unless true do&#10;  &#34;This will never be seen&#34;&#10;else&#10;  &#34;This will&#34;&#10;end&#10;# Remember pattern matching? Many control-flow structures in elixir rely on it.&#10;# `case` allows us to compare a value against many patterns:&#10;case &#123;:one, :two&#125; do&#10;  &#123;:four, :five&#125; -&#62;&#10;    &#34;This won&#39;t match&#34;&#10;  &#123;:one, x&#125; -&#62;&#10;    &#34;This will match and bind `x` to `:two`&#34;&#10;  _ -&#62;&#10;    &#34;This will match any value&#34;&#10;end&#10;# It&#39;s common to bind the value to `_` if we don&#39;t need it.&#10;# For example, if only the head of a list matters to us:&#10;[head | _] = [1,2,3]&#10;head #=&#62; 1&#10;# For better readability we can do the following:&#10;[head | _tail] = [:a, :b, :c]&#10;head #=&#62; :a&#10;# `cond` lets us check for many conditions at the same time.&#10;# Use `cond` instead of nesting many `if` expressions.&#10;cond do&#10;  1 + 1 == 3 -&#62;&#10;    &#34;I will never be seen&#34;&#10;  2 * 5 == 12 -&#62;&#10;    &#34;Me neither&#34;&#10;  1 + 2 == 3 -&#62;&#10;    &#34;But I will&#34;&#10;end&#10;# It is common to see the last condition equal to `true`, which will always match.&#10;cond do&#10;  1 + 1 == 3 -&#62;&#10;    &#34;I will never be seen&#34;&#10;  2 * 5 == 12 -&#62;&#10;    &#34;Me neither&#34;&#10;  true -&#62;&#10;    &#34;But I will (this is essentially an else)&#34;&#10;end&#10;# `try/catch` is used to catch values that are thrown, it also supports an&#10;# `after` clause that is invoked whether or not a value is caught.&#10;try do&#10;  throw(:hello)&#10;catch&#10;  message -&#62; &#34;Got #&#123;message&#125;.&#34;&#10;after&#10;  IO.puts(&#34;I&#39;m the after clause.&#34;)&#10;end&#10;#=&#62; I&#39;m the after clause&#10;# &#34;Got :hello&#34;</span><br></pre></td></tr></table></figure>
+<h2 id="模块和函数">模块和函数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># Anonymous functions (notice the dot)&#10;square = fn(x) -&#62; x * x end&#10;square.(5) #=&#62; 25&#10;# They also accept many clauses and guards.&#10;# Guards let you fine tune pattern matching,&#10;# they are indicated by the `when` keyword:&#10;f = fn&#10;  x, y when x &#62; 0 -&#62; x + y&#10;  x, y -&#62; x * y&#10;end&#10;f.(1, 3)  #=&#62; 4&#10;f.(-1, 3) #=&#62; -3&#10;# Elixir also provides many built-in functions.&#10;# These are available in the current scope.&#10;is_number(10)    #=&#62; true&#10;is_list(&#34;hello&#34;) #=&#62; false&#10;elem(&#123;1,2,3&#125;, 0) #=&#62; 1&#10;# You can group several functions into a module. Inside a module use `def`&#10;# to define your functions.&#10;defmodule Math do&#10;  def sum(a, b) do&#10;    a + b&#10;  end&#10;  def square(x) do&#10;    x * x&#10;  end&#10;end&#10;Math.sum(1, 2)  #=&#62; 3&#10;Math.square(3) #=&#62; 9&#10;# To compile our simple Math module save it as `math.ex` and use `elixirc`&#10;# in your terminal: elixirc math.ex&#10;# Inside a module we can define functions with `def` and private functions with `defp`.&#10;# A function defined with `def` is available to be invoked from other modules,&#10;# a private function can only be invoked locally.&#10;defmodule PrivateMath do&#10;  def sum(a, b) do&#10;    do_sum(a, b)&#10;  end&#10;  defp do_sum(a, b) do&#10;    a + b&#10;  end&#10;end&#10;PrivateMath.sum(1, 2)    #=&#62; 3&#10;# PrivateMath.do_sum(1, 2) #=&#62; ** (UndefinedFunctionError)&#10;# Function declarations also support guards and multiple clauses:&#10;defmodule Geometry do&#10;  def area(&#123;:rectangle, w, h&#125;) do&#10;    w * h&#10;  end&#10;  def area(&#123;:circle, r&#125;) when is_number(r) do&#10;    3.14 * r * r&#10;  end&#10;end&#10;Geometry.area(&#123;:rectangle, 2, 3&#125;) #=&#62; 6&#10;Geometry.area(&#123;:circle, 3&#125;)       #=&#62; 28.25999999999999801048&#10;# Geometry.area(&#123;:circle, &#34;not_a_number&#34;&#125;)&#10;#=&#62; ** (FunctionClauseError) no function clause matching in Geometry.area/1&#10;# Due to immutability, recursion is a big part of elixir&#10;defmodule Recursion do&#10;  def sum_list([head | tail], acc) do&#10;    sum_list(tail, acc + head)&#10;  end&#10;  def sum_list([], acc) do&#10;    acc&#10;  end&#10;end&#10;Recursion.sum_list([1,2,3], 0) #=&#62; 6&#10;# Elixir modules support attributes, there are built-in attributes and you&#10;# may also add custom ones.&#10;defmodule MyMod do&#10;  @moduledoc &#34;&#34;&#34;&#10;  This is a built-in attribute on a example module.&#10;  &#34;&#34;&#34;&#10;  @my_data 100 # This is a custom attribute.&#10;  IO.inspect(@my_data) #=&#62; 100&#10;end</span><br></pre></td></tr></table></figure>
+<h2 id="结构和异常">结构和异常</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># Structs are extensions on top of maps that bring default values,&#10;# compile-time guarantees and polymorphism into Elixir.&#10;defmodule Person do&#10;  defstruct name: nil, age: 0, height: 0&#10;end&#10;joe_info = %Person&#123; name: &#34;Joe&#34;, age: 30, height: 180 &#125;&#10;#=&#62; %Person&#123;age: 30, height: 180, name: &#34;Joe&#34;&#125;&#10;# Access the value of name&#10;joe_info.name #=&#62; &#34;Joe&#34;&#10;# Update the value of age&#10;older_joe_info = %&#123; joe_info | age: 31 &#125;&#10;#=&#62; %Person&#123;age: 31, height: 180, name: &#34;Joe&#34;&#125;&#10;# The `try` block with the `rescue` keyword is used to handle exceptions&#10;try do&#10;  raise &#34;some error&#34;&#10;rescue&#10;  RuntimeError -&#62; &#34;rescued a runtime error&#34;&#10;  _error -&#62; &#34;this will rescue any error&#34;&#10;end&#10;# All exceptions have a message&#10;try do&#10;  raise &#34;some error&#34;&#10;rescue&#10;  x in [RuntimeError] -&#62;&#10;    x.message&#10;end</span><br></pre></td></tr></table></figure>
+<h2 id="并发">并发</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># Elixir relies on the actor model for concurrency. All we need to write&#10;# concurrent programs in elixir are three primitives: spawning processes,&#10;# sending messages and receiving messages.&#10;# To start a new process we use the `spawn` function, which takes a function&#10;# as argument.&#10;f = fn -&#62; 2 * 2 end #=&#62; #Function&#60;erl_eval.20.80484245&#62;&#10;spawn(f) #=&#62; #PID&#60;0.40.0&#62;&#10;# `spawn` returns a pid (process identifier), you can use this pid to send&#10;# messages to the process. To do message passing we use the `send` operator.&#10;# For all of this to be useful we need to be able to receive messages. This is&#10;# achieved with the `receive` mechanism:&#10;defmodule Geometry do&#10;  def area_loop do&#10;    receive do&#10;      &#123;:rectangle, w, h&#125; -&#62;&#10;        IO.puts(&#34;Area = #&#123;w * h&#125;&#34;)&#10;        area_loop()&#10;      &#123;:circle, r&#125; -&#62;&#10;        IO.puts(&#34;Area = #&#123;3.14 * r * r&#125;&#34;)&#10;        area_loop()&#10;    end&#10;  end&#10;end&#10;# Compile the module and create a process that evaluates `area_loop` in the shell&#10;pid = spawn(fn -&#62; Geometry.area_loop() end) #=&#62; #PID&#60;0.40.0&#62;&#10;# Send a message to `pid` that will match a pattern in the receive statement&#10;send pid, &#123;:rectangle, 2, 3&#125;&#10;#=&#62; Area = 6&#10;#   &#123;:rectangle,2,3&#125;&#10;send pid, &#123;:circle, 2&#125;&#10;#=&#62; Area = 12.56000000000000049738&#10;#   &#123;:circle,2&#125;&#10;# The shell is also a process, you can use `self` to get the current pid&#10;self() #=&#62; #PID&#60;0.27.0&#62;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
+        <time datetime="2014-10-23T09:30:27.000Z"><a href="/2014/10/23/elixir-base64/">2014-10-23</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/23/elixir-base64/">Base64编码</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p><img src="/assets/images/AA9701C5-0427-45AF-88CE-CB0DA1183FAB.png" alt="Elixir base64 和url,文件名安全的base64字母表"></p>
+<p>一般性的Base64编码包含<code>+</code>,<code>/</code>两个符号,但是这两个符号在URL中有特殊的含义,因此需要一种方式来避免这两个符号的冲突. 在编码URL地址和文件名的时候分别使用<code>-</code>,<code>_</code>替换这两个符号.</p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="http://elixir-lang.org/docs/master/elixir/Base.html" target="_blank" rel="external">http://elixir-lang.org/docs/master/elixir/Base.html</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
         <time datetime="2014-10-23T08:20:32.000Z"><a href="/2014/10/23/erlang-emysql-execute-prepared-statement/">2014-10-23</a></time>
       
       
@@ -111,7 +750,7 @@
         
 
 
-        <figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% 创建一个预处理语句</span></span><br><span class="line"><span class="atom">emysql</span>:<span class="atom">prepare</span>(<span class="atom">stmt_isbound</span>, &lt;&lt;<span class="string">"SELECT COUNT(sn) FROM online_users WHERE sn = ? AND jid = ?"</span>&gt;&gt;),</span><br><span class="line"><span class="comment">%% 执行预处理语句</span></span><br><span class="line">&#123;<span class="name">_</span>, <span class="name">_</span>, <span class="name">_</span>, [[<span class="name">Rows</span>]], <span class="name">_</span>&#125; = <span class="atom">emysql</span>:<span class="atom">execute</span>(<span class="atom">pool_gbox_messager</span>, <span class="atom">stmt_isbound</span>, [<span class="name">Sn</span>, <span class="name">Jid</span>]),</span><br><span class="line">?<span class="name">INFO_MSG</span>(<span class="string">"COUNT: ~p~n"</span>, [<span class="name">Rows</span>])</span><br></pre></td></tr></table></figure>
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% &#21019;&#24314;&#19968;&#20010;&#39044;&#22788;&#29702;&#35821;&#21477;&#10;emysql:prepare(stmt_isbound, &#60;&#60;&#34;SELECT COUNT(sn) FROM online_users WHERE sn = ? AND jid = ?&#34;&#62;&#62;),&#10;%% &#25191;&#34892;&#39044;&#22788;&#29702;&#35821;&#21477;&#10;&#123;_, _, _, [[Rows]], _&#125; = emysql:execute(pool_gbox_messager, stmt_isbound, [Sn, Jid]),&#10;?INFO_MSG(&#34;COUNT: ~p~n&#34;, [Rows])</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer>
@@ -166,40 +805,40 @@
 
         <p>有时候我们不想停止ejabberd服务,同时能够更新我们的自定义模块,ejabberd已经为我们提供了这样一个功能.通过使用ejabberd的<code>ejabberd_update</code>核心模块, 我们可以在<code>运行时重新加载</code>我们的模块新代码.</p>
 <p>ejabberd_update核心模块为我们提供了如下三个导出的接口函数:</p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="pp"><span class="keyword">-export</span><span class="params">([</span><br><span class="line">    <span class="comment">%% Update all the modified modules</span></span><br><span class="line">    update/<span class="number">0</span>,</span><br><span class="line">    <span class="comment">%% Update only the specified modules</span></span><br><span class="line">    update/<span class="number">1</span>,</span><br><span class="line">    <span class="comment">%% Get information about the modified modules</span></span><br><span class="line">    update_info/<span class="number">0</span></span><br><span class="line">])</span></span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-export([&#10;    %% Update all the modified modules&#10;    update/0,&#10;    %% Update only the specified modules&#10;    update/1,&#10;    %% Get information about the modified modules&#10;    update_info/0&#10;]).</span><br></pre></td></tr></table></figure>
 <h2 id="示例">示例</h2><p>该示例假设你已经搭建好了Ejabberd的开发环境,如果还未搭建号开发环境,请完成开发环境的搭建.</p>
 <ul>
 <li>首先停止ejabberd</li>
 </ul>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ejabberdctl <span class="keyword">stop</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ejabberdctl stop</span><br></pre></td></tr></table></figure>
 <ul>
 <li>启动到<code>live</code>模式</li>
 </ul>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ejabberdctl</span> live</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ejabberdctl live</span><br></pre></td></tr></table></figure>
 <ul>
 <li>更新一个模块文件/编译/安装</li>
 </ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">make</span> &amp;&amp; <span class="built_in">make</span> install</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &#38;&#38; make install</span><br></pre></td></tr></table></figure>
 <ul>
 <li>查看需要更新的模块列表</li>
 </ul>
 <p>打开一个新的终端执行,查看哪些模块代码需要更新</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@bffd81e6215e</span><span class="symbol">:~/ejabberd</span><span class="comment"># ejabberdctl update_list</span></span><br><span class="line">mod_gbox_messager</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@bffd81e6215e:~/ejabberd# ejabberdctl update_list&#10;mod_gbox_messager</span><br></pre></td></tr></table></figure>
 <p>我们看到,update_list命令列出了我们需要更新的模块<code>mod_gbox_messager</code></p>
 <ul>
 <li>切换到live模式的窗口执行</li>
 </ul>
 <p>为了清晰,下面的输出通过手工格式化</p>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(<span class="atom">ejabberd</span>@<span class="atom">localhost</span>)<span class="number">2</span>&gt; <span class="atom">ejabberd_update</span>:<span class="atom">update</span>().</span><br><span class="line"><span class="number">07</span>:<span class="number">57</span>:<span class="number">08.491</span> [<span class="atom">debug</span>] <span class="atom">beam</span> <span class="atom">files</span>: [<span class="atom">mod_gbox_messager</span>]</span><br><span class="line"><span class="number">07</span>:<span class="number">57</span>:<span class="number">08.492</span> [<span class="atom">debug</span>] <span class="atom">script</span>: [&#123;<span class="atom">load_module</span>,<span class="atom">mod_gbox_messager</span>&#125;]</span><br><span class="line"><span class="number">07</span>:<span class="number">57</span>:<span class="number">08.492</span> [<span class="atom">debug</span>] <span class="atom">low</span> <span class="atom">level</span> <span class="atom">script</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="atom">load_object_code</span>,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="atom">ejabberd</span>,[],[<span class="atom">mod_gbox_messager</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="atom">point_of_no_return</span>,&#123;</span><br><span class="line">        <span class="atom">load</span>,&#123;</span><br><span class="line">            <span class="atom">mod_gbox_messager</span>,</span><br><span class="line">            <span class="atom">brutal_purge</span>,<span class="atom">brutal_purge</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"><span class="number">07</span>:<span class="number">57</span>:<span class="number">08.492</span> [<span class="atom">debug</span>] <span class="atom">check</span>: &#123;<span class="atom">ok</span>,[]&#125;</span><br><span class="line"><span class="number">07</span>:<span class="number">57</span>:<span class="number">08.497</span> [<span class="atom">debug</span>] <span class="atom">eval</span>: &#123;<span class="atom">ok</span>,[]&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ejabberd@localhost)2&#62; ejabberd_update:update().&#10;07:57:08.491 [debug] beam files: [mod_gbox_messager]&#10;07:57:08.492 [debug] script: [&#123;load_module,mod_gbox_messager&#125;]&#10;07:57:08.492 [debug] low level script: [&#10;    &#123;&#10;        load_object_code,&#10;        &#123;&#10;            ejabberd,[],[mod_gbox_messager]&#10;        &#125;&#10;    &#125;,&#10;    point_of_no_return,&#123;&#10;        load,&#123;&#10;            mod_gbox_messager,&#10;            brutal_purge,brutal_purge&#10;        &#125;&#10;    &#125;&#10;]&#10;07:57:08.492 [debug] check: &#123;ok,[]&#125;&#10;07:57:08.497 [debug] eval: &#123;ok,[]&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>获取更新信息</li>
 </ul>
-<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">(<span class="atom">ejabberd</span>@<span class="atom">localhost</span>)<span class="number">4</span>&gt; <span class="atom">ejabberd_update</span>:<span class="atom">update_info</span>().</span><br><span class="line"><span class="number">08</span>:<span class="number">25</span>:<span class="number">24.357</span> [<span class="atom">debug</span>] <span class="atom">beam</span> <span class="atom">files</span>: [<span class="atom">mod_gbox_messager</span>]</span><br><span class="line"><span class="number">08</span>:<span class="number">25</span>:<span class="number">24.358</span> [<span class="atom">debug</span>] <span class="atom">script</span>: [&#123;<span class="atom">load_module</span>,<span class="atom">mod_gbox_messager</span>&#125;]</span><br><span class="line"><span class="number">08</span>:<span class="number">25</span>:<span class="number">24.358</span> [<span class="atom">debug</span>] <span class="atom">low</span> <span class="atom">level</span> <span class="atom">script</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="atom">load_object_code</span>,</span><br><span class="line">        &#123;<span class="atom">ejabberd</span>,[],[<span class="atom">mod_gbox_messager</span>]&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="atom">point_of_no_return</span>,</span><br><span class="line">    &#123;<span class="atom">load</span>,&#123;<span class="atom">mod_gbox_messager</span>,<span class="atom">brutal_purge</span>,<span class="atom">brutal_purge</span>&#125;&#125;</span><br><span class="line">]</span><br><span class="line"><span class="number">08</span>:<span class="number">25</span>:<span class="number">24.358</span> [<span class="atom">debug</span>] <span class="atom">check</span>: &#123;<span class="atom">ok</span>,[]&#125;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="atom">ok</span>,</span><br><span class="line">    <span class="string">"/lib/ejabberd/ebin"</span>,</span><br><span class="line">    [<span class="atom">mod_gbox_messager</span>],</span><br><span class="line">    [&#123;<span class="atom">load_module</span>,<span class="atom">mod_gbox_messager</span>&#125;],</span><br><span class="line">    [</span><br><span class="line">        &#123;<span class="atom">load_object_code</span>,&#123;<span class="atom">ejabberd</span>,[],[<span class="atom">mod_gbox_messager</span>]&#125;&#125;,</span><br><span class="line">        <span class="atom">point_of_no_return</span>,</span><br><span class="line">        &#123;<span class="atom">load</span>,&#123;<span class="atom">mod_gbox_messager</span>,<span class="atom">brutal_purge</span>,<span class="atom">brutal_purge</span>&#125;&#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="atom">ok</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(ejabberd@localhost)4&#62; ejabberd_update:update_info().&#10;08:25:24.357 [debug] beam files: [mod_gbox_messager]&#10;08:25:24.358 [debug] script: [&#123;load_module,mod_gbox_messager&#125;]&#10;08:25:24.358 [debug] low level script: [&#10;    &#123;&#10;        load_object_code,&#10;        &#123;ejabberd,[],[mod_gbox_messager]&#125;&#10;    &#125;,&#10;    point_of_no_return,&#10;    &#123;load,&#123;mod_gbox_messager,brutal_purge,brutal_purge&#125;&#125;&#10;]&#10;08:25:24.358 [debug] check: &#123;ok,[]&#125;&#10;&#123;&#10;    ok,&#10;    &#34;/lib/ejabberd/ebin&#34;,&#10;    [mod_gbox_messager],&#10;    [&#123;load_module,mod_gbox_messager&#125;],&#10;    [&#10;        &#123;load_object_code,&#123;ejabberd,[],[mod_gbox_messager]&#125;&#125;,&#10;        point_of_no_return,&#10;        &#123;load,&#123;mod_gbox_messager,brutal_purge,brutal_purge&#125;&#125;&#10;    ],&#10;    ok&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p><code>ejabberd_update:update_info()</code>返回一个元组,其中包含了beam文件的位置<code>/lib/ejabberd/ebin</code>, 要加载的模块列表<code>[{load_module,mod_gbox_messager}]</code>等, 我们可以在我们的HTTP模块代码中使用,比如:</p>
-<figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">%% 打印需要更新的模块</span></span><br><span class="line"><span class="function_or_atom">print_modules</span>() <span class="arrow">-&gt;</span></span><br><span class="line">    &#123;<span class="ok">ok</span>,_<span class="variable">Ebin</span>,<span class="variable">Modules</span>,_,_,_&#125; = <span class="function_or_atom">ejabberd_update:update_info</span>,</span><br><span class="line">    <span class="constant">?INFO_MSG</span>(<span class="string">"modules to update: ~p~n"</span>, [<span class="variable">Modules</span>]).</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% &#25171;&#21360;&#38656;&#35201;&#26356;&#26032;&#30340;&#27169;&#22359;&#10;print_modules() -&#62;&#10;    &#123;ok,_Ebin,Modules,_,_,_&#125; = ejabberd_update:update_info,&#10;    ?INFO_MSG(&#34;modules to update: ~p~n&#34;, [Modules]).</span><br></pre></td></tr></table></figure>
 <h2 id="通过Web更新模块代码">通过Web更新模块代码</h2><p>开发一个Ejabberd的HTTP模块,(如何开发Ejabberd的HTTP模块,请参考 <a href="/2014/09/18/ejabberd-http-module">开发一个Ejabberd HTTP模块</a>) 并通过RESTFul接口动态地更新模块代码</p>
 <p>下面我们来定义两个RESTFul服务的端点</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET <span class="string">http:</span><span class="comment">//localhost/update-modules/all</span></span><br><span class="line">POST <span class="string">http:</span><span class="comment">//localhost/update-modules</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET http://localhost/update-modules/all&#10;POST http://localhost/update-modules</span><br></pre></td></tr></table></figure>
 <ul>
 <li>第一个端点用于更新所有已修改的模块</li>
 <li>第二个端点用于更新特定的模块列表,POST的数据格式采用JSON</li>
@@ -332,9 +971,9 @@ Tuple = <span class="function"><span class="title">tuple</span><span class="para
 <p>例子</p>
 </blockquote>
 <p><strong>lists:keysearch/3</strong></p>
-<figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">1&gt; </span><span class="function_or_atom">lists:keysearch</span>(<span class="function_or_atom">mail</span>,<span class="number">1</span>, [&#123;<span class="function_or_atom">username</span>, <span class="string">"13012345678"</span>&#125;, &#123;<span class="function_or_atom">mail</span>, <span class="string">"13012345678@139.com"</span>&#125;, &#123;<span class="function_or_atom">tel</span>, <span class="number">13012345678</span>&#125;]).</span><br><span class="line">&#123;<span class="function_or_atom">value</span>,&#123;<span class="function_or_atom">mail</span>,<span class="string">"13012345678@139.com"</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#62; lists:keysearch(mail,1, [&#123;username, &#34;13012345678&#34;&#125;, &#123;mail, &#34;13012345678@139.com&#34;&#125;, &#123;tel, 13012345678&#125;]).&#10;&#123;value,&#123;mail,&#34;13012345678@139.com&#34;&#125;&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>lists:keyfind/3</strong></p>
-<figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">3&gt; </span><span class="function_or_atom">lists:keyfind</span>(<span class="function_or_atom">mail</span>,<span class="number">1</span>, [&#123;<span class="function_or_atom">username</span>, <span class="string">"13012345678"</span>&#125;, &#123;<span class="function_or_atom">mail</span>, <span class="string">"13012345678@139.com"</span>&#125;, &#123;<span class="function_or_atom">tel</span>, <span class="number">13012345678</span>&#125;]).</span><br><span class="line">&#123;<span class="function_or_atom">mail</span>,<span class="string">"13012345678@139.com"</span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3&#62; lists:keyfind(mail,1, [&#123;username, &#34;13012345678&#34;&#125;, &#123;mail, &#34;13012345678@139.com&#34;&#125;, &#123;tel, 13012345678&#125;]).&#10;&#123;mail,&#34;13012345678@139.com&#34;&#125;</span><br></pre></td></tr></table></figure>
 <p>注意<code>lists:keysearch/3</code>和<code>lists:keyfind/3</code>返回值的差异.</p>
 
       
@@ -446,15 +1085,15 @@ Tuple = <span class="function"><span class="title">tuple</span><span class="para
 <h3 id="函数文档">函数文档</h3><ul>
 <li>创建一个文件<code>hello.exs</code>如下:</li>
 </ul>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Elixir module</span></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Test</span></span> <span class="keyword">do</span></span><br><span class="line">    <span class="variable">@doc</span> <span class="string">""</span><span class="string">"</span><br><span class="line">    一个Echo方法用于输出Hello World.</span><br><span class="line">    "</span><span class="string">""</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">echo</span></span> <span class="keyword">do</span></span><br><span class="line">        <span class="constant">IO.</span>puts <span class="string">"Hello World!"</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># Elixir module&#10;defmodule Test do&#10;    @doc &#34;&#34;&#34;&#10;    &#19968;&#20010;Echo&#26041;&#27861;&#29992;&#20110;&#36755;&#20986;Hello World.&#10;    &#34;&#34;&#34;&#10;    def echo do&#10;        IO.puts &#34;Hello World!&#34;&#10;    end&#10;end</span><br></pre></td></tr></table></figure>
 <ul>
 <li>进入交互式shell</li>
 </ul>
-<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">root</span><span class="comment"># iex</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root# iex</span><br></pre></td></tr></table></figure>
 <ul>
 <li>编译模块</li>
 </ul>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">iex</span><span class="params">(<span class="number">1</span>)</span></span>&gt; <span class="function"><span class="title">c</span><span class="params">(<span class="string">"hello.exs"</span>)</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iex(1)&#62; c(&#34;hello.exs&#34;)</span><br></pre></td></tr></table></figure>
 <p>模块编译会在当前目录下生成一个<code>Elixir.Test.beam</code> BEAM文件.</p>
 <ul>
 <li>查看文档</li>
@@ -464,19 +1103,19 @@ Tuple = <span class="function"><span class="title">tuple</span><span class="para
 <h2 id="函数参数和返回类型规范">函数参数和返回类型规范</h2><p>函数定义的类型规范是通过<code>@spec</code>标签定义的</p>
 <h2 id="用ExDoc生成文档">用ExDoc生成文档</h2><ul>
 <li><p>用<code>mix</code>创建一个新项目</p>
-  <figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">root@fd4cc081e295:~/ejabberd/elixir# mix new docs</span><br><span class="line"><span class="comment">* creating README.md</span></span><br><span class="line"><span class="comment">* creating .gitignore</span></span><br><span class="line"><span class="comment">* creating mix.exs</span></span><br><span class="line"><span class="comment">* creating config</span></span><br><span class="line"><span class="comment">* creating config/config.exs</span></span><br><span class="line"><span class="comment">* creating lib</span></span><br><span class="line"><span class="comment">* creating lib/docs.ex</span></span><br><span class="line"><span class="comment">* creating test</span></span><br><span class="line"><span class="comment">* creating test/test_helper.exs</span></span><br><span class="line"><span class="comment">* creating test/docs_test.exs</span></span><br><span class="line">Your mix project was created successfully.</span><br><span class="line">You can <span class="keyword">use</span> mix to compile it, <span class="keyword">test</span> it, and <span class="keyword">more</span>:</span><br><span class="line">    <span class="keyword">cd</span> docs</span><br><span class="line">    mix <span class="keyword">test</span></span><br><span class="line"><span class="keyword">Run</span> `mix <span class="keyword">help</span>` <span class="keyword">for</span> <span class="keyword">more</span> commands.</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@fd4cc081e295:~/ejabberd/elixir# mix new docs&#10;* creating README.md&#10;* creating .gitignore&#10;* creating mix.exs&#10;* creating config&#10;* creating config/config.exs&#10;* creating lib&#10;* creating lib/docs.ex&#10;* creating test&#10;* creating test/test_helper.exs&#10;* creating test/docs_test.exs&#10;Your mix project was created successfully.&#10;You can use mix to compile it, test it, and more:&#10;    cd docs&#10;    mix test&#10;Run `mix help` for more commands.</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>编辑mix.exs,添加依赖模块</p>
-  <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Docs</span></span>.<span class="constant">Mixfile </span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Mix.Project</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">project</span></span> <span class="keyword">do</span></span><br><span class="line">    [<span class="symbol">app:</span> <span class="symbol">:docs</span>,</span><br><span class="line">     <span class="symbol">version:</span> <span class="string">"0.0.1"</span>,</span><br><span class="line">     <span class="symbol">elixir:</span> <span class="string">"~&gt; 1.0"</span>,</span><br><span class="line">     <span class="symbol">deps:</span> deps]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="comment"># Configuration for the OTP application</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment"># Type `mix help compile.app` for more information</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">application</span></span> <span class="keyword">do</span></span><br><span class="line">    [<span class="symbol">applications:</span> [<span class="symbol">:logger</span>]]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="comment"># Dependencies can be Hex packages:</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment">#   &#123;:mydep, "~&gt; 0.3.0"&#125;</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment"># Or git/path repositories:</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment">#   &#123;:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"&#125;</span></span><br><span class="line">  <span class="comment">#</span></span><br><span class="line">  <span class="comment"># Type `mix help deps` for more examples and options</span></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">deps</span></span> <span class="keyword">do</span></span><br><span class="line">    [&#123;<span class="symbol">:ex_doc</span>, <span class="symbol">github:</span> <span class="string">"elixir-lang/ex_doc"</span>&#125;]</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule Docs.Mixfile do&#10;  use Mix.Project&#10;  def project do&#10;    [app: :docs,&#10;     version: &#34;0.0.1&#34;,&#10;     elixir: &#34;~&#62; 1.0&#34;,&#10;     deps: deps]&#10;  end&#10;  # Configuration for the OTP application&#10;  #&#10;  # Type `mix help compile.app` for more information&#10;  def application do&#10;    [applications: [:logger]]&#10;  end&#10;  # Dependencies can be Hex packages:&#10;  #&#10;  #   &#123;:mydep, &#34;~&#62; 0.3.0&#34;&#125;&#10;  #&#10;  # Or git/path repositories:&#10;  #&#10;  #   &#123;:mydep, git: &#34;https://github.com/elixir-lang/mydep.git&#34;, tag: &#34;0.1.0&#34;&#125;&#10;  #&#10;  # Type `mix help deps` for more examples and options&#10;  defp deps do&#10;    [&#123;:ex_doc, github: &#34;elixir-lang/ex_doc&#34;&#125;]&#10;  end&#10;end</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>安装依赖</p>
 </li>
 </ul>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@fd4cc081e295</span><span class="symbol">:~/elixir/docs</span><span class="comment"># mix deps.get</span></span><br><span class="line">* <span class="constant">Updating</span> ex_doc (<span class="symbol">git:</span>/<span class="regexp">/github.com/elixir</span>-lang/ex_doc.git)</span><br><span class="line">==&gt; ex_doc</span><br><span class="line"><span class="constant">Could</span> <span class="keyword">not</span> find hex, which is needed to build dependency <span class="symbol">:earmark</span></span><br><span class="line"><span class="constant">Shall</span> <span class="constant">I</span> install hex? [<span class="constant">Yn</span>] <span class="constant">Y</span></span><br><span class="line"><span class="number">2014</span>-<span class="number">10</span>-<span class="number">13</span> 09<span class="symbol">:</span><span class="number">07</span><span class="symbol">:</span><span class="number">56</span> <span class="constant">URL</span><span class="symbol">:https</span><span class="symbol">://s3</span>.amazonaws.com/s3.hex.pm/installs/hex.ez [<span class="number">240877</span>/<span class="number">240877</span>] -&gt; <span class="string">"/root/.mix/archives/hex.ez"</span> [<span class="number">1</span>]</span><br><span class="line">* creating /root/.mix/archives/hex.ez</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@fd4cc081e295:~/elixir/docs# mix deps.get&#10;* Updating ex_doc (git://github.com/elixir-lang/ex_doc.git)&#10;==&#62; ex_doc&#10;Could not find hex, which is needed to build dependency :earmark&#10;Shall I install hex? [Yn] Y&#10;2014-10-13 09:07:56 URL:https://s3.amazonaws.com/s3.hex.pm/installs/hex.ez [240877/240877] -&#62; &#34;/root/.mix/archives/hex.ez&#34; [1]&#10;* creating /root/.mix/archives/hex.ez</span><br></pre></td></tr></table></figure>
 <ul>
 <li>生成文档</li>
 </ul>
-<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mix</span> docs</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix docs</span><br></pre></td></tr></table></figure>
 <h2 id="ExDoc中文模板">ExDoc中文模板</h2><p>下载地址:<br><a href="https://github.com/developerworks/ex_doc" target="_blank" rel="external">https://github.com/developerworks/ex_doc</a></p>
 <p><img src="/assets/images/61802553-AA1E-430F-9BED-2B25BC2BAF58.png" alt="ExDoc中文模板"></p>
 
@@ -529,13 +1168,13 @@ Tuple = <span class="function"><span class="title">tuple</span><span class="para
 
         <p>Elixir 依赖与Erlang/OTP 17,需要首先安装Erlang, 这里不讲解如何安装Erlang, 这里说明如何编译和使用Elixir</p>
 <h1 id="编译">编译</h1><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># &#19979;&#36733;&#10;wget https://github.com/elixir-lang/elixir/archive/v1.0.1.tar.gz&#10;# &#35299;&#21387;&#10;tar zxf v1.0.1.tar.gz&#10;cd elixir-1.0.1&#10;make</span><br></pre></td></tr></table></figure>
-<h1 id="配置路径">配置路径</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/root/elixir-<span class="number">1.0</span>.<span class="number">1</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
-<h1 id="交互式Shell">交互式Shell</h1><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@fd4cc081e295</span><span class="symbol">:~/elixir-</span><span class="number">1.0</span>.<span class="number">1</span>/bin<span class="comment"># iex</span></span><br><span class="line"><span class="constant">Erlang/OTP </span><span class="number">17</span> [erts-<span class="number">6.2</span>] [source] [<span class="number">64</span>-bit] [async-<span class="symbol">threads:</span><span class="number">10</span>] [kernel-<span class="symbol">poll:</span><span class="keyword">false</span>]</span><br><span class="line"><span class="constant">Interactive Elixir </span>(<span class="number">1.0</span>.<span class="number">1</span>) - press <span class="constant">Ctrl+C </span>to exit (type h() <span class="constant">ENTER </span><span class="keyword">for</span> help)</span><br><span class="line">iex(<span class="number">1</span>)&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="配置路径">配置路径</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/root/elixir-1.0.1/bin:$PATH</span><br></pre></td></tr></table></figure>
+<h1 id="交互式Shell">交互式Shell</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@fd4cc081e295:~/elixir-1.0.1/bin# iex&#10;Erlang/OTP 17 [erts-6.2] [source] [64-bit] [async-threads:10] [kernel-poll:false]&#10;Interactive Elixir (1.0.1) - press Ctrl+C to exit (type h() ENTER for help)&#10;iex(1)&#62;</span><br></pre></td></tr></table></figure>
 <p>输入<code>h()</code>显示如下帮助</p>
 <p><img src="/assets/images/94E0C021-A9FE-44CD-97C5-EA564C66BC78.png" alt="Elixir交互式Shell"></p>
-<h1 id="Hell_World">Hell World</h1><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IO<span class="class">.puts</span> <span class="string">"Hello World!</span></span><br></pre></td></tr></table></figure>
+<h1 id="Hell_World">Hell World</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IO.puts &#34;Hello World!</span><br></pre></td></tr></table></figure>
 <p>执行</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@fd4cc081e295</span><span class="symbol">:~/elixir</span><span class="comment"># elixir hello.exs</span></span><br><span class="line"><span class="constant">Hello World!</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@fd4cc081e295:~/elixir# elixir hello.exs&#10;Hello World!</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -701,38 +1340,38 @@ Tuple = <span class="function"><span class="title">tuple</span><span class="para
 
         <p>Ejabberd支持国际化,在<code>&lt;iq/&gt;</code>,<code>&lt;message/&gt;</code>,<code>&lt;presence/&gt;</code>等元素上添加<code>xml:lang</code>属性,对应的英文文本会切换到指定的语言.</p>
 <p>举个例子,模块<code>mod_announce.erl</code>代码内有如下对<code>translate:translate()</code>的使用:</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, &lt;&lt;"<span class="tag">announce</span>"&gt;&gt;) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Announcements"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_ANNOUNCE_ALL</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Send announcement to all users"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_ANNOUNCE_ALL_ALLHOSTS</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Send announcement to all users on all hosts"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_ANNOUNCE</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Send announcement to all online users"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_ANNOUNCE_ALLHOSTS</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Send announcement to all online users on all hosts"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_SET_MOTD</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Set message of the day and send to online users"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_SET_MOTD_ALLHOSTS</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Set message of the day on all hosts and send to online users"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_EDIT_MOTD</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Update message of the day (don't send)"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_EDIT_MOTD_ALLHOSTS</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Update message of the day on all hosts (don't send)"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_DELETE_MOTD</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Delete message of the day"</span>&gt;&gt;)</span></span>;</span><br><span class="line"><span class="tag">get_title</span>(<span class="tag">Lang</span>, ?<span class="tag">NS_ADMIN_DELETE_MOTD_ALLHOSTS</span>) <span class="tag">-</span>&gt;</span><br><span class="line">    <span class="rule"><span class="attribute">translate</span>:<span class="value"><span class="function">translate</span>(Lang, &lt;&lt;<span class="string">"Delete message of the day on all hosts"</span>&gt;&gt;).</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_title(Lang, &#60;&#60;&#34;announce&#34;&#62;&#62;) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Announcements&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_ANNOUNCE_ALL) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Send announcement to all users&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_ANNOUNCE_ALL_ALLHOSTS) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Send announcement to all users on all hosts&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_ANNOUNCE) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Send announcement to all online users&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_ANNOUNCE_ALLHOSTS) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Send announcement to all online users on all hosts&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_SET_MOTD) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Set message of the day and send to online users&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_SET_MOTD_ALLHOSTS) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Set message of the day on all hosts and send to online users&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_EDIT_MOTD) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Update message of the day (don&#39;t send)&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_EDIT_MOTD_ALLHOSTS) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Update message of the day on all hosts (don&#39;t send)&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_DELETE_MOTD) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Delete message of the day&#34;&#62;&#62;);&#10;get_title(Lang, ?NS_ADMIN_DELETE_MOTD_ALLHOSTS) -&#62;&#10;    translate:translate(Lang, &#60;&#60;&#34;Delete message of the day on all hosts&#34;&#62;&#62;).</span><br></pre></td></tr></table></figure>
 <p><code>translate:translate()</code>定义在<code>translate.erl</code>模块中.</p>
-<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-spec translate<span class="function"><span class="params">(binary(), binary())</span> -&gt;</span> binary().</span><br><span class="line">translate<span class="function"><span class="params">(Lang, Msg)</span> -&gt;</span></span><br><span class="line">    LLang = ascii_tolower(Lang),</span><br><span class="line">    <span class="keyword">case</span> <span class="attribute">ets</span>:lookup(translations, &#123;LLang, Msg&#125;) <span class="keyword">of</span></span><br><span class="line">      [&#123;_, Trans&#125;]<span class="function"> -&gt;</span> Trans;</span><br><span class="line">      _<span class="function"> -&gt;</span></span><br><span class="line">	  ShortLang = <span class="keyword">case</span> <span class="attribute">str</span>:tokens(LLang, &lt;&lt;<span class="string">"-"</span>&gt;&gt;) <span class="keyword">of</span></span><br><span class="line">			[]<span class="function"> -&gt;</span> LLang;</span><br><span class="line">			[SL | _]<span class="function"> -&gt;</span> SL</span><br><span class="line">		      end,</span><br><span class="line">	  <span class="keyword">case</span> ShortLang <span class="keyword">of</span></span><br><span class="line">	    &lt;&lt;<span class="string">"en"</span>&gt;&gt;<span class="function"> -&gt;</span> Msg;</span><br><span class="line">	    LLang<span class="function"> -&gt;</span> translate(Msg);</span><br><span class="line">	    _<span class="function"> -&gt;</span></span><br><span class="line">		<span class="keyword">case</span> <span class="attribute">ets</span>:lookup(translations, &#123;ShortLang, Msg&#125;) <span class="keyword">of</span></span><br><span class="line">		  [&#123;_, Trans&#125;]<span class="function"> -&gt;</span> Trans;</span><br><span class="line">		  _<span class="function"> -&gt;</span> translate(Msg)</span><br><span class="line">		end</span><br><span class="line">	  end</span><br><span class="line">    end.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-spec translate(binary(), binary()) -&#62; binary().&#10;translate(Lang, Msg) -&#62;&#10;    LLang = ascii_tolower(Lang),&#10;    case ets:lookup(translations, &#123;LLang, Msg&#125;) of&#10;      [&#123;_, Trans&#125;] -&#62; Trans;&#10;      _ -&#62;&#10;&#9;  ShortLang = case str:tokens(LLang, &#60;&#60;&#34;-&#34;&#62;&#62;) of&#10;&#9;&#9;&#9;[] -&#62; LLang;&#10;&#9;&#9;&#9;[SL | _] -&#62; SL&#10;&#9;&#9;      end,&#10;&#9;  case ShortLang of&#10;&#9;    &#60;&#60;&#34;en&#34;&#62;&#62; -&#62; Msg;&#10;&#9;    LLang -&#62; translate(Msg);&#10;&#9;    _ -&#62;&#10;&#9;&#9;case ets:lookup(translations, &#123;ShortLang, Msg&#125;) of&#10;&#9;&#9;  [&#123;_, Trans&#125;] -&#62; Trans;&#10;&#9;&#9;  _ -&#62; translate(Msg)&#10;&#9;&#9;end&#10;&#9;  end&#10;    end.</span><br></pre></td></tr></table></figure>
 <p>当你在XML节上定义了<code>xml:lang=&#39;zh&#39;</code>属性后,服务端的应答文本就变为中文了, 如下:</p>
 <p><img src="/assets/images/D373E553-9009-48E3-A9C3-5FD33D7C7080.png" alt="Erlang国际化文本-服务节点列表"></p>
 <h2 id="增加自定义字符串">增加自定义字符串</h2><p>搞清楚了原理后,我就可以为我的模块添加字符串了.</p>
 <p>首先我在我的模块中使用英文作为默认的文本描述, 如下所示:</p>
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#xmlel&#123;</span></span><br><span class="line">    <span class="variable">name =</span> &lt;&lt;<span class="string">"item"</span>&gt;&gt;,</span><br><span class="line">    <span class="variable">attrs =</span> [</span><br><span class="line">        &#123;&lt;&lt;<span class="string">"jid"</span>&gt;&gt;, Server&#125;,</span><br><span class="line">        &#123;&lt;&lt;<span class="string">"node"</span>&gt;&gt;, &lt;&lt;<span class="string">"http://www.example.com/protocol/messager#upgrade-full"</span>&gt;&gt;&#125;,</span><br><span class="line">        &#123;&lt;&lt;<span class="string">"name"</span>&gt;&gt;, translate:translate(Lang, &lt;&lt;<span class="string">"Make a complete upgrade"</span>&gt;&gt;)&#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="variable">children =</span> []</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#xmlel&#123;&#10;    name = &#60;&#60;&#34;item&#34;&#62;&#62;,&#10;    attrs = [&#10;        &#123;&#60;&#60;&#34;jid&#34;&#62;&#62;, Server&#125;,&#10;        &#123;&#60;&#60;&#34;node&#34;&#62;&#62;, &#60;&#60;&#34;http://www.example.com/protocol/messager#upgrade-full&#34;&#62;&#62;&#125;,&#10;        &#123;&#60;&#60;&#34;name&#34;&#62;&#62;, translate:translate(Lang, &#60;&#60;&#34;Make a complete upgrade&#34;&#62;&#62;)&#125;&#10;    ],&#10;    children = []&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p>然后根据<code>$EJABBERD_SRC/contrib/extract_translations/README</code>的描述,<br>需要编译<code>$EJABBERD_SRC/contrib/extract_translations/extract_translations.erl</code>模块.</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">erlc</span> <span class="variable">$EJABBERD_SRC</span>/contrib/extract_translations/extract_translations.erl</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erlc $EJABBERD_SRC/contrib/extract_translations/extract_translations.erl</span><br></pre></td></tr></table></figure>
 <p>Ejabberd提供了一个SHELL脚本来从<code>*.po</code>文件生成Ejabberd需要的<code>*.msg</code>文件.</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">root@<span class="number">4850618</span>fe551:~/ejabberd/contrib/extract_translations<span class="comment"># ./prepare-translation.sh -h</span></span><br><span class="line"><span class="type">Options</span>:</span><br><span class="line">  -langall</span><br><span class="line">  -lang <span class="type">LANGUAGE_FILE</span></span><br><span class="line">  -srcmsg2po <span class="type">LANGUAGE</span>   <span class="type">Construct</span> .msg file <span class="keyword">using</span> source code to <span class="type">PO</span> file</span><br><span class="line">  -src2pot              <span class="type">Generate</span> <span class="keyword">template</span> <span class="type">POT</span> file <span class="keyword">from</span> source code</span><br><span class="line">  -popot2po <span class="type">LANGUAGE</span>    <span class="type">Update</span> <span class="type">PO</span> file <span class="keyword">with</span> <span class="keyword">template</span> <span class="type">POT</span> file</span><br><span class="line">  -po2msg <span class="type">LANGUAGE</span>      <span class="type">Export</span> <span class="type">PO</span> file to <span class="type">MSG</span> file</span><br><span class="line">  -updateall            <span class="type">Generate</span> <span class="type">POT</span> <span class="keyword">and</span> update all <span class="type">PO</span></span><br><span class="line"><span class="type">Example</span>:</span><br><span class="line">  ./prepare-translation.sh -lang es.msg</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@4850618fe551:~/ejabberd/contrib/extract_translations# ./prepare-translation.sh -h&#10;Options:&#10;  -langall&#10;  -lang LANGUAGE_FILE&#10;  -srcmsg2po LANGUAGE   Construct .msg file using source code to PO file&#10;  -src2pot              Generate template POT file from source code&#10;  -popot2po LANGUAGE    Update PO file with template POT file&#10;  -po2msg LANGUAGE      Export PO file to MSG file&#10;  -updateall            Generate POT and update all PO&#10;Example:&#10;  ./prepare-translation.sh -lang es.msg</span><br></pre></td></tr></table></figure>
 <p>首先切换到源码根目录, 执行:</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@4850618fe551</span><span class="symbol">:~/ejabberd</span><span class="comment"># ./contrib/extract_translations/prepare-translation.sh -src2pot</span></span><br><span class="line">./contrib/extract_translations/prepare-translation.<span class="symbol">sh:</span> line <span class="number">183</span><span class="symbol">:</span> <span class="symbol">msguniq:</span> command <span class="keyword">not</span> found</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@4850618fe551:~/ejabberd# ./contrib/extract_translations/prepare-translation.sh -src2pot&#10;./contrib/extract_translations/prepare-translation.sh: line 183: msguniq: command not found</span><br></pre></td></tr></table></figure>
 <p>找不到<code>msguniq</code>命令,在Ubuntu上,<code>msguniq</code>在<code>gettext</code>包种, 下面安装需要的软件包:</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aptitude <span class="keyword">install</span> -y gettext</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aptitude install -y gettext</span><br></pre></td></tr></table></figure>
 <p>执行下面的命令, 更新<code>ejabberd.pot</code>文件:</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@4850618fe551</span><span class="symbol">:~/ejabberd</span><span class="comment"># ./contrib/extract_translations/prepare-translation.sh -src2pot</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@4850618fe551:~/ejabberd# ./contrib/extract_translations/prepare-translation.sh -src2pot</span><br></pre></td></tr></table></figure>
 <p>打开<code>$EJABBERD_SRC/priv/msgs/ejabberd.pot</code>, 翻译相关条目后, 复制粘贴到到<code>$EJABBERD_SRC/priv/msgs/zh.po</code>中,</p>
 <p><img src="/assets/images/4BD11A32-C9E4-4348-AD5A-60061B8998A5.png" alt="$EJABBERD_SRC/priv/msgs/ejabberd.pot"></p>
 <p>并执行下面的命令,更新我的<code>zh.msg</code>文件, 这个文件是在Erlang代码中直接使用的文件. 后面会看到最终的效果.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./contrib/extract_translations/<span class="operator"><span class="keyword">prepare</span>-<span class="keyword">translation</span>.sh -po2msg zh</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./contrib/extract_translations/prepare-translation.sh -po2msg zh</span><br></pre></td></tr></table></figure>
 <p>更新后的消息文件在<code>$EJABBERD_SRC/priv/msgs/zh.msg</code></p>
 <p><img src="/assets/images/95BD1DE1-C5C4-47AB-BB6E-B94A3ADF2811.png" alt="$EJABBERD_SRC/priv/msgs/zh.msg"></p>
 <p>生成了我最终要的<code>zh.msg</code>文件后,重新编译一次ejabberd(之前已经编译过,这一步很快)</p>
-<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@4850618fe551:~/ejabberd# make</span><br><span class="line"><span class="comment">/usr/lib/erlang/bin/escript rebar skip_deps=true compile</span></span><br><span class="line">=<span class="ruby"><span class="status">=&gt;</span> rel (compile)</span><br><span class="line"></span>=<span class="ruby"><span class="status">=&gt;</span> ejabberd (compile)</span><br><span class="line"></span>Compiled src/mod_online_users.erl</span><br><span class="line">Compiled src/mod_gbox_messager.erl</span><br><span class="line">Compiled src/mod_cputime.erl</span><br><span class="line">Compiled src/mod_system_information.erl</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@4850618fe551:~/ejabberd# make&#10;/usr/lib/erlang/bin/escript rebar skip_deps=true compile&#10;==&#62; rel (compile)&#10;==&#62; ejabberd (compile)&#10;Compiled src/mod_online_users.erl&#10;Compiled src/mod_gbox_messager.erl&#10;Compiled src/mod_cputime.erl&#10;Compiled src/mod_system_information.erl</span><br></pre></td></tr></table></figure>
 <p>复制编译的新文件</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">cp</span> ebin/<span class="regexp">*.beam</span> /lib/ejabberd/ebin</span><br><span class="line">cp priv/<span class="regexp">*.msg</span> /lib/ejabberd/priv/msgs</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp ebin/*.beam /lib/ejabberd/ebin&#10;cp priv/*.msg /lib/ejabberd/priv/msgs</span><br></pre></td></tr></table></figure>
 <p>最后重启,并测试</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">ejabberdctl</span> restart</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ejabberdctl restart</span><br></pre></td></tr></table></figure>
 <p>查询命令列表(注意属性<code>xml:lang=&#39;zh&#39;</code>)</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;iq <span class="built_in">type</span>=<span class="string">'get'</span> <span class="keyword">to</span>=<span class="string">'xmpp.myserver.info'</span> from=<span class="string">'root@xmpp.myserver.info'</span> <span class="keyword">xm</span><span class="variable">l:lang</span>=<span class="string">'zh'</span> xmlns=<span class="string">'jabber:client'</span>&gt;</span><br><span class="line">  &lt;query xmlns=<span class="string">'http://jabber.org/protocol/disco#items'</span> node=<span class="string">'http://jabber.org/protocol/commands'</span>/&gt;</span><br><span class="line">&lt;/iq&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;iq type=&#39;get&#39; to=&#39;xmpp.myserver.info&#39; from=&#39;root@xmpp.myserver.info&#39; xml:lang=&#39;zh&#39; xmlns=&#39;jabber:client&#39;&#62;&#10;  &#60;query xmlns=&#39;http://jabber.org/protocol/disco#items&#39; node=&#39;http://jabber.org/protocol/commands&#39;/&#62;&#10;&#60;/iq&#62;</span><br></pre></td></tr></table></figure>
 <p>国际化后的结果</p>
 <p><img src="/assets/images/1BD77F60-BE7B-48CF-B1BE-1933F3D9D839.png" alt="自定义Ad-Hoc Commands"></p>
 <h2 id="参考资料">参考资料</h2><ol>
@@ -832,7 +1471,7 @@ Tuple = <span class="function"><span class="title">tuple</span><span class="para
 </ul>
 <p><a href="http://www.onem2m.org/candidate_release/index.cfm" target="_blank" rel="external">http://www.onem2m.org/candidate_release/index.cfm</a></p>
 <p><code>M2M在线</code><br><a href="http://m2m.iot-online.com/" target="_blank" rel="external">http://m2m.iot-online.com/</a></p>
-<p>功能架构<br>TS-0001-oneM2M-Functional-Architecture-V-2014-08<br>需求<br>TS-0002-Requirements-V-2014-08<br>安全方案<br>TS-0003-Security<em>Solutions-V-2014-08<br>核心协议<br>TS-0004-CoreProtocol-V-2014-08<br>管理(OMA)<br>TS-0005-Management_Enablement (OMA)-V-2014-08<br>管理(BBF)<br>TS-0006-Management_Enablement</em>(BBF)-V-2014-08<br>CoAP协议绑定<br>TS-0008-CoAP_Protocol_Binding-V-2014-08<br>HTTP协议绑定<br>TS-0009-HTTP_Protocol_Binding_V-2014-08<br>定义和缩写词<br>TS-0011-Definitions and Acronyms-V-2014-08</p>
+<p>功能架构<br>TS-0001-oneM2M-Functional-Architecture-V-2014-08<br>需求<br>TS-0002-Requirements-V-2014-08<br>安全方案<br>TS-0003-Security_Solutions-V-2014-08<br>核心协议<br>TS-0004-CoreProtocol-V-2014-08<br>管理(OMA)<br>TS-0005-Management_Enablement (OMA)-V-2014-08<br>管理(BBF)<br>TS-0006-Management<em>Enablement</em>(BBF)-V-2014-08<br>CoAP协议绑定<br>TS-0008-CoAP_Protocol_Binding-V-2014-08<br>HTTP协议绑定<br>TS-0009-HTTP_Protocol_Binding_V-2014-08<br>定义和缩写词<br>TS-0011-Definitions and Acronyms-V-2014-08</p>
 <h2 id="资料">资料</h2><ol>
 <li><p>XMPP Service Discovery extensions for M2M and IoT<br><a href="http://servicelab.org/2013/02/21/xmpp-service-discovery-extensions-for-m2m-and-iot/" target="_blank" rel="external">http://servicelab.org/2013/02/21/xmpp-service-discovery-extensions-for-m2m-and-iot/</a></p>
 </li>
@@ -972,473 +1611,6 @@ XMPP Client
 
 
 
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-10-03T10:12:35.000Z"><a href="/2014/10/03/strophejs-plugins-register/">2014-10-03</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/03/strophejs-plugins-register/">XMPP Strophe.js插件 - 带内注册</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <h2 id="客户端服务器交互">客户端服务器交互</h2><p>下图,是注册过程客户端和服务器的交互过程, 绿色的输出是客户端请求的XML节, 蓝色的输出是服务器应答的XML节.</p>
-<p><img src="/assets/images/D6DC8BC6-6F30-49CA-B898-F47E9AD83A43.png" alt="XMPP Stanzas"></p>
-<h2 id="下载插件">下载插件</h2><p><a href="https://github.com/strophe/strophejs-plugins/tree/master/register" target="_blank" rel="external">https://github.com/strophe/strophejs-plugins/tree/master/register</a></p>
-<h2 id="HTML页面代码">HTML页面代码</h2><p>创建两个表单元素<code>username</code>和<code>password</code>用于获取用户名和密码, 一个<code>Register</code>按钮触发注册操作.<br>本文所演示示例的完整代码在此: <a href="https://gist.github.com/developerworks/317ccf6eb2d3060610f8" target="_blank" rel="external">https://gist.github.com/developerworks/317ccf6eb2d3060610f8</a><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>Register a user<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--// JQuery库--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--// Strophe.js库--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"strophe.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--// Strophe.js 注册插件--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"strophe.register.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--// 注册业务逻辑--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"text/javascript"</span> <span class="attribute">src</span>=<span class="value">"register.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  Username:<span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">id</span>=<span class="value">"username"</span> <span class="attribute">placeholder</span>=<span class="value">"Please input username"</span>/&gt;</span></span><br><span class="line">  Password<span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"text"</span> <span class="attribute">id</span>=<span class="value">"password"</span> <span class="attribute">placeholder</span>=<span class="value">"Please input your password"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">br</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">id</span>=<span class="value">"register"</span>&gt;</span>Register<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="回调函数">回调函数</h2><p><strong>register.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 调试用,XML格式化函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">formatXml</span><span class="params">(xml)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> formatted = <span class="string">''</span>;</span><br><span class="line">  <span class="keyword">var</span> reg = <span class="regexp">/(&gt;)(&lt;)(\/*)/g</span>;</span><br><span class="line">  xml = xml.replace(reg, <span class="string">'$1\r\n$2$3'</span>);</span><br><span class="line">  <span class="keyword">var</span> pad = <span class="number">0</span>;</span><br><span class="line">  jQuery.each(xml.split(<span class="string">'\r\n'</span>), <span class="function"><span class="keyword">function</span> <span class="params">(index, node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> indent = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (node.match(<span class="regexp">/.+&lt;\/\w[^&gt;]*&gt;$/</span>)) &#123;</span><br><span class="line">      indent = <span class="number">0</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node.match(<span class="regexp">/^&lt;\/\w/</span>)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (pad != <span class="number">0</span>) &#123;</span><br><span class="line">        pad -= <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node.match(<span class="regexp">/^&lt;\w[^&gt;]*[^\/]&gt;.*$/</span>)) &#123;</span><br><span class="line">      indent = <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      indent = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> padding = <span class="string">''</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; pad; i++) &#123;</span><br><span class="line">      padding += <span class="string">'  '</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    formatted += padding + node + <span class="string">'\r\n'</span>;</span><br><span class="line">    pad += indent;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> formatted;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Websocket端点</span></span><br><span class="line"><span class="keyword">var</span> BOSH_SERVICE = <span class="string">'ws://xmpp.myserver.info:5288'</span>;</span><br><span class="line"><span class="comment">// 域名</span></span><br><span class="line"><span class="keyword">var</span> DOMAIN_NAME = <span class="string">'xmpp.myserver.info'</span>;</span><br><span class="line"><span class="comment">// XMPP连接对象</span></span><br><span class="line"><span class="keyword">var</span> connection = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// 浏览器控制台日志</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log</span><span class="params">(msg, sent)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (sent) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"%c\n"</span> + msg, <span class="string">"color:green;"</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"%c\n"</span> + msg, <span class="string">"color:blue;"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rawInput</span><span class="params">(data)</span> </span>&#123;</span><br><span class="line">  log(formatXml(data), <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rawOutput</span><span class="params">(data)</span> </span>&#123;</span><br><span class="line">  log(formatXml(data), <span class="literal">true</span>);</span><br><span class="line">&#125;</span><br><span class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">  $(<span class="string">'#register'</span>).bind(<span class="string">'click'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 创建连接</span></span><br><span class="line">    connection = <span class="keyword">new</span> Strophe.Connection(BOSH_SERVICE);</span><br><span class="line">    <span class="comment">// 注册事件处理器</span></span><br><span class="line">    connection.rawInput = rawInput;</span><br><span class="line">    connection.rawOutput = rawOutput;</span><br><span class="line">    <span class="comment">// 用户注册</span></span><br><span class="line">    connection.register.connect(DOMAIN_NAME, <span class="function"><span class="keyword">function</span> <span class="params">(status)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (status === Strophe.Status.REGISTER) &#123;</span><br><span class="line">        connection.register.fields.username = $(<span class="string">"#username"</span>).val();</span><br><span class="line">        connection.register.fields.password = $(<span class="string">"#password"</span>).val();</span><br><span class="line">        <span class="built_in">console</span>.info(<span class="string">"registering..."</span>);</span><br><span class="line">        connection.register.submit();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (status === Strophe.Status.REGISTERED) &#123;</span><br><span class="line">        <span class="built_in">console</span>.info(<span class="string">"Registerd!"</span>);</span><br><span class="line">        connection.disconnect();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (status === Strophe.Status.CONFLICT) &#123;</span><br><span class="line">        <span class="built_in">console</span>.error(<span class="string">"Username already exists."</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (status === Strophe.Status.NOTACCEPTABLE) &#123;</span><br><span class="line">        <span class="built_in">console</span>.error(<span class="string">"Registration form not properly filled out."</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (status === Strophe.Status.REGIFAIL) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"The Server does not support In-Band Registration"</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (status === Strophe.Status.CONNECTED) &#123;</span><br><span class="line">        <span class="built_in">console</span>.info(<span class="string">"Connected."</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (status === Strophe.Status.DISCONNECTING) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Disconneting..."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (status === Strophe.Status.DISCONNECTED) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Disconneted."</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;, <span class="number">60</span>, <span class="number">1</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-10-02T20:07:43.000Z"><a href="/2014/10/03/xmpp-xep-0198-stream-management-2/">2014-10-03</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/03/xmpp-xep-0198-stream-management-2/">XMPP XEP-0198流管理 - 实例分析</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p>客户端启用流管理<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">enable</span> <span class="attribute">xmlns</span>=<span class="value">'urn:xmpp:sm:3'</span> <span class="attribute">resume</span>=<span class="value">'true'</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>服务端启用流管理</p>
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;enabled <span class="variable">xmlns=</span><span class="string">"urn:xmpp:sm:3"</span></span><br><span class="line">    <span class="variable">id=</span><span class="string">"g2gCbQAAABkyNTY2MjI4NzA1MTQxMjIwMTU0MjEwMjkzaANiAAAFhGIAAE65YgAMkl8="</span></span><br><span class="line">    <span class="variable">resume=</span><span class="string">"true"</span> <span class="variable">max=</span><span class="string">"300"</span></span><br><span class="line">    xmlns:<span class="variable">stream=</span><span class="string">"http://etherx.jabber.org/streams"</span> <span class="variable">version=</span><span class="string">"1.0"</span>/&gt;</span><br></pre></td></tr></table></figure>
-<p>Strophe.js代码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> enable = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> stanza = <span class="variable">$build</span>(<span class="string">'enable'</span>, &#123;xmlns: <span class="string">'urn:xmpp:sm:3'</span>, resume: <span class="keyword">true</span>&#125;);</span><br><span class="line">  connection.send(stanza.tree());</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>服务器日志</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2014</span>-<span class="number">09</span>-<span class="number">29</span> <span class="number">22</span>:<span class="number">12</span>:<span class="number">39.416</span> [info] &lt;<span class="number">0.14329</span>.0&gt;<span class="annotation">@ejabberd</span><span class="string">_c2s:</span><span class="string">handle_enable:</span><span class="number">2676</span></span><br><span class="line">    Stream management with resumption enabled <span class="keyword">for</span> root<span class="annotation">@xmpp</span>.myserver.info/<span class="number">2619252428141228749171506</span></span><br></pre></td></tr></table></figure>
-<p>当启用流管理功能后,客户端在发送和接受每一个XML节的时候,会附带收到<code>&lt;r/&gt;</code>请求</p>
-<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;r <span class="variable">xmlns=</span><span class="string">"urn:xmpp:sm:3"</span> xmlns:<span class="variable">stream=</span><span class="string">"http://etherx.jabber.org/streams"</span> <span class="variable">version=</span><span class="string">"1.0"</span>/&gt;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-10-02T20:07:43.000Z"><a href="/2014/10/03/xmpp-xep-0198-stream-management/">2014-10-03</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/03/xmpp-xep-0198-stream-management/">XMPP XEP-0198流管理 - 协议</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>本文包括两个部分</p>
-<ul>
-<li>本规范引用自如下连接并对其<strong>修订</strong>,<strong>校对</strong>,<strong>补充</strong><br><a href="http://blog.csdn.net/yuedong56/article/details/38120101">http://blog.csdn.net/yuedong56/article/details/38120101</a>.</li>
-</ul>
-<h2 id="介绍">介绍</h2><p><a href="http://wiki.jabbercn.org/RFC6120#.E5.85.A8.E5.B1.80.E5.9C.B0.E5.9D.80">XMPP Core</a> 用XMPP定义了流的XML技术(也就是流的建立和终止,包括认证和加密).但是核心的XMPP协议并没有为管理一个灵活的XML流提供工具.</p>
-<p>流管理背后的基本概念是,初始化的实体(一个服务端或者客户端)和接收的实体(一个服务端)可以为更灵活的管理stream交换<code>命令</code>.下面两条流管理的特性被广泛的关注,因为它们可以提高网络的可靠性和终端用户的体验:</p>
-<ul>
-<li>Stanza确认(Stanza Acknowledgements) — 能够确认一段或者一系列Stanza是否已被某一方接收.</li>
-<li>流恢复(Stream Resumption) — 能够迅速的恢复(resume)一个已经被终止的流.</li>
-</ul>
-<p>流管理用较的短XML元素实现了这些特性,这些XML元素是在流的标准上的.这些元素并不是XMPP意义上的<code>stanzas</code>(也就是说,不是<code>&lt;iq/&gt;</code>,<code>&lt;message/&gt;</code>,或<code>&lt;presence/&gt;</code>这样的<code>stanzas</code>,<code>stanzas</code>在<strong>RFC 6120</strong>中有定义),它们不会在流管理中被<code>counted</code>或者被<code>acked</code>,因为它们是为管理stanzas本身而存在的.</p>
-<p>流管理是在XML流的标准上使用的.检查一个给定的流TCP的连通性的时候,特别推荐使用<code>whitespace keepalives</code>(见<strong>RFC 6120</strong>),<a href="http://xmpp.org/extensions/xep-0199.html">XMPP Ping (XEP-0199)</a>或者<code>TCP keepalives</code>.对比流管理,高级消息处理<a href="http://xmpp.org/extensions/xep-0079.html">Advanced Message Processing (XEP-0079)</a>和消息回执<a href="http://xmpp.org/extensions/xep-0184.html">Message Delivery Receipts (XEP-0184)</a>,定义了<code>Ack</code>,它可以通过多个流实现端对端的传输;这些特性在一些特殊情况中是有用的,但是没必要去检查在两个xmpp实体之间直接传递的流.</p>
-<p>注:流管理可以用于服务端到服务端,客户端到服务端的流.但是,为了方便,本规范只讨论客户端到服务端的流.同样的原则也适用于服务器到服务器的流.(在本文档中,以<strong>C:</strong>开头的都是由客户端发送的,由<strong>S:</strong>开头的都是由服务器发送的).</p>
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/10/03/xmpp-xep-0198-stream-management/#more" class="more-link">阅读全文</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-10-01T19:23:39.000Z"><a href="/2014/10/02/erlang-mysql-driver/">2014-10-02</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/02/erlang-mysql-driver/">Erlang MySQL驱动</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <h2 id="编译">编译</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone git:<span class="comment">//github.com/dizzyd/erlang-mysql-driver.git erlang-mysql-driver.git</span></span><br><span class="line"><span class="keyword">cd</span> erlang-mysql-driver</span><br><span class="line">wget -O ./build.<span class="keyword">sh</span> http:<span class="comment">//svn.process-one.net/ejabberd-modules/mysql/trunk/build.sh</span></span><br><span class="line">chmod +x ./build.<span class="keyword">sh</span></span><br><span class="line">./build.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure>
-<p><img src="/assets/images/build-erlang-mysql-driver.png" alt="编译erlang-mysql-driver"></p>
-<h2 id="Examples">Examples</h2><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">%% Author: Administrator</span><br><span class="line">%% Created: <span class="number">2011</span>-<span class="number">5</span>-<span class="number">15</span></span><br><span class="line">%% Description: TODO: Add description <span class="keyword">to</span> test</span><br><span class="line">-<span class="keyword">module</span>(test).</span><br><span class="line">%%</span><br><span class="line">%% Include files</span><br><span class="line">%%</span><br><span class="line">%%</span><br><span class="line">%% Exported Functions</span><br><span class="line">%%</span><br><span class="line">-export([start/<span class="number">0</span>]).</span><br><span class="line">%%</span><br><span class="line">%% API Functions</span><br><span class="line">%%</span><br><span class="line">%%</span><br><span class="line">%% Local Functions</span><br><span class="line">%%</span><br><span class="line">start() -&gt;</span><br><span class="line">%% Build connection</span><br><span class="line">%% 注意最后一个参数,utf8,支持中文必杀技.</span><br><span class="line">    mysql:start_link(connection,<span class="string">"localhost"</span>, <span class="number">3306</span>,<span class="string">"root"</span>, <span class="string">"root"</span>, <span class="string">"erlang"</span>, undefined, utf8),</span><br><span class="line">%% INSERT</span><br><span class="line">    _result = mysql:fetch(connection, <span class="annotation">[&lt;&lt;"INSERT INTO test_table (id, first_name, last_name) VALUES(default, '你好', '世界')"&gt;&gt;]</span>),</span><br><span class="line">    io:format(<span class="string">"Result1: ~p~n"</span>, [_result]),</span><br><span class="line">%% SELECT</span><br><span class="line">    _result2 = mysql:fetch(connection, <span class="annotation">[&lt;&lt;"SELECT * FROM test_table;"&gt;&gt;]</span>),</span><br><span class="line">    io:format(<span class="string">"Result2: ~p~n"</span>, [_result2]),</span><br><span class="line">%% UPDATE</span><br><span class="line">    _result3 = mysql:fetch(connection, <span class="annotation">[&lt;&lt;"UPDATE test_table SET first_name = 'River' WHERE first_name = 'ZHIQIANG' AND last_name = 'HE';"&gt;&gt;]</span>),</span><br><span class="line">    io:format(<span class="string">"Result3: ~p~n"</span>, [_result3]),</span><br><span class="line">%% SELECT</span><br><span class="line">    _result4 = mysql:fetch(connection, <span class="annotation">[&lt;&lt;"SELECT * FROM test_table;"&gt;&gt;]</span>),</span><br><span class="line">    io:format(<span class="string">"Result4: ~p~n"</span>, [_result4]),</span><br><span class="line">%% DELETE</span><br><span class="line">    _result5 = mysql:fetch(connection, <span class="annotation">[&lt;&lt;"DELETE FROM test_table WHERE last_name = 'HE' AND first_name = 'River';"&gt;&gt;]</span>),</span><br><span class="line">    io:format(<span class="string">"Result5: ~p~n"</span>, [_result5]),</span><br><span class="line">%% SELECT</span><br><span class="line">    _result6 = mysql:fetch(connection, <span class="annotation">[&lt;&lt;"SELECT * FROM test_table;"&gt;&gt;]</span>),</span><br><span class="line">    io:format(<span class="string">"Result6: ~p~n"</span>, [_result6]),</span><br><span class="line">    ok.</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-10-01T18:38:09.000Z"><a href="/2014/10/02/ejabberd-pubsub/">2014-10-02</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/02/ejabberd-pubsub/">Ejabberd 发布订阅实验</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <h2 id="环境">环境</h2><table>
-<thead>
-<tr>
-<th>Software</th>
-<th>Version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Ejabberd</td>
-<td>14.07</td>
-</tr>
-<tr>
-<td>Strophe.js</td>
-<td>1.1.3</td>
-</tr>
-</tbody>
-</table>
-<h2 id="创建节点">创建节点</h2><p>Strophe.js代码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> createnode = <span class="function"><span class="keyword">function</span> <span class="params">(node)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> iq = <span class="variable">$iq</span>(&#123;</span><br><span class="line">    type: <span class="string">'set'</span>,</span><br><span class="line">    from: jid,</span><br><span class="line">    to: session.pubsub,</span><br><span class="line">    id: getId()</span><br><span class="line">  &#125;).c(<span class="string">'pubsub'</span>, &#123;xmlns: <span class="string">'http://jabber.org/protocol/pubsub'</span>&#125;)</span><br><span class="line">    .c(<span class="string">'create'</span>, &#123;node: node&#125;);</span><br><span class="line">  connection.send(iq.tree());</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>XML节</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--客户端IQ-set请求--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">iq</span> <span class="attribute">type</span>=<span class="value">'set'</span></span><br><span class="line">    <span class="attribute">from</span>=<span class="value">'root@xmpp.myserver.info'</span></span><br><span class="line">    <span class="attribute">to</span>=<span class="value">'pubsub.xmpp.myserver.info'</span></span><br><span class="line">    <span class="attribute">id</span>=<span class="value">'id-1412188942892'</span></span><br><span class="line">    <span class="attribute">xmlns</span>=<span class="value">'jabber:client'</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">pubsub</span> <span class="attribute">xmlns</span>=<span class="value">'http://jabber.org/protocol/pubsub'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">create</span> <span class="attribute">node</span>=<span class="value">'/home/test2'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">pubsub</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">iq</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--服务端应答IQ-result--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">iq</span> <span class="attribute">from</span>=<span class="value">"pubsub.xmpp.myserver.info"</span></span><br><span class="line">    <span class="attribute">to</span>=<span class="value">"root@xmpp.myserver.info/17735350171411959891145164"</span></span><br><span class="line">    <span class="attribute">id</span>=<span class="value">"id-1412188942892"</span></span><br><span class="line">    <span class="attribute">type</span>=<span class="value">"result"</span></span><br><span class="line">    <span class="attribute">xmlns</span>=<span class="value">"jabber:client"</span></span><br><span class="line">    <span class="attribute">xmlns:stream</span>=<span class="value">"http://etherx.jabber.org/streams"</span></span><br><span class="line">    <span class="attribute">version</span>=<span class="value">"1.0"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">pubsub</span> <span class="attribute">xmlns</span>=<span class="value">"http://jabber.org/protocol/pubsub"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">create</span> <span class="attribute">node</span>=<span class="value">"/home/test2"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">pubsub</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">iq</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="订阅">订阅</h2><p>Strophe.js代码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> subscribe = <span class="function"><span class="keyword">function</span> <span class="params">(node)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> iq = <span class="variable">$iq</span>(&#123;</span><br><span class="line">    type: <span class="string">'set'</span>,</span><br><span class="line">    from: jid,</span><br><span class="line">    to: session.pubsub,</span><br><span class="line">    id: getId()</span><br><span class="line">  &#125;).c(<span class="string">'pubsub'</span>, &#123;xmlns: <span class="string">'http://jabber.org/protocol/pubsub'</span>&#125;)</span><br><span class="line">    .c(<span class="string">'subscribe'</span>, &#123;node: node, jid: jid&#125;);</span><br><span class="line">  connection.send(iq.tree());</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>XML节</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--客户端IQ-set请求--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">iq</span> <span class="attribute">type</span>=<span class="value">'set'</span> <span class="attribute">from</span>=<span class="value">'root@xmpp.myserver.info'</span></span><br><span class="line">    <span class="attribute">to</span>=<span class="value">'pubsub.xmpp.myserver.info'</span> <span class="attribute">id</span>=<span class="value">'id-1412189193003'</span></span><br><span class="line">    <span class="attribute">xmlns</span>=<span class="value">'jabber:client'</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">pubsub</span> <span class="attribute">xmlns</span>=<span class="value">'http://jabber.org/protocol/pubsub'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">subscribe</span> <span class="attribute">node</span>=<span class="value">'/home/test'</span> <span class="attribute">jid</span>=<span class="value">'root@xmpp.myserver.info'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">pubsub</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">iq</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--服务端应答IQ-result--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">iq</span> <span class="attribute">from</span>=<span class="value">"pubsub.xmpp.myserver.info"</span></span><br><span class="line">    <span class="attribute">to</span>=<span class="value">"root@xmpp.myserver.info/17735350171411959891145164"</span></span><br><span class="line">    <span class="attribute">id</span>=<span class="value">"id-1412189193003"</span> <span class="attribute">type</span>=<span class="value">"result"</span></span><br><span class="line">    <span class="attribute">xmlns</span>=<span class="value">"jabber:client"</span> <span class="attribute">xmlns:stream</span>=<span class="value">"http://etherx.jabber.org/streams"</span></span><br><span class="line">    <span class="attribute">version</span>=<span class="value">"1.0"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">pubsub</span> <span class="attribute">xmlns</span>=<span class="value">"http://jabber.org/protocol/pubsub"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">subscription</span></span><br><span class="line">        <span class="attribute">jid</span>=<span class="value">"root@xmpp.myserver.info"</span> <span class="attribute">subscription</span>=<span class="value">"subscribed"</span> <span class="attribute">subid</span>=<span class="value">"583EAABFD09CF"</span></span><br><span class="line">        <span class="attribute">node</span>=<span class="value">"/home/test"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">pubsub</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">iq</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="参考资料">参考资料</h2><ol>
-<li><a href="http://wiki.jabbercn.org/XEP-0060#.E5.88.9B.E5.BB.BA.E8.8A.82.E7.82.B9" target="_blank" rel="external">http://wiki.jabbercn.org/XEP-0060#.E5.88.9B.E5.BB.BA.E8.8A.82.E7.82.B9</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-10-01T14:47:12.000Z"><a href="/2014/10/01/xmpp-xep-0184-message-delivery-receipts/">2014-10-01</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/01/xmpp-xep-0184-message-delivery-receipts/">XMPP XEP-0184消息回执</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="http://xmpp.org/extensions/xep-0184.html">XEP-0184</a>, 定义如下:</p>
-<p>本规范定义了一个关于<code>消息送达收条</code>的XMPP协议扩展,消息的发送者可以要求消息的接收设备在接收到消息后发送一个确认消息(收条). 比如: 发邮件给对方可以要求一个邮件回执,以确定对方收到消息. 如果没有收到回执,可以重新发送.</p>
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/10/01/xmpp-xep-0184-message-delivery-receipts/#more" class="more-link">阅读全文</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-10-01T13:27:52.000Z"><a href="/2014/10/01/erlang-application/">2014-10-01</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/01/erlang-application/">应用程序简介</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p>In OTP, application denotes a component implementing some specific functionality, that can be started and stopped as a unit, and which can be re-used in other systems as well. This module interfaces the application controller, a process started at every Erlang runtime system, and contains functions for controlling applications (for example starting and stopping applications), and functions to access information about applications (for example configuration parameters).</p>
-<p>An application is defined by an application specification. The specification is normally located in an application resource file called Application.app, where Application is the name of the application. Refer to app(4) for more information about the application specification.</p>
-<p>This module can also be viewed as a behaviour for an application implemented according to the OTP design principles as a supervision tree. The definition of how to start and stop the tree should be located in an application callback</p>
-<p>在OPT中,一个应用程序表示一个实现了特定功能的组件, 可以作为独立的单元start和stop,可以在其他系统中重用.</p>
-<p><code>application</code>模块与<code>application controller</code>连接, <code>application controller</code> 是一个随erlang系统启动的进程.用于控制应用程序(启动,停止,访问应用程序信息).</p>
-<ul>
-<li><code>application specification</code><br>描述如何定义一个应用程序</li>
-<li><code>application resource file</code>(<code>Application</code>.app)<br><code>Application</code>为应用程序的名称</li>
-<li><code>erl -man app</code><br>查看应用程序资源文件的详细规范</li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-09-29T17:01:37.000Z"><a href="/2014/09/30/ejabberd-modules-get-room-member-list/">2014-09-30</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/09/30/ejabberd-modules-get-room-member-list/">Ejabberd模块 - 获取房间成员列表</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p>上一篇<a href="/2014/09/29/ejabberd-modules-pitfalls">Ejabberd 14.x版本系列模块开发过程中遇到的坑</a>,一个很坑的移植过程,没找到相关的升级文档,全靠读代码. -_-!</p>
-<p>本模块用于获取一个房间内的所有成员, 代码在<a href="https://gist.github.com/developerworks/798d67182b38eda72e25" target="_blank" rel="external">这里</a>, 本模块修改自<a href="http://blog.zlxstar.me/blog/2013/07/21/dicorvery-user-muclist" target="_blank" rel="external">获取房间的用户列表模块</a>, 兼容<code>ejabberd 14.x</code>系列版本.</p>
-<h2 id="Bugfix">Bugfix</h2><ol>
-<li><code>muc_room</code>表结构有变化, 下面是输出的日志,为了便于阅读,我在每个元素前附加序号作为前缀</li>
-</ol>
-<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">[<span class="collection">&#123;muc_room,</span><br><span class="line">    <span class="collection">&#123;&lt;&lt;<span class="string">"test"</span>&gt;&gt;,&lt;&lt;<span class="string">"conference.xmpp.myserver.info"</span>&gt;&gt;&#125;</span>,</span><br><span class="line">    <span class="collection">[</span><br><span class="line">        <span class="number">1</span>  <span class="collection">&#123;title,&lt;&lt;232,<span class="number">129</span>,<span class="number">138</span>,<span class="number">229</span>,<span class="number">164</span>,<span class="number">169</span>,<span class="number">229</span>,<span class="number">174</span>,<span class="number">164</span>,<span class="number">230</span>,<span class="number">160</span>,<span class="number">135</span>,<span class="number">233</span>,<span class="number">162</span>,<span class="number">152</span>&gt;&gt;&#125;</span>,</span><br><span class="line">        <span class="number">2</span>  <span class="collection">&#123;description,&lt;&lt;232,<span class="number">129</span>,<span class="number">138</span>,<span class="number">229</span>,<span class="number">164</span>,<span class="number">169</span>,<span class="number">229</span>,<span class="number">174</span>,<span class="number">164</span>,<span class="number">230</span>,<span class="number">143</span>,<span class="number">143</span>,<span class="number">232</span>,<span class="number">191</span>,<span class="number">176</span>&gt;&gt;&#125;</span>,</span><br><span class="line">        <span class="number">3</span>  <span class="collection">&#123;allow_change_subj,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">4</span>  <span class="collection">&#123;allow_query_users,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">5</span>  <span class="collection">&#123;allow_private_messages,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">6</span>  <span class="collection">&#123;allow_private_messages_from_visitors,anyone&#125;</span>,</span><br><span class="line">        <span class="number">7</span>  <span class="collection">&#123;allow_visitor_status,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">8</span>  <span class="collection">&#123;allow_visitor_nickchange,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">9</span>  <span class="collection">&#123;public,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">10</span> <span class="collection">&#123;public_list,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">11</span> <span class="collection">&#123;persistent,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">12</span> <span class="collection">&#123;moderated,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">13</span> <span class="collection">&#123;members_by_default,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">14</span> <span class="collection">&#123;members_only,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">        <span class="number">15</span> <span class="collection">&#123;allow_user_invites,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">        <span class="number">16</span> <span class="collection">&#123;password_protected,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">        <span class="number">17</span> <span class="collection">&#123;captcha_protected,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">        <span class="number">18</span> <span class="collection">&#123;password,&lt;&lt;&gt;&gt;&#125;</span>,</span><br><span class="line">        <span class="number">19</span> <span class="collection">&#123;anonymous,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">20</span> <span class="collection">&#123;logging,<span class="literal">false</span>&#125;</span>,</span><br><span class="line">        <span class="number">21</span> <span class="collection">&#123;max_users,<span class="number">200</span>&#125;</span>,</span><br><span class="line">        <span class="number">22</span> <span class="collection">&#123;allow_voice_requests,<span class="literal">true</span>&#125;</span>,</span><br><span class="line">        <span class="number">23</span> <span class="collection">&#123;voice_request_min_interval,<span class="number">1800</span>&#125;</span>,</span><br><span class="line">        <span class="number">24</span> <span class="collection">&#123;vcard,&lt;&lt;&gt;&gt;&#125;</span>,</span><br><span class="line">        <span class="number">25</span> <span class="collection">&#123;captcha_whitelist,<span class="collection">[]</span>&#125;</span>,</span><br><span class="line">        <span class="number">26</span> <span class="collection">&#123;affiliations,<span class="collection">[</span><br><span class="line">            <span class="collection">&#123;</span><br><span class="line">                <span class="collection">&#123;&lt;&lt;<span class="string">"hezhiqiang"</span>&gt;&gt;,&lt;&lt;<span class="string">"xmpp.myserver.info"</span>&gt;&gt;,&lt;&lt;&gt;&gt;&#125;</span>,</span><br><span class="line">                <span class="collection">&#123;owner,&lt;&lt;&gt;&gt;&#125;</span></span><br><span class="line">            &#125;</span></span><br><span class="line">        ]</span>&#125;</span>,</span><br><span class="line">        <span class="number">27</span> <span class="collection">&#123;subject,&lt;&lt;&gt;&gt;&#125;</span>,</span><br><span class="line">        <span class="number">28</span> <span class="collection">&#123;subject_author,&lt;&lt;&gt;&gt;&#125;</span></span><br><span class="line">    ]</span>&#125;</span>]</span></span><br></pre></td></tr></table></figure>
-<p>其中元素<code>affiliations</code>位于房间配置列表第26个元素,和<a href="http://blog.zlxstar.me/blog/2013/07/21/dicorvery-user-muclist" target="_blank" rel="external">原文&lt;&lt;获取房间的用户列表模块&gt;&gt;</a>不同</p>
-<h2 id="补充">补充</h2><p>忘了一件事, 需要在<code>$EJABBERD/tools/xmpp_codec.spec</code>增加下列代码:</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-xml(room_member_item,</span><br><span class="line">     <span class="comment">#elem&#123;name = &lt;&lt;"item"&gt;&gt;,</span></span><br><span class="line">           xmlns = &lt;&lt;<span class="string">"http://jabber.org/protocol/muc#member-list"</span>&gt;&gt;,</span><br><span class="line">           <span class="literal">result</span> = '$jid',</span><br><span class="line">           attrs = [<span class="comment">#attr&#123;name = &lt;&lt;"jid"&gt;&gt;,</span></span><br><span class="line">                          required = <span class="literal">true</span>,</span><br><span class="line">                          dec = &#123;dec_jid, []&#125;,</span><br><span class="line">                          enc = &#123;enc_jid, []&#125;&#125;]&#125;).</span><br><span class="line">-xml(room_member,</span><br><span class="line">     <span class="comment">#elem&#123;name = &lt;&lt;"query"&gt;&gt;,</span></span><br><span class="line">           xmlns = &lt;&lt;<span class="string">"http://jabber.org/protocol/muc#member-list"</span>&gt;&gt;,</span><br><span class="line">           <span class="literal">result</span> = &#123;room_member, '$items'&#125;,</span><br><span class="line">           refs = [<span class="comment">#ref&#123;name = room_member_item,</span></span><br><span class="line">                        label = '$items'&#125;]&#125;).</span><br></pre></td></tr></table></figure>
-<p>并执行<code>make spec</code>更新, 然后再 <code>make &amp;&amp; make install</code>, 最后 <code>ejabberdctl restart</code></p>
-<h2 id="参考资料">参考资料</h2><ol>
-<li><a href="http://blog.zlxstar.me/blog/2013/07/21/dicorvery-user-muclist" target="_blank" rel="external">http://blog.zlxstar.me/blog/2013/07/21/dicorvery-user-muclist</a></li>
-<li><a href="http://www.ibm.com/developerworks/cn/opensource/os-erlang1" target="_blank" rel="external">http://www.ibm.com/developerworks/cn/opensource/os-erlang1</a></li>
-<li>Erlang标准库函数 <code>lists:any/2</code><br><a href="http://www.erlang.org/doc/man/lists.html#any-2" target="_blank" rel="external">http://www.erlang.org/doc/man/lists.html#any-2</a></li>
-<li>Erlang标准库函数 <code>lists:nth/2</code><br><a href="http://www.erlang.org/doc/man/lists.html#nth-2" target="_blank" rel="external">http://www.erlang.org/doc/man/lists.html#nth-2</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
 
 <nav id="pagination">
   
@@ -1457,43 +1629,43 @@ XMPP Client
   <ul class="entry">
     
       <li>
+        <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/05/uftp/">UFTP - 基于UDP的加密文件多播传输协议</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/html5-web-cryptography-api-hashing/">Web加密API - 散列(Hashing)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/the-3-modes-of-http-protocol/">HTTP协议的三种模式</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/21/ejabberd-with-elixir-packet-filters/">Ejabberd 用Elixir开发一个包过滤模块</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/chrome-dev-get-started/">Chrome 开发入门</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/html5-web-cryptography-api-tutorial/">Web加密API指南</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/17/html5-battery-status/">HTML5获取电池状态</a>
+      </li>
+    
+      <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
       </li>
     
       <li>
         <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/23/thrift-messing-guide/">Thrift: The Missing Guide</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/ejabberd-os-optimizations/">针对Ejabberd的操作系统C1000K优化</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
       </li>
     
   </ul>
@@ -1509,23 +1681,29 @@ XMPP Client
   
     <li><a href="/categories/API/">API</a><small>3</small></li>
   
+    <li><a href="/categories/Chrome/">Chrome</a><small>1</small></li>
+  
     <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
   
     <li><a href="/categories/Database/">Database</a><small>1</small></li>
   
     <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
   
-    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>34</small></li>
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>36</small></li>
   
     <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
   
     <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
   
+    <li><a href="/categories/HTML5/">HTML5</a><small>3</small></li>
+  
+    <li><a href="/categories/HTTP/">HTTP</a><small>1</small></li>
+  
     <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
   
     <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
   
-    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+    <li><a href="/categories/Linux/">Linux</a><small>4</small></li>
   
     <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
   
@@ -1583,7 +1761,7 @@ XMPP Client
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11.11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 16.67px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11.11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 15.56px;">docker</a><a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12.22px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11.11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a> <a href="/tags/API/" style="font-size: 11.11px;">API</a> <a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a> <a href="/tags/Battery-Status/" style="font-size: 10px;">Battery Status</a> <a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a> <a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a> <a href="/tags/CURL/" style="font-size: 10px;">CURL</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a> <a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a> <a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a> <a href="/tags/ETS/" style="font-size: 10px;">ETS</a> <a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a> <a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a> <a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a> <a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a> <a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a> <a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a> <a href="/tags/H2O/" style="font-size: 10px;">H2O</a> <a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a> <a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a> <a href="/tags/Howto/" style="font-size: 10px;">Howto</a> <a href="/tags/Http-modes/" style="font-size: 10px;">Http modes</a> <a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a> <a href="/tags/I18n/" style="font-size: 10px;">I18n</a> <a href="/tags/IAB/" style="font-size: 10px;">IAB</a> <a href="/tags/ID3/" style="font-size: 10px;">ID3</a> <a href="/tags/IO/" style="font-size: 10px;">IO</a> <a href="/tags/IOT/" style="font-size: 10px;">IOT</a> <a href="/tags/IoT/" style="font-size: 10px;">IoT</a> <a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a> <a href="/tags/MUC/" style="font-size: 10px;">MUC</a> <a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a> <a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a> <a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a> <a href="/tags/Modules/" style="font-size: 10px;">Modules</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a> <a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a> <a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/PM2/" style="font-size: 10px;">PM2</a> <a href="/tags/Performance/" style="font-size: 10px;">Performance</a> <a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a> <a href="/tags/Pool/" style="font-size: 10px;">Pool</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a> <a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a> <a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a> <a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a> <a href="/tags/Regex/" style="font-size: 10px;">Regex</a> <a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/SSL/" style="font-size: 10px;">SSL</a> <a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a> <a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a> <a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a> <a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a> <a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a> <a href="/tags/Task/" style="font-size: 10px;">Task</a> <a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a> <a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a> <a href="/tags/UBF/" style="font-size: 10px;">UBF</a> <a href="/tags/UFTP/" style="font-size: 10px;">UFTP</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a> <a href="/tags/VAST/" style="font-size: 10px;">VAST</a> <a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a> <a href="/tags/Web-Cryptography-API/" style="font-size: 11.11px;">Web Cryptography API</a> <a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a> <a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angular/" style="font-size: 16.67px;">angular</a> <a href="/tags/application/" style="font-size: 10px;">application</a> <a href="/tags/blockies/" style="font-size: 10px;">blockies</a> <a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a> <a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a> <a href="/tags/ci/" style="font-size: 10px;">ci</a> <a href="/tags/container/" style="font-size: 11.11px;">container</a> <a href="/tags/data-management/" style="font-size: 10px;">data management</a> <a href="/tags/data-volume/" style="font-size: 10px;">data volume</a> <a href="/tags/debugging/" style="font-size: 10px;">debugging</a> <a href="/tags/devtools/" style="font-size: 10px;">devtools</a> <a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a> <a href="/tags/doc/" style="font-size: 10px;">doc</a> <a href="/tags/docker/" style="font-size: 15.56px;">docker</a> <a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a> <a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a> <a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a> <a href="/tags/encoding/" style="font-size: 10px;">encoding</a> <a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a> <a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a> <a href="/tags/faq/" style="font-size: 10px;">faq</a> <a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a> <a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a> <a href="/tags/gettext/" style="font-size: 10px;">gettext</a> <a href="/tags/git/" style="font-size: 12.22px;">git</a> <a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a> <a href="/tags/grunt/" style="font-size: 10px;">grunt</a> <a href="/tags/hero/" style="font-size: 10px;">hero</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a> <a href="/tags/iq/" style="font-size: 10px;">iq</a> <a href="/tags/jabber/" style="font-size: 10px;">jabber</a> <a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a> <a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a> <a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a> <a href="/tags/library/" style="font-size: 10px;">library</a> <a href="/tags/linking/" style="font-size: 10px;">linking</a> <a href="/tags/lists/" style="font-size: 10px;">lists</a> <a href="/tags/load-balance/" style="font-size: 10px;">load balance</a> <a href="/tags/log4er/" style="font-size: 10px;">log4er</a> <a href="/tags/manage-images/" style="font-size: 10px;">manage images</a> <a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a> <a href="/tags/muc/" style="font-size: 10px;">muc</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a> <a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a> <a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a> <a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a> <a href="/tags/notification/" style="font-size: 10px;">notification</a> <a href="/tags/npm/" style="font-size: 11.11px;">npm</a> <a href="/tags/performance/" style="font-size: 10px;">performance</a> <a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a> <a href="/tags/polymer/" style="font-size: 10px;">polymer</a> <a href="/tags/port/" style="font-size: 10px;">port</a> <a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a> <a href="/tags/rebar/" style="font-size: 10px;">rebar</a> <a href="/tags/record/" style="font-size: 10px;">record</a> <a href="/tags/recursion/" style="font-size: 10px;">recursion</a> <a href="/tags/regexp/" style="font-size: 10px;">regexp</a> <a href="/tags/relx/" style="font-size: 10px;">relx</a> <a href="/tags/screen/" style="font-size: 10px;">screen</a> <a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/stanza/" style="font-size: 10px;">stanza</a> <a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a> <a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a> <a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a> <a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a> <a href="/tags/testing/" style="font-size: 10px;">testing</a> <a href="/tags/tls/" style="font-size: 10px;">tls</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/tsung/" style="font-size: 10px;">tsung</a> <a href="/tags/upstart/" style="font-size: 10px;">upstart</a> <a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a> <a href="/tags/varnish/" style="font-size: 10px;">varnish</a> <a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a> <a href="/tags/vt/" style="font-size: 10px;">vt</a> <a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a> <a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a> <a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a> <a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
   </div>
 </div>
 

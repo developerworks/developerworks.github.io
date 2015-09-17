@@ -9,10 +9,9 @@
   
   <meta name="description" content="本文基于Ubuntu Server 14.04进行优化, 不同的Linux/Unix系统有不同的细节.
 查看系统当前支持的最大打开文件数:
-12root@ci:~# cat /proc/sys/fs/nr_open1048576
+1root@ci:~# cat /proc/sys/fs/nr_open&amp;#10;1048576
 查看硬性限制和软性限制
-12ulimit -Hnulimit -Sn
-">
+1ulimit -Hn&amp;#10;uli">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -119,14 +118,14 @@
 
         <p>本文基于Ubuntu Server 14.04进行优化, 不同的Linux/Unix系统有不同的细节.</p>
 <p>查看系统当前支持的最大打开文件数:</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@ci</span><span class="symbol">:~</span><span class="comment"># cat /proc/sys/fs/nr_open</span></span><br><span class="line"><span class="number">1048576</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@ci:~# cat /proc/sys/fs/nr_open&#10;1048576</span><br></pre></td></tr></table></figure>
 <p>查看硬性限制和软性限制</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ulimit</span> -Hn</span><br><span class="line"><span class="built_in">ulimit</span> -Sn</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ulimit -Hn&#10;ulimit -Sn</span><br></pre></td></tr></table></figure>
 <p>如果该值小于1000K, 请增大如下设置, 否则达不到100W并发连接.</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fs<span class="class">.file-max</span> = <span class="number">1024000</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.ip_conntrack_max</span> = <span class="number">1024000</span></span><br><span class="line">net<span class="class">.ipv4</span><span class="class">.netfilter</span><span class="class">.ip_conntrack_max</span> = <span class="number">1024000</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fs.file-max = 1024000&#10;net.ipv4.ip_conntrack_max = 1024000&#10;net.ipv4.netfilter.ip_conntrack_max = 1024000</span><br></pre></td></tr></table></figure>
 <p>所有进程打开的文件描述符数不能超过<code>/proc/sys/fs/file-max</code><br>单个进程打开的文件描述符数不能超过user limit中nofile的soft limit<br>nofile的soft limit不能超过其hard limit<br>nofile的hard limit不能超过<code>/proc/sys/fs/nr_open</code></p>
 <p>查看服务器TCP状态:</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -<span class="keyword">n</span> | awk '/^tcp/ &#123;++S[<span class="label">$NF</span>]&#125; END &#123;<span class="keyword">for</span>(a <span class="keyword">in</span> S) <span class="keyword">print</span> a, S[a]&#125;'</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -n | awk &#39;/^tcp/ &#123;++S[$NF]&#125; END &#123;for(a in S) print a, S[a]&#125;&#39;</span><br></pre></td></tr></table></figure>
 <h2 id="参考资料">参考资料</h2><ol>
 <li><a href="http://www.ideawu.net/blog/archives/740.html" target="_blank" rel="external">构建C1000K的服务器(1) – 基础</a></li>
 <li><a href="http://www.cyberciti.biz/faq/linux-increase-the-maximum-number-of-open-files" target="_blank" rel="external">Linux Increase The Maximum Number Of Open Files / File Descriptors (FD)</a></li>
@@ -138,8 +137,10 @@
 <p>net.core.netdev_max_backlog = 3000000</p>
 <p>net.ipv4.tcp_tw_recycle = 0<br>net.ipv4.tcp_tw_reuse = 1<br>net.ipv4.tcp_timestamps = 1<br>net.ipv4.tcp_max_syn_backlog = 65535<br>net.ipv4.tcp_fin_timeout = 30<br>net.ipv4.tcp_keepalive_time = 1800<br>net.ipv4.tcp_rmem = 4096 4096 16777216<br>net.ipv4.tcp_wmem = 4096 4096 16777216</p>
 <p>net.ipv4.ip_local_port_range = 1024 65000<br>net.ipv4.tcp_rmem = 4096 87380 16777216<br>net.ipv4.tcp_wmem = 4096 65536 16777216</p>
-<h1 id="net-ipv4-tcp_congestion_control_=_HTCP">net.ipv4.tcp_congestion_control = HTCP</h1><h1 id="net-ipv4-tcp_mtu_probing_=_1">net.ipv4.tcp_mtu_probing = 1</h1><p>net.netfilter.nf_conntrack_max = 1000000<br>net.netfilter.nf_conntrack_buckets = 32768</p>
-<h1 id="net-netfilter-nf_conntrack_tcp_timeout_established_=_432000">net.netfilter.nf_conntrack_tcp_timeout_established = 432000</h1><p>net.netfilter.nf_conntrack_tcp_timeout_established = 3600<br>net.netfilter.nf_conntrack_tcp_timeout_time_wait = 120<br>net.netfilter.nf_conntrack_tcp_timeout_close_wait = 60<br>net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 120</p>
+<p>#net.ipv4.tcp_congestion_control = HTCP</p>
+<p>#net.ipv4.tcp_mtu_probing = 1</p>
+<p>net.netfilter.nf_conntrack_max = 1000000<br>net.netfilter.nf_conntrack_buckets = 32768</p>
+<p>#net.netfilter.nf_conntrack_tcp_timeout_established = 432000<br>net.netfilter.nf_conntrack_tcp_timeout_established = 3600<br>net.netfilter.nf_conntrack_tcp_timeout_time_wait = 120<br>net.netfilter.nf_conntrack_tcp_timeout_close_wait = 60<br>net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 120</p>
 <p>解决 nf_conntrack: table full, dropping packet 的几种思路<br><a href="http://jaseywang.me/2012/08/16/%E8%A7%A3%E5%86%B3-nf_conntrack-table-full-dropping-packet-%E7%9A%84%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF/" target="_blank" rel="external">http://jaseywang.me/2012/08/16/%E8%A7%A3%E5%86%B3-nf_conntrack-table-full-dropping-packet-%E7%9A%84%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF/</a></p>
 <p>关于Erlang的一些限制<br><a href="http://youthyblog.com/2014/08/05/erlang%E6%9C%89%E5%85%B3%E6%95%88%E7%8E%87%E7%9A%84%E4%B8%80%E4%BA%9Blimit/" target="_blank" rel="external">http://youthyblog.com/2014/08/05/erlang%E6%9C%89%E5%85%B3%E6%95%88%E7%8E%87%E7%9A%84%E4%B8%80%E4%BA%9Blimit/</a></p>
 
@@ -193,43 +194,43 @@
   <ul class="entry">
     
       <li>
+        <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/05/uftp/">UFTP - 基于UDP的加密文件多播传输协议</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/html5-web-cryptography-api-hashing/">Web加密API - 散列(Hashing)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/the-3-modes-of-http-protocol/">HTTP协议的三种模式</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/21/ejabberd-with-elixir-packet-filters/">Ejabberd 用Elixir开发一个包过滤模块</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/chrome-dev-get-started/">Chrome 开发入门</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/html5-web-cryptography-api-tutorial/">Web加密API指南</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/17/html5-battery-status/">HTML5获取电池状态</a>
+      </li>
+    
+      <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
       </li>
     
       <li>
         <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/23/thrift-messing-guide/">Thrift: The Missing Guide</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/ejabberd-os-optimizations/">针对Ejabberd的操作系统C1000K优化</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
       </li>
     
   </ul>
@@ -245,23 +246,29 @@
   
     <li><a href="/categories/API/">API</a><small>3</small></li>
   
+    <li><a href="/categories/Chrome/">Chrome</a><small>1</small></li>
+  
     <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
   
     <li><a href="/categories/Database/">Database</a><small>1</small></li>
   
     <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
   
-    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>34</small></li>
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>36</small></li>
   
     <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
   
     <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
   
+    <li><a href="/categories/HTML5/">HTML5</a><small>3</small></li>
+  
+    <li><a href="/categories/HTTP/">HTTP</a><small>1</small></li>
+  
     <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
   
     <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
   
-    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+    <li><a href="/categories/Linux/">Linux</a><small>4</small></li>
   
     <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
   
@@ -319,7 +326,7 @@
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11.11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 16.67px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11.11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 15.56px;">docker</a><a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12.22px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11.11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a> <a href="/tags/API/" style="font-size: 11.11px;">API</a> <a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a> <a href="/tags/Battery-Status/" style="font-size: 10px;">Battery Status</a> <a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a> <a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a> <a href="/tags/CURL/" style="font-size: 10px;">CURL</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a> <a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a> <a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a> <a href="/tags/ETS/" style="font-size: 10px;">ETS</a> <a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a> <a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a> <a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a> <a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a> <a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a> <a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a> <a href="/tags/H2O/" style="font-size: 10px;">H2O</a> <a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a> <a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a> <a href="/tags/Howto/" style="font-size: 10px;">Howto</a> <a href="/tags/Http-modes/" style="font-size: 10px;">Http modes</a> <a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a> <a href="/tags/I18n/" style="font-size: 10px;">I18n</a> <a href="/tags/IAB/" style="font-size: 10px;">IAB</a> <a href="/tags/ID3/" style="font-size: 10px;">ID3</a> <a href="/tags/IO/" style="font-size: 10px;">IO</a> <a href="/tags/IOT/" style="font-size: 10px;">IOT</a> <a href="/tags/IoT/" style="font-size: 10px;">IoT</a> <a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a> <a href="/tags/MUC/" style="font-size: 10px;">MUC</a> <a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a> <a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a> <a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a> <a href="/tags/Modules/" style="font-size: 10px;">Modules</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a> <a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a> <a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/PM2/" style="font-size: 10px;">PM2</a> <a href="/tags/Performance/" style="font-size: 10px;">Performance</a> <a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a> <a href="/tags/Pool/" style="font-size: 10px;">Pool</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a> <a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a> <a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a> <a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a> <a href="/tags/Regex/" style="font-size: 10px;">Regex</a> <a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/SSL/" style="font-size: 10px;">SSL</a> <a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a> <a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a> <a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a> <a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a> <a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a> <a href="/tags/Task/" style="font-size: 10px;">Task</a> <a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a> <a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a> <a href="/tags/UBF/" style="font-size: 10px;">UBF</a> <a href="/tags/UFTP/" style="font-size: 10px;">UFTP</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a> <a href="/tags/VAST/" style="font-size: 10px;">VAST</a> <a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a> <a href="/tags/Web-Cryptography-API/" style="font-size: 11.11px;">Web Cryptography API</a> <a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a> <a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angular/" style="font-size: 16.67px;">angular</a> <a href="/tags/application/" style="font-size: 10px;">application</a> <a href="/tags/blockies/" style="font-size: 10px;">blockies</a> <a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a> <a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a> <a href="/tags/ci/" style="font-size: 10px;">ci</a> <a href="/tags/container/" style="font-size: 11.11px;">container</a> <a href="/tags/data-management/" style="font-size: 10px;">data management</a> <a href="/tags/data-volume/" style="font-size: 10px;">data volume</a> <a href="/tags/debugging/" style="font-size: 10px;">debugging</a> <a href="/tags/devtools/" style="font-size: 10px;">devtools</a> <a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a> <a href="/tags/doc/" style="font-size: 10px;">doc</a> <a href="/tags/docker/" style="font-size: 15.56px;">docker</a> <a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a> <a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a> <a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a> <a href="/tags/encoding/" style="font-size: 10px;">encoding</a> <a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a> <a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a> <a href="/tags/faq/" style="font-size: 10px;">faq</a> <a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a> <a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a> <a href="/tags/gettext/" style="font-size: 10px;">gettext</a> <a href="/tags/git/" style="font-size: 12.22px;">git</a> <a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a> <a href="/tags/grunt/" style="font-size: 10px;">grunt</a> <a href="/tags/hero/" style="font-size: 10px;">hero</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a> <a href="/tags/iq/" style="font-size: 10px;">iq</a> <a href="/tags/jabber/" style="font-size: 10px;">jabber</a> <a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a> <a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a> <a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a> <a href="/tags/library/" style="font-size: 10px;">library</a> <a href="/tags/linking/" style="font-size: 10px;">linking</a> <a href="/tags/lists/" style="font-size: 10px;">lists</a> <a href="/tags/load-balance/" style="font-size: 10px;">load balance</a> <a href="/tags/log4er/" style="font-size: 10px;">log4er</a> <a href="/tags/manage-images/" style="font-size: 10px;">manage images</a> <a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a> <a href="/tags/muc/" style="font-size: 10px;">muc</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a> <a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a> <a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a> <a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a> <a href="/tags/notification/" style="font-size: 10px;">notification</a> <a href="/tags/npm/" style="font-size: 11.11px;">npm</a> <a href="/tags/performance/" style="font-size: 10px;">performance</a> <a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a> <a href="/tags/polymer/" style="font-size: 10px;">polymer</a> <a href="/tags/port/" style="font-size: 10px;">port</a> <a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a> <a href="/tags/rebar/" style="font-size: 10px;">rebar</a> <a href="/tags/record/" style="font-size: 10px;">record</a> <a href="/tags/recursion/" style="font-size: 10px;">recursion</a> <a href="/tags/regexp/" style="font-size: 10px;">regexp</a> <a href="/tags/relx/" style="font-size: 10px;">relx</a> <a href="/tags/screen/" style="font-size: 10px;">screen</a> <a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/stanza/" style="font-size: 10px;">stanza</a> <a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a> <a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a> <a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a> <a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a> <a href="/tags/testing/" style="font-size: 10px;">testing</a> <a href="/tags/tls/" style="font-size: 10px;">tls</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/tsung/" style="font-size: 10px;">tsung</a> <a href="/tags/upstart/" style="font-size: 10px;">upstart</a> <a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a> <a href="/tags/varnish/" style="font-size: 10px;">varnish</a> <a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a> <a href="/tags/vt/" style="font-size: 10px;">vt</a> <a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a> <a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a> <a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a> <a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
   </div>
 </div>
 

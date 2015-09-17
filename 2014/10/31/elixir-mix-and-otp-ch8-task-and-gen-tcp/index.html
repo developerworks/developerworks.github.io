@@ -122,116 +122,116 @@ Echo服务器首先通过实现一个echo服务器,开始学习TCP服务器. 它
 <li>读取客户端请求并回写响应</li>
 </ul>
 <p>下面来实现这些步骤, 转到<code>apps/kv_server</code>应用程序, 打开<code>lib/kv_server.ex</code>,添加下面的函数:</p>
-<pre><code>def accept(port) <span class="built_in">do</span>
+<pre><code><span class="function"><span class="keyword">def</span> <span class="title">accept</span></span>(port) <span class="keyword">do</span>
   <span class="comment"># The options below mean:</span>
   <span class="comment">#</span>
   <span class="comment"># 1. `:binary` - receives data as binaries (instead of lists)</span>
   <span class="comment"># 2. `packet: :line` - receives data line by line</span>
   <span class="comment"># 3. `active: false` - block on `:gen_tcp.recv/2` until data is available</span>
   <span class="comment">#</span>
-  {:ok, <span class="built_in">socket</span>} = :gen_tcp.listen(port,
-                    [:binary, packet: :<span class="built_in">line</span>, active: <span class="constant">false</span>])
-  IO.puts <span class="string">"Accepting connections on port #{port}"</span>
-  loop_acceptor(<span class="built_in">socket</span>)
-<span class="function"><span class="keyword">end</span></span>
-defp loop_acceptor(<span class="built_in">socket</span>) <span class="built_in">do</span>
-  {:ok, client} = :gen_tcp.accept(<span class="built_in">socket</span>)
+  {<span class="symbol">:ok</span>, socket} = <span class="symbol">:gen_tcp</span>.listen(port,
+                    [<span class="symbol">:binary</span>, <span class="symbol">packet:</span> <span class="symbol">:line</span>, <span class="symbol">active:</span> <span class="keyword">false</span>])
+  <span class="constant">IO.</span>puts <span class="string">"Accepting connections on port <span class="subst">#{port}</span>"</span>
+  loop_acceptor(socket)
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
   serve(client)
-  loop_acceptor(<span class="built_in">socket</span>)
-<span class="function"><span class="keyword">end</span></span>
-defp serve(client) <span class="built_in">do</span>
+  loop_acceptor(socket)
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">defp</span> <span class="title">serve</span></span>(client) <span class="keyword">do</span>
   client
   |&gt; read_line()
   |&gt; write_line(client)
   serve(client)
-<span class="function"><span class="keyword">end</span></span>
-defp read_line(<span class="built_in">socket</span>) <span class="built_in">do</span>
-  {:ok, data} = :gen_tcp.recv(<span class="built_in">socket</span>, <span class="number">0</span>)
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">defp</span> <span class="title">read_line</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, data} = <span class="symbol">:gen_tcp</span>.recv(socket, <span class="number">0</span>)
   data
-<span class="function"><span class="keyword">end</span></span>
-defp write_line(<span class="built_in">line</span>, <span class="built_in">socket</span>) <span class="built_in">do</span>
-  :gen_tcp.<span class="built_in">send</span>(<span class="built_in">socket</span>, <span class="built_in">line</span>)
-<span class="function"><span class="keyword">end</span></span>
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">defp</span> <span class="title">write_line</span></span>(line, socket) <span class="keyword">do</span>
+  <span class="symbol">:gen_tcp</span>.send(socket, line)
+<span class="keyword">end</span>
 </code></pre><p>调用<code>KVServer.accept(4040)</code>启动服务器, <code>4040</code>为端口. 在<code>accept/1</code>中第一步是监听端口直到获得一个可用的套接字, 然后调用<code>loop_acceptor/1</code>. <code>loop_acceptor/1</code>仅仅是循环地接受客户端连接. 对于每个接受的连接, 调用<code>serve/1</code>.</p>
 <p><code>serve/1</code>是另一个循环调用, 其从套接字读取一行数据并把读取到的行写回套接字. 注意函数<code>serve/1</code>使用管道操作符 <code>|&gt;</code> 来表达操作流.管道操作符对左边的表达式求值并把结果作为右侧函数的第一个参数传递. 上面的例子:</p>
-<pre><code><span class="built_in">socket</span> |&gt; read_line() |&gt; write_line(<span class="built_in">socket</span>)
+<pre><code>socket |<span class="string">&gt; read_line() </span>|<span class="string">&gt; write_line(socket)</span>
 </code></pre><p>等同于:</p>
-<pre><code><span class="function"><span class="title">write_line</span><span class="params">(read_line(socket)</span></span>, socket)
+<pre><code>write_line<span class="list">(<span class="keyword">read_line</span><span class="list">(<span class="keyword">socket</span>)</span>, socket)</span>
 </code></pre><p>当使用 <code>|&gt;</code> 操作符时, 由于操作符优先级的问题, 给函数调用添加必要的括号是非常重要的, 特别是, 这段代码:</p>
-<pre><code><span class="number">1</span>..<span class="number">10</span> |&gt; <span class="keyword">Enum</span>.filter &amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>) |&gt; <span class="keyword">Enum</span>.map &amp;(&amp;<span class="number">1</span> * <span class="number">2</span>)
+<pre><code><span class="number">1.</span><span class="number">.10</span> |&gt; Enum.filter &amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>) |&gt; Enum.<span class="built_in">map</span> &amp;(&amp;<span class="number">1</span> * <span class="number">2</span>)
 </code></pre><p>实际上会转换为:</p>
-<pre><code><span class="number">1</span>..<span class="number">10</span> |&gt; <span class="keyword">Enum</span>.filter(&amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>) |&gt; <span class="keyword">Enum</span>.map(&amp;(&amp;<span class="number">1</span> * <span class="number">2</span>)))
+<pre><code><span class="number">1.</span><span class="number">.10</span> |&gt; Enum.filter(&amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>) |&gt; Enum.<span class="built_in">map</span>(&amp;(&amp;<span class="number">1</span> * <span class="number">2</span>)))
 </code></pre><p>这不是我们想要的结果, 因为传递给<code>Enum.filter/2</code>的函数作为给<code>Enum.map/2</code>的第一个参数传递, 解决办法是使用括号:</p>
 <pre><code><span class="preprocessor"># 译注: 虽然Elixir的函数调用通常情况下可以不使用括号,</span>
 <span class="preprocessor"># 但是为了避免歧义或不必要的问题,建议所有函数调用其他语言中必须的括号风格</span>
-<span class="number">1.</span><span class="number">.10</span> |&gt; Enum.filter(&amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>)) |&gt; Enum.map(&amp;(&amp;<span class="number">1</span> * <span class="number">2</span>))
+<span class="number">1.</span><span class="number">.10</span> |&gt; Enum.filter(&amp;(&amp;<span class="number">1</span> &lt;= <span class="number">5</span>)) |&gt; Enum.<span class="built_in">map</span>(&amp;(&amp;<span class="number">1</span> * <span class="number">2</span>))
 </code></pre><p><code>read_line/1</code>函数实现使用<code>:gen_tcp.recv/2</code>从套接字接收数据,  <code>write_line/2</code>使用<code>:gen_tcp.send/2</code>向套接字写入数据.</p>
 <p>使用命令<code>iex -S mix</code>在<code>kv_server</code>应用程序中启动一个iex会话. 在IEx中运行:</p>
 <pre><code>iex&gt; KVServer.<span class="function"><span class="title">accept</span><span class="params">(<span class="number">4040</span>)</span></span>
 </code></pre><p>服务器现在开始运行, 终端被阻塞. 我们使用 <code>telnet</code>客户端访问我们的服务器. 它在大多数操作系统中都有, 其命令行参数通常类似:</p>
 <pre><code>$ telnet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">4040</span>
-Trying <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="keyword">...</span>
-Connected to localhost.
-Escape character is <span class="string">'^]'</span>.
+Trying <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>...
+Connected <span class="keyword">to</span> localhost.
+Escape <span class="property">character</span> <span class="keyword">is</span> '^]'.
 hello
 hello
-is it me
-is it me
+<span class="keyword">is</span> <span class="keyword">it</span> <span class="keyword">me</span>
+<span class="keyword">is</span> <span class="keyword">it</span> <span class="keyword">me</span>
 you are looking <span class="keyword">for</span>?
 you are looking <span class="keyword">for</span>?
 </code></pre><p>键入<code>hello</code>, 并敲击回车, 你会的到服务器的<code>hello</code>响应, 太棒了!</p>
 <p>我的telnet客户端可以通过键入<code>ctrl + ]</code>, <code>quit</code>, 并敲击 <code>&lt;Enter&gt;</code>退出, 你的客户端可能有不同的步骤:</p>
 <p>退出telnet客户端后, 你可能会在IEx(Elixir Shell)会话中看到如下错误:</p>
-<pre><code>** (MatchError) no match of right hand side <span class="string">value:</span> {:error, :closed}
-    (kv_server) lib<span class="regexp">/kv_server.ex:41: KVServer.read_line/</span><span class="number">1</span>
-    (kv_server) lib<span class="regexp">/kv_server.ex:33: KVServer.serve/</span><span class="number">1</span>
-    (kv_server) lib<span class="regexp">/kv_server.ex:27: KVServer.loop_acceptor/</span><span class="number">1</span>
+<pre><code>** (<span class="constant">MatchError</span>) no match <span class="keyword">of</span> right hand side <span class="symbol">value:</span> {<span class="symbol">:error</span>, <span class="symbol">:closed</span>}
+    (kv_server) <span class="class"><span class="keyword">lib</span>/<span class="title">kv_server</span>.<span class="title">ex</span>:41: <span class="title">KVServer</span>.<span class="title">read_line</span>/1</span>
+    (kv_server) <span class="class"><span class="keyword">lib</span>/<span class="title">kv_server</span>.<span class="title">ex</span>:33: <span class="title">KVServer</span>.<span class="title">serve</span>/1</span>
+    (kv_server) <span class="class"><span class="keyword">lib</span>/<span class="title">kv_server</span>.<span class="title">ex</span>:27: <span class="title">KVServer</span>.<span class="title">loop_acceptor</span>/1</span>
 </code></pre><p>这是因为我们期望从<code>:gen_tcp.recv/2</code>接收数据,但是客户端关闭了连接. 服务器后续的版本修订需要更好的处理这种情况.</p>
 <p>现在有一个更重要的Bug要解决: 如果TCP acceptor崩溃会发生什么? 因为没有监视进程, 服务器异常退出并且不能处理更多后续的请求, 因为它没有重启. 这就是为什么必须把服务器放在监控树当中.</p>
 <h2 id="Tasks">Tasks</h2><p>我们已经学习过了代理(Agents), 通用服务器(Generic Servers), 以及事件管理器(Event Managers), 它们全部是适合处理多个消息或管理状态. 但是, 当我们只需要执行一些任务时,我们使用什么?</p>
 <p><a href="http://elixir-lang.org/docs/stable/elixir/Task.html" title="Task模块" target="_blank" rel="external">Task模块</a>恰好提供了这个功能. 例如, 其有一个<code>start_link/3</code>函数, 其接受一个模块, 函数和参数, 作为监控树(Supervision tree)的一部分允许我们运行一个给定的函数.</p>
 <p>让我们试一下. 打开<code>lib/kv_server.ex</code>, 修改<code>start/2</code>中的监控进程为如下:</p>
-<pre><code><span class="function"><span class="keyword">def</span> <span class="title">start</span>(<span class="constant">_type,</span> <span class="constant">_args)</span> </span><span class="keyword">do</span>
-  import <span class="constant">Supervisor.Spec</span>
+<pre><code><span class="function"><span class="keyword">def</span> <span class="title">start</span></span>(_type, _args) <span class="keyword">do</span>
+  import <span class="constant">Supervisor</span>.<span class="constant">Spec</span>
   children = [
-    worker(<span class="constant">Task,</span> [<span class="constant">KVServer,</span> <span class="symbol">:accept</span>, [<span class="number">4040</span>]])
+    worker(<span class="constant">Task</span>, [<span class="constant">KVServer</span>, <span class="symbol">:accept</span>, [<span class="number">4040</span>]])
   ]
-  opts = [<span class="symbol">strategy:</span> <span class="symbol">:one_for_one</span>, <span class="symbol">name:</span> <span class="constant">KVServer.Supervisor]</span>
-  <span class="constant">Supervisor.</span>start_link(children, opts)
+  opts = [<span class="symbol">strategy:</span> <span class="symbol">:one_for_one</span>, <span class="symbol">name:</span> <span class="constant">KVServer</span>.<span class="constant">Supervisor</span>]
+  <span class="constant">Supervisor</span>.start_link(children, opts)
 <span class="keyword">end</span>
 </code></pre><p>With this change, we are saying that we want to run KVServer.accept(4040) as a worker.<br>We are hardcoding the port for now, but we will discuss ways in which this could be changed later.</p>
 <p>现在我们向把<code>KVServer.accept(4040)</code>作为一个worker运行. 现在我们硬编码了端口号, 但我们将会讨论能在以后修改的方法.</p>
 <p>现在服务器作为监控数的一部分, 当运行应用程序的时候它应该自动地启动. 在终端中键入命令<code>mix run --no-halt</code>, 再次使用<code>telnet</code>客户端验证一切仍能工作:</p>
 <pre><code>$ telnet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">4040</span>
-Trying <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="keyword">...</span>
-Connected to localhost.
-Escape character is <span class="string">'^]'</span>.
-say you
-say you
-say me
-say me
+Trying <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>...
+Connected <span class="keyword">to</span> localhost.
+Escape <span class="property">character</span> <span class="keyword">is</span> '^]'.
+<span class="command">say</span> you
+<span class="command">say</span> you
+<span class="command">say</span> <span class="keyword">me</span>
+<span class="command">say</span> <span class="keyword">me</span>
 </code></pre><p>Yes, 仍然可以工作. 如果你杀掉客户端, 将导致整个服务器崩溃, 你会看到另一个服务器进程立即启动.</p>
 <p>同时连接两个客户端, 再次测试, 你发现第二个客户端并没有echo:</p>
-<pre><code>$ telnet <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">4040</span>
-Trying <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="keyword">...</span>
-Connected to localhost.
-Escape character is <span class="string">'^]'</span>.
-hello
-hello?
-HELLOOOOOO?
+<pre><code>$ <span class="atom">telnet</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">4040</span>
+<span class="name">Trying</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>...
+<span class="name">Connected</span> <span class="atom">to</span> <span class="atom">localhost</span>.
+<span class="name">Escape</span> <span class="atom">character</span> <span class="atom">is</span> <span class="string">'^]'</span>.
+<span class="atom">hello</span>
+<span class="atom">hello</span>?
+<span class="name">HELLOOOOOO</span>?
 </code></pre><p>这是因为我们在同一个进程中处理接受连接并处理请求. 一个客户端连接后, 同一时刻就不能在接受其他的客户端的连接了, 直到之前的请求处理完成.</p>
 <h2 id="任务监视器(Task_supervisor)">任务监视器(Task supervisor)</h2><p>为了使服务器能处理并发连接, 需要一个进程作为acceptor, 生成(spawns)一个额外的进程来处理请求. 解决办法是修改下面的代码:</p>
-<pre><code>defp loop_acceptor(<span class="built_in">socket</span>) <span class="built_in">do</span>
-  {:ok, client} = :gen_tcp.accept(<span class="built_in">socket</span>)
+<pre><code><span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
   serve(client)
-  loop_acceptor(<span class="built_in">socket</span>)
-<span class="function"><span class="keyword">end</span></span>
+  loop_acceptor(socket)
+<span class="keyword">end</span>
 </code></pre><p>使用 <code>Task.start_link/1</code>, 类似于 <code>Task.start_link/3</code>, 它接受一个匿名函数作为参数, 而非模块,函数,参数:</p>
-<pre><code>defp loop_acceptor(<span class="built_in">socket</span>) <span class="built_in">do</span>
-  {:ok, client} = :gen_tcp.accept(<span class="built_in">socket</span>)
-  Task.start_link(fn -&gt; serve(client) <span class="function"><span class="keyword">end</span>)</span>
-  loop_acceptor(<span class="built_in">socket</span>)
-<span class="function"><span class="keyword">end</span></span>
+<pre><code><span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
+  <span class="constant">Task.</span>start_link(<span class="keyword">fn</span> -&gt; serve(client) <span class="keyword">end</span>)
+  loop_acceptor(socket)
+<span class="keyword">end</span>
 </code></pre><p>我们已经犯了一次这样的错误. 记得么?</p>
 <p>这个错误类似于当我们从registry调用<code>KV.Bucket.start_link/0</code>所犯的错误. 在任何bucket中的失败将带来整个registry当机.</p>
 <p>上面的胆码有同样的瑕疵: 如果我们连接<code>serve(client)</code>任务到acceptor, 当处理一个请求的时候将导致acceptor崩溃, 结果所有其他的连接,断开(down)</p>
@@ -253,18 +253,18 @@ HELLOOOOOO?
 <span class="keyword">end</span>
 </code></pre><p>使用名称<code>KVServer.TaskSupervisor</code>启动一个<a href="http://elixir-lang.org/docs/stable/elixir/Task.Supervisor.html" title="Task.Supervisor" target="_blank" rel="external">Task.Supervisor</a>进程. 记住, 因为acceptor任务依赖此监视进程, 该监视检查必须首先启动.</p>
 <p>现在只需要修改<code>loop_acceptor/2</code>使用<code>Task.Supervisor</code>来处理每一个请求:</p>
-<pre><code>defp loop_acceptor(<span class="built_in">socket</span>) <span class="built_in">do</span>
-  {:ok, client} = :gen_tcp.accept(<span class="built_in">socket</span>)
-  Task.Supervisor.start_child(KVServer.TaskSupervisor, fn -&gt; serve(client) <span class="function"><span class="keyword">end</span>)</span>
-  loop_acceptor(<span class="built_in">socket</span>)
-<span class="function"><span class="keyword">end</span></span>
+<pre><code><span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
+  {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
+  <span class="constant">Task.Supervisor.</span>start_child(<span class="constant">KVServer.TaskSupervisor,</span> <span class="keyword">fn</span> -&gt; serve(client) <span class="keyword">end</span>)
+  loop_acceptor(socket)
+<span class="keyword">end</span>
 </code></pre><p>使用命令<code>mix run --no-halt</code>启动一个新的服务器, 然后可以打开多个并发的telnet客户端连接. 你还注意到退出一个客户端后并不会导致acceptor崩溃. 太棒了!</p>
 <p>这里是完整的echo服务器在单个模块中的实现:</p>
-<pre><code><span class="class"><span class="keyword">defmodule</span> <span class="title">KVServer</span> </span><span class="keyword">do</span>
+<pre><code><span class="class"><span class="keyword">defmodule</span> <span class="title">KVServer</span></span> <span class="keyword">do</span>
   <span class="keyword">use</span> <span class="constant">Application</span>
 
   <span class="variable">@doc</span> <span class="keyword">false</span>
-  <span class="function"><span class="keyword">def</span> <span class="title">start</span>(<span class="constant">_type,</span> <span class="constant">_args)</span> </span><span class="keyword">do</span>
+  <span class="function"><span class="keyword">def</span> <span class="title">start</span></span>(<span class="constant">_type,</span> <span class="constant">_args)</span> <span class="keyword">do</span>
     import <span class="constant">Supervisor.Spec</span>
 
     children = [
@@ -279,20 +279,20 @@ HELLOOOOOO?
   <span class="variable">@doc</span> <span class="string">""</span><span class="string">"
   Starts accepting connections on the given `port`.
   "</span><span class="string">""</span>
-  <span class="function"><span class="keyword">def</span> <span class="title">accept</span>(port) </span><span class="keyword">do</span>
+  <span class="function"><span class="keyword">def</span> <span class="title">accept</span></span>(port) <span class="keyword">do</span>
     {<span class="symbol">:ok</span>, socket} = <span class="symbol">:gen_tcp</span>.listen(port,
                       [<span class="symbol">:binary</span>, <span class="symbol">packet:</span> <span class="symbol">:line</span>, <span class="symbol">active:</span> <span class="keyword">false</span>])
     <span class="constant">IO.</span>puts <span class="string">"Accepting connections on port <span class="subst">#{port}</span>"</span>
     loop_acceptor(socket)
   <span class="keyword">end</span>
 
-  defp loop_acceptor(socket) <span class="keyword">do</span>
+  <span class="function"><span class="keyword">defp</span> <span class="title">loop_acceptor</span></span>(socket) <span class="keyword">do</span>
     {<span class="symbol">:ok</span>, client} = <span class="symbol">:gen_tcp</span>.accept(socket)
     <span class="constant">Task.Supervisor.</span>start_child(<span class="constant">KVServer.TaskSupervisor,</span> <span class="keyword">fn</span> -&gt; serve(client) <span class="keyword">end</span>)
     loop_acceptor(socket)
   <span class="keyword">end</span>
 
-  defp serve(socket) <span class="keyword">do</span>
+  <span class="function"><span class="keyword">defp</span> <span class="title">serve</span></span>(socket) <span class="keyword">do</span>
     socket
     |&gt; read_line()
     |&gt; write_line(socket)
@@ -300,12 +300,12 @@ HELLOOOOOO?
     serve(socket)
   <span class="keyword">end</span>
 
-  defp read_line(socket) <span class="keyword">do</span>
+  <span class="function"><span class="keyword">defp</span> <span class="title">read_line</span></span>(socket) <span class="keyword">do</span>
     {<span class="symbol">:ok</span>, data} = <span class="symbol">:gen_tcp</span>.recv(socket, <span class="number">0</span>)
     data
   <span class="keyword">end</span>
 
-  defp write_line(line, socket) <span class="keyword">do</span>
+  <span class="function"><span class="keyword">defp</span> <span class="title">write_line</span></span>(line, socket) <span class="keyword">do</span>
     <span class="symbol">:gen_tcp</span>.send(socket, line)
   <span class="keyword">end</span>
 <span class="keyword">end</span>
@@ -362,43 +362,43 @@ HELLOOOOOO?
   <ul class="entry">
     
       <li>
+        <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/05/uftp/">UFTP - 基于UDP的加密文件多播传输协议</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/html5-web-cryptography-api-hashing/">Web加密API - 散列(Hashing)</a>
+      </li>
+    
+      <li>
+        <a href="/2015/06/04/the-3-modes-of-http-protocol/">HTTP协议的三种模式</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/21/ejabberd-with-elixir-packet-filters/">Ejabberd 用Elixir开发一个包过滤模块</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/chrome-dev-get-started/">Chrome 开发入门</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/18/html5-web-cryptography-api-tutorial/">Web加密API指南</a>
+      </li>
+    
+      <li>
+        <a href="/2015/05/17/html5-battery-status/">HTML5获取电池状态</a>
+      </li>
+    
+      <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
       </li>
     
       <li>
         <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/23/thrift-messing-guide/">Thrift: The Missing Guide</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/ejabberd-os-optimizations/">针对Ejabberd的操作系统C1000K优化</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/angular-if-else-statement-in-template/">AngularJS中的If..Else语句</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/18/continuous-deployment-of-node-js-applications/">Nodejs应用程序持续部署</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/erlang-pooler/">Erlang Pooler</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/17/ejabberd-easy-installer-and-structure-for-ejabberd-contributed-modules/">Ejabberd模块安装工具</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/13/ejabberd-howto-20150312/">Ejabberd Howto 20150312 &lt;TODO LIST&gt;</a>
-      </li>
-    
-      <li>
-        <a href="/2015/03/12/ejabberd-performance-turning/">Ejabberd 性能调优(草稿)</a>
       </li>
     
   </ul>
@@ -414,23 +414,29 @@ HELLOOOOOO?
   
     <li><a href="/categories/API/">API</a><small>3</small></li>
   
+    <li><a href="/categories/Chrome/">Chrome</a><small>1</small></li>
+  
     <li><a href="/categories/Continuous-Deployment/">Continuous Deployment</a><small>1</small></li>
   
     <li><a href="/categories/Database/">Database</a><small>1</small></li>
   
     <li><a href="/categories/Docker/">Docker</a><small>9</small></li>
   
-    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>34</small></li>
+    <li><a href="/categories/Ejabberd/">Ejabberd</a><small>36</small></li>
   
     <li><a href="/categories/Elixir/">Elixir</a><small>42</small></li>
   
     <li><a href="/categories/Erlang/">Erlang</a><small>20</small></li>
   
+    <li><a href="/categories/HTML5/">HTML5</a><small>3</small></li>
+  
+    <li><a href="/categories/HTTP/">HTTP</a><small>1</small></li>
+  
     <li><a href="/categories/HTTP2/">HTTP2</a><small>1</small></li>
   
     <li><a href="/categories/Javascript/">Javascript</a><small>14</small></li>
   
-    <li><a href="/categories/Linux/">Linux</a><small>3</small></li>
+    <li><a href="/categories/Linux/">Linux</a><small>4</small></li>
   
     <li><a href="/categories/MySQL/">MySQL</a><small>2</small></li>
   
@@ -488,7 +494,7 @@ HELLOOOOOO?
 <div class="widget tagcloud">
   <h3 class="title">标签云</h3>
   <div class="entry">
-    <a href="/tags/AD/" style="font-size: 10px;">AD</a><a href="/tags/API/" style="font-size: 11.11px;">API</a><a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a><a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a><a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a><a href="/tags/CURL/" style="font-size: 10px;">CURL</a><a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a><a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a><a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a><a href="/tags/ETS/" style="font-size: 10px;">ETS</a><a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a><a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a><a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a><a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a><a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a><a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a><a href="/tags/H2O/" style="font-size: 10px;">H2O</a><a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a><a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a><a href="/tags/Howto/" style="font-size: 10px;">Howto</a><a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a><a href="/tags/I18n/" style="font-size: 10px;">I18n</a><a href="/tags/IAB/" style="font-size: 10px;">IAB</a><a href="/tags/ID3/" style="font-size: 10px;">ID3</a><a href="/tags/IO/" style="font-size: 10px;">IO</a><a href="/tags/IOT/" style="font-size: 10px;">IOT</a><a href="/tags/IoT/" style="font-size: 10px;">IoT</a><a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a><a href="/tags/MUC/" style="font-size: 10px;">MUC</a><a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a><a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a><a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a><a href="/tags/Modules/" style="font-size: 10px;">Modules</a><a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a><a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a><a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a><a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a><a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a><a href="/tags/PM2/" style="font-size: 10px;">PM2</a><a href="/tags/Performance/" style="font-size: 10px;">Performance</a><a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a><a href="/tags/Pool/" style="font-size: 10px;">Pool</a><a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a><a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a><a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a><a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a><a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a><a href="/tags/Regex/" style="font-size: 10px;">Regex</a><a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a><a href="/tags/SSH/" style="font-size: 10px;">SSH</a><a href="/tags/SSL/" style="font-size: 10px;">SSL</a><a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a><a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a><a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a><a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a><a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a><a href="/tags/Task/" style="font-size: 10px;">Task</a><a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a><a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a><a href="/tags/UBF/" style="font-size: 10px;">UBF</a><a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a><a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a><a href="/tags/VAST/" style="font-size: 10px;">VAST</a><a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a><a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a><a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a><a href="/tags/XML/" style="font-size: 10px;">XML</a><a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a><a href="/tags/android/" style="font-size: 10px;">android</a><a href="/tags/angular/" style="font-size: 16.67px;">angular</a><a href="/tags/application/" style="font-size: 10px;">application</a><a href="/tags/blockies/" style="font-size: 10px;">blockies</a><a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a><a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a><a href="/tags/ci/" style="font-size: 10px;">ci</a><a href="/tags/container/" style="font-size: 11.11px;">container</a><a href="/tags/data-management/" style="font-size: 10px;">data management</a><a href="/tags/data-volume/" style="font-size: 10px;">data volume</a><a href="/tags/debugging/" style="font-size: 10px;">debugging</a><a href="/tags/devtools/" style="font-size: 10px;">devtools</a><a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a><a href="/tags/doc/" style="font-size: 10px;">doc</a><a href="/tags/docker/" style="font-size: 15.56px;">docker</a><a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a><a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a><a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a><a href="/tags/encoding/" style="font-size: 10px;">encoding</a><a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a><a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a><a href="/tags/faq/" style="font-size: 10px;">faq</a><a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a><a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a><a href="/tags/gettext/" style="font-size: 10px;">gettext</a><a href="/tags/git/" style="font-size: 12.22px;">git</a><a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a><a href="/tags/grunt/" style="font-size: 10px;">grunt</a><a href="/tags/hero/" style="font-size: 10px;">hero</a><a href="/tags/html/" style="font-size: 10px;">html</a><a href="/tags/html5/" style="font-size: 10px;">html5</a><a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a><a href="/tags/iq/" style="font-size: 10px;">iq</a><a href="/tags/jabber/" style="font-size: 10px;">jabber</a><a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a><a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a><a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a><a href="/tags/library/" style="font-size: 10px;">library</a><a href="/tags/linking/" style="font-size: 10px;">linking</a><a href="/tags/lists/" style="font-size: 10px;">lists</a><a href="/tags/load-balance/" style="font-size: 10px;">load balance</a><a href="/tags/log4er/" style="font-size: 10px;">log4er</a><a href="/tags/manage-images/" style="font-size: 10px;">manage images</a><a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a><a href="/tags/muc/" style="font-size: 10px;">muc</a><a href="/tags/mysql/" style="font-size: 10px;">mysql</a><a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a><a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a><a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a><a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a><a href="/tags/notification/" style="font-size: 10px;">notification</a><a href="/tags/npm/" style="font-size: 11.11px;">npm</a><a href="/tags/performance/" style="font-size: 10px;">performance</a><a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a><a href="/tags/polymer/" style="font-size: 10px;">polymer</a><a href="/tags/port/" style="font-size: 10px;">port</a><a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a><a href="/tags/rebar/" style="font-size: 10px;">rebar</a><a href="/tags/record/" style="font-size: 10px;">record</a><a href="/tags/recursion/" style="font-size: 10px;">recursion</a><a href="/tags/regexp/" style="font-size: 10px;">regexp</a><a href="/tags/relx/" style="font-size: 10px;">relx</a><a href="/tags/screen/" style="font-size: 10px;">screen</a><a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a><a href="/tags/shell/" style="font-size: 10px;">shell</a><a href="/tags/socket/" style="font-size: 10px;">socket</a><a href="/tags/ssh/" style="font-size: 10px;">ssh</a><a href="/tags/stanza/" style="font-size: 10px;">stanza</a><a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a><a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a><a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a><a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a><a href="/tags/testing/" style="font-size: 10px;">testing</a><a href="/tags/tls/" style="font-size: 10px;">tls</a><a href="/tags/tools/" style="font-size: 10px;">tools</a><a href="/tags/tsung/" style="font-size: 10px;">tsung</a><a href="/tags/upstart/" style="font-size: 10px;">upstart</a><a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a><a href="/tags/varnish/" style="font-size: 10px;">varnish</a><a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a><a href="/tags/vt/" style="font-size: 10px;">vt</a><a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a><a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a><a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a><a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
+    <a href="/tags/AD/" style="font-size: 10px;">AD</a> <a href="/tags/API/" style="font-size: 11.11px;">API</a> <a href="/tags/Analysis/" style="font-size: 10px;">Analysis</a> <a href="/tags/Battery-Status/" style="font-size: 10px;">Battery Status</a> <a href="/tags/Behaviour/" style="font-size: 10px;">Behaviour</a> <a href="/tags/CUPS/" style="font-size: 10px;">CUPS</a> <a href="/tags/CURL/" style="font-size: 10px;">CURL</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Clustering/" style="font-size: 10px;">Clustering</a> <a href="/tags/Distributed/" style="font-size: 10px;">Distributed</a> <a href="/tags/Distributed-Application/" style="font-size: 10px;">Distributed Application</a> <a href="/tags/ETS/" style="font-size: 10px;">ETS</a> <a href="/tags/Ecto/" style="font-size: 11.11px;">Ecto</a> <a href="/tags/Elixir/" style="font-size: 20px;">Elixir</a> <a href="/tags/Erlang/" style="font-size: 10px;">Erlang</a> <a href="/tags/Escalus/" style="font-size: 10px;">Escalus</a> <a href="/tags/ExUnit/" style="font-size: 10px;">ExUnit</a> <a href="/tags/Exrm/" style="font-size: 10px;">Exrm</a> <a href="/tags/H2O/" style="font-size: 10px;">H2O</a> <a href="/tags/Hex-pm/" style="font-size: 10px;">Hex.pm</a> <a href="/tags/HiPE/" style="font-size: 10px;">HiPE</a> <a href="/tags/Howto/" style="font-size: 10px;">Howto</a> <a href="/tags/Http-modes/" style="font-size: 10px;">Http modes</a> <a href="/tags/Httpotion/" style="font-size: 10px;">Httpotion</a> <a href="/tags/I18n/" style="font-size: 10px;">I18n</a> <a href="/tags/IAB/" style="font-size: 10px;">IAB</a> <a href="/tags/ID3/" style="font-size: 10px;">ID3</a> <a href="/tags/IO/" style="font-size: 10px;">IO</a> <a href="/tags/IOT/" style="font-size: 10px;">IOT</a> <a href="/tags/IoT/" style="font-size: 10px;">IoT</a> <a href="/tags/Loopback/" style="font-size: 12.22px;">Loopback</a> <a href="/tags/MUC/" style="font-size: 10px;">MUC</a> <a href="/tags/Macro/" style="font-size: 12.22px;">Macro</a> <a href="/tags/Memcache/" style="font-size: 10px;">Memcache</a> <a href="/tags/Mix/" style="font-size: 14.44px;">Mix</a> <a href="/tags/Modules/" style="font-size: 10px;">Modules</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OSM-Building/" style="font-size: 10px;">OSM Building</a> <a href="/tags/OTP/" style="font-size: 12.22px;">OTP</a> <a href="/tags/OpenStreetMap/" style="font-size: 10px;">OpenStreetMap</a> <a href="/tags/Optimization/" style="font-size: 10px;">Optimization</a> <a href="/tags/PM2/" style="font-size: 10px;">PM2</a> <a href="/tags/Performance/" style="font-size: 10px;">Performance</a> <a href="/tags/Phoenix/" style="font-size: 12.22px;">Phoenix</a> <a href="/tags/Pool/" style="font-size: 10px;">Pool</a> <a href="/tags/PostgreSQL/" style="font-size: 10px;">PostgreSQL</a> <a href="/tags/RESTFUL/" style="font-size: 11.11px;">RESTFUL</a> <a href="/tags/RMAL/" style="font-size: 10px;">RMAL</a> <a href="/tags/Ranch/" style="font-size: 10px;">Ranch</a> <a href="/tags/RefactorErl/" style="font-size: 10px;">RefactorErl</a> <a href="/tags/Regex/" style="font-size: 10px;">Regex</a> <a href="/tags/Resource-Pool/" style="font-size: 10px;">Resource Pool</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/SSL/" style="font-size: 10px;">SSL</a> <a href="/tags/SemVer/" style="font-size: 10px;">SemVer</a> <a href="/tags/Semantic-UI/" style="font-size: 10px;">Semantic UI</a> <a href="/tags/Sequelize/" style="font-size: 10px;">Sequelize</a> <a href="/tags/Stream-Management/" style="font-size: 10px;">Stream Management</a> <a href="/tags/Sublime/" style="font-size: 10px;">Sublime</a> <a href="/tags/Task/" style="font-size: 10px;">Task</a> <a href="/tags/Thrift/" style="font-size: 11.11px;">Thrift</a> <a href="/tags/Tsung/" style="font-size: 10px;">Tsung</a> <a href="/tags/UBF/" style="font-size: 10px;">UBF</a> <a href="/tags/UFTP/" style="font-size: 10px;">UFTP</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/Umbrella/" style="font-size: 10px;">Umbrella</a> <a href="/tags/VAST/" style="font-size: 10px;">VAST</a> <a href="/tags/VPAID/" style="font-size: 10px;">VPAID</a> <a href="/tags/Web-Cryptography-API/" style="font-size: 11.11px;">Web Cryptography API</a> <a href="/tags/XEP/" style="font-size: 16.67px;">XEP</a> <a href="/tags/XEP-198/" style="font-size: 10px;">XEP-198</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/XMPP/" style="font-size: 17.78px;">XMPP</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/angular/" style="font-size: 16.67px;">angular</a> <a href="/tags/application/" style="font-size: 10px;">application</a> <a href="/tags/blockies/" style="font-size: 10px;">blockies</a> <a href="/tags/bootstrap3/" style="font-size: 10px;">bootstrap3</a> <a href="/tags/bosh/" style="font-size: 12.22px;">bosh</a> <a href="/tags/ci/" style="font-size: 10px;">ci</a> <a href="/tags/container/" style="font-size: 11.11px;">container</a> <a href="/tags/data-management/" style="font-size: 10px;">data management</a> <a href="/tags/data-volume/" style="font-size: 10px;">data volume</a> <a href="/tags/debugging/" style="font-size: 10px;">debugging</a> <a href="/tags/devtools/" style="font-size: 10px;">devtools</a> <a href="/tags/devtools-terminal/" style="font-size: 10px;">devtools-terminal</a> <a href="/tags/doc/" style="font-size: 10px;">doc</a> <a href="/tags/docker/" style="font-size: 15.56px;">docker</a> <a href="/tags/ejabberd/" style="font-size: 18.89px;">ejabberd</a> <a href="/tags/ejabberd-c2s/" style="font-size: 10px;">ejabberd_c2s</a> <a href="/tags/emysql/" style="font-size: 11.11px;">emysql</a> <a href="/tags/encoding/" style="font-size: 10px;">encoding</a> <a href="/tags/erlang/" style="font-size: 12.22px;">erlang</a> <a href="/tags/erlang-mk/" style="font-size: 10px;">erlang.mk</a> <a href="/tags/faq/" style="font-size: 10px;">faq</a> <a href="/tags/gen-tcp/" style="font-size: 10px;">gen_tcp</a> <a href="/tags/gerrit/" style="font-size: 11.11px;">gerrit</a> <a href="/tags/gettext/" style="font-size: 10px;">gettext</a> <a href="/tags/git/" style="font-size: 12.22px;">git</a> <a href="/tags/graphviz/" style="font-size: 10px;">graphviz</a> <a href="/tags/grunt/" style="font-size: 10px;">grunt</a> <a href="/tags/hero/" style="font-size: 10px;">hero</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/html5/" style="font-size: 10px;">html5</a> <a href="/tags/iconutil/" style="font-size: 10px;">iconutil</a> <a href="/tags/iq/" style="font-size: 10px;">iq</a> <a href="/tags/jabber/" style="font-size: 10px;">jabber</a> <a href="/tags/javascript/" style="font-size: 11.11px;">javascript</a> <a href="/tags/jiffy/" style="font-size: 10px;">jiffy</a> <a href="/tags/json-schema/" style="font-size: 10px;">json-schema</a> <a href="/tags/library/" style="font-size: 10px;">library</a> <a href="/tags/linking/" style="font-size: 10px;">linking</a> <a href="/tags/lists/" style="font-size: 10px;">lists</a> <a href="/tags/load-balance/" style="font-size: 10px;">load balance</a> <a href="/tags/log4er/" style="font-size: 10px;">log4er</a> <a href="/tags/manage-images/" style="font-size: 10px;">manage images</a> <a href="/tags/mariadb/" style="font-size: 10px;">mariadb</a> <a href="/tags/muc/" style="font-size: 10px;">muc</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/node-reggie/" style="font-size: 10px;">node-reggie</a> <a href="/tags/node-webkit/" style="font-size: 13.33px;">node-webkit</a> <a href="/tags/node-js/" style="font-size: 12.22px;">node.js</a> <a href="/tags/nodemailer/" style="font-size: 10px;">nodemailer</a> <a href="/tags/notification/" style="font-size: 10px;">notification</a> <a href="/tags/npm/" style="font-size: 11.11px;">npm</a> <a href="/tags/performance/" style="font-size: 10px;">performance</a> <a href="/tags/ploymer/" style="font-size: 10px;">ploymer</a> <a href="/tags/polymer/" style="font-size: 10px;">polymer</a> <a href="/tags/port/" style="font-size: 10px;">port</a> <a href="/tags/pubsub/" style="font-size: 10px;">pubsub</a> <a href="/tags/rebar/" style="font-size: 10px;">rebar</a> <a href="/tags/record/" style="font-size: 10px;">record</a> <a href="/tags/recursion/" style="font-size: 10px;">recursion</a> <a href="/tags/regexp/" style="font-size: 10px;">regexp</a> <a href="/tags/relx/" style="font-size: 10px;">relx</a> <a href="/tags/screen/" style="font-size: 10px;">screen</a> <a href="/tags/sequelize/" style="font-size: 10px;">sequelize</a> <a href="/tags/shell/" style="font-size: 10px;">shell</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/ssh/" style="font-size: 10px;">ssh</a> <a href="/tags/stanza/" style="font-size: 10px;">stanza</a> <a href="/tags/strophe-js/" style="font-size: 10px;">strophe.js</a> <a href="/tags/strophejs/" style="font-size: 10px;">strophejs</a> <a href="/tags/svg-sprite/" style="font-size: 10px;">svg-sprite</a> <a href="/tags/swagger/" style="font-size: 12.22px;">swagger</a> <a href="/tags/testing/" style="font-size: 10px;">testing</a> <a href="/tags/tls/" style="font-size: 10px;">tls</a> <a href="/tags/tools/" style="font-size: 10px;">tools</a> <a href="/tags/tsung/" style="font-size: 10px;">tsung</a> <a href="/tags/upstart/" style="font-size: 10px;">upstart</a> <a href="/tags/vQmod/" style="font-size: 10px;">vQmod</a> <a href="/tags/varnish/" style="font-size: 10px;">varnish</a> <a href="/tags/vqmod/" style="font-size: 10px;">vqmod</a> <a href="/tags/vt/" style="font-size: 10px;">vt</a> <a href="/tags/win32reg/" style="font-size: 10px;">win32reg</a> <a href="/tags/xml-schema/" style="font-size: 10px;">xml schema</a> <a href="/tags/匆匆那年/" style="font-size: 10px;">匆匆那年</a> <a href="/tags/协议包/" style="font-size: 10px;">协议包</a>
   </div>
 </div>
 
