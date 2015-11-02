@@ -12,7 +12,7 @@ body {
   background: #fcf4dc;
   color: #444;
   font-family: "Lato", Georgia, "Bitstream Charter", serif, "STHeiti", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  /*font-size: 18px;*/
+  font-size: 18px;
   text-shadow: 0 0 1px transparent;
 }
 @media screen and (max-width: 1260px) {

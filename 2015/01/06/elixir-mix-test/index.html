@@ -10,7 +10,7 @@
   <meta name="description" content="Mix的测试过程
 
 Mix首先启动应用程序
-Mix然后查找项目根目录下的test子目录, 查找模式为test/**/_test.exs, 所有匹配这个模式的Elixir脚本都本认为是测试代码.
+Mix然后查找项目根目录下的test子目录, 查找模式为test/**/_test.exs, 所有匹配这个模式的Elixir脚本都被认为是测试代码.
 
 给测试方法打标签有的时候,为了加速测试过程,我们需要过滤那些依赖外部资源的测试,为此,我们可以给测试打上">
   
@@ -120,7 +120,7 @@ Mix然后查找项目根目录下的test子目录, 查找模式为test/**/_test.
         <p>Mix的测试过程</p>
 <ul>
 <li>Mix首先启动应用程序</li>
-<li>Mix然后查找项目根目录下的<code>test</code>子目录, 查找模式为<code>test/**/_test.exs</code>, 所有匹配这个模式的Elixir脚本都本认为是测试代码.</li>
+<li>Mix然后查找项目根目录下的<code>test</code>子目录, 查找模式为<code>test/**/_test.exs</code>, 所有匹配这个模式的Elixir脚本都被认为是测试代码.</li>
 </ul>
 <h2 id="给测试方法打标签">给测试方法打标签</h2><p>有的时候,为了加速测试过程,我们需要过滤那些依赖外部资源的测试,为此,我们可以给测试打上标签,排除那些标记为<code>ignore</code>的测试.</p>
 <p>首先需要在测试配置文件<code>test/test_helper.exs</code>中添加如下一行,用于排除外部测试</p>

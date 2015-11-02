@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Tansform information as knowledges, extract and purify as thoughts]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://developerworks.github.io/"/>
-  <updated>2015-11-02T04:26:33.000Z</updated>
+  <updated>2015-11-02T06:55:10.000Z</updated>
   <id>http://developerworks.github.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://developerworks.github.io/2015/11/02/elixir-failover-and-takeover/"/>
     <id>http://developerworks.github.io/2015/11/02/elixir-failover-and-takeover/</id>
     <published>2015-11-01T18:10:29.000Z</published>
-    <updated>2015-11-02T04:26:33.000Z</updated>
+    <updated>2015-11-02T06:55:10.000Z</updated>
     <content type="html"><![CDATA[<p>2015-11-02 更新</p>
 <p>Elixir 可以运行在主/从, 故障转移/接管模式下. 要使Elixir应用程序能够执行故障转移/接管, Elixir应用程序必须是一个OTP应用程序.</p>
 <p>下面来创建一个包含Supervisor的Elixir项目</p>
@@ -47,8 +47,9 @@
 <li>再次启动节点<code>abc@192.168.8.104</code>后,应用在<code>bcd@192.168.8.104</code>上停止, 应用被恢复后的<code>abc@192.168.8.104</code>节点接管(Takeover)</li>
 </ol>
 <h2 id="参考资料">参考资料</h2><ol>
-<li>Elixir Application Failover/Takeover <a href="https://erlangcentral.org/topic/elixir-application-failovertakeover/" target="_blank" rel="external">https://erlangcentral.org/topic/elixir-application-failovertakeover/</a></li>
-<li>源码仓库: <a href="https://github.com/developerworks/distro" target="_blank" rel="external">https://github.com/developerworks/distro</a></li>
+<li><a href="https://erlangcentral.org/topic/elixir-application-failovertakeover" target="_blank" rel="external">Elixir Application Failover/Takeover</a></li>
+<li><a href="http://learnyousomeerlang.com/distributed-otp-applications" target="_blank" rel="external">Distributed OTP Applications</a></li>
+<li><a href="https://github.com/developerworks/distro" target="_blank" rel="external">源码仓库</a> (<strong>求加星</strong>)</li>
 </ol>
 ]]></content>
     <summary type="html">
