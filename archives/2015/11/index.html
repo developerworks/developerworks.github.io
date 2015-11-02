@@ -4,18 +4,13 @@
 <head>
   <meta charset="utf-8">
   
-  <title>故障转移和接管 | 元气糯米团子的Coding Blog</title>
+  <title>归档：2015/11 | 元气糯米团子的Coding Blog</title>
   <meta name="author" content="zhiqiang he">
-  
-  <meta name="description" content="Elixir 可以运行在主/从, 故障转移/接管模式下. 要使Elixir应用程序能够执行故障转移/接管, Elixir应用程序必须是一个OTP应用程序.
-下面来创建一个包含Supervisor的Elixir项目
-1mix new distro --sup
-修改distro.ex添加logger模块">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="故障转移和接管"/>
+  
   <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
 
   
@@ -82,115 +77,34 @@
 
 <div id="content" class="inner">
     <div id="main-col" class="alignleft">
-        <div id="wrapper"><article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
+        <div id="wrapper"><div class="archive">
     
-      <img src="">
+    <article class="post">
+        <div class="post-content">
+            <!--<div class="icon"></div>-->
+            <time datetime="2015-11-01T18:10:29.000Z" style="font-size: 12px;">2015-11-02</time>
+            
+            <span class="title" style="font-size: 20px;"><a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a></span>
+            
+        </div>
+    </article>
     
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
 </div>
+<nav id="pagination">
   
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-11-19T18:10:29.000Z"><a href="/2014/11/20/elixir-failover-and-takeover/">2014-11-20</a></time>
-      
-      
   
-    <h1 class="title">故障转移和接管</h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p>Elixir 可以运行在主/从, 故障转移/接管模式下. 要使Elixir应用程序能够执行故障转移/接管, Elixir应用程序必须是一个OTP应用程序.</p>
-<p>下面来创建一个包含Supervisor的Elixir项目</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix new distro --sup</span><br></pre></td></tr></table></figure>
-<p>修改<code>distro.ex</code>添加<code>logger</code>模块. 以记录当触发故障转移/接管操作时的日志记录.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule Distro do&#10;  use Application&#10;  require Logger&#10;  #See http://elixir-lang.org/docs/stable/elixir/Application.html&#10;  #for more information on OTP Applications&#10;  def start(_type, _args) do&#10;    import Supervisor.Spec, warn: false&#10;    Logger.info(&#34;Distro application in #&#123;inspect _type&#125; mode&#34;)&#10;    children = [&#10;      #Define workers and child supervisors to be supervised&#10;      worker(Distro.DistroCal, [])&#10;    ]&#10;    #See http://elixir-lang.org/docs/stable/elixir/Supervisor.html&#10;    #for other strategies and supported options&#10;    opts = [strategy: :one_for_one, name: Distro.Supervisor]&#10;    Supervisor.start_link(children, opts)&#10;  end&#10;end</span><br></pre></td></tr></table></figure>
-<p><code>DistroCal</code>位于<code>distro</code>子目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir lib/distro&#10;$ touch lib/distro/distro_cal.ex</span><br></pre></td></tr></table></figure>
-<p><code>DistroCal</code>是一个<code>GenServer</code>: 它使用全局名称注册, 假设其运行在集群中的一个节点上, 全局注册让我们不用考虑其实际的运行位置, 只需要提供注册名称就可以访问.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule Distro.DistroCal do&#10;    use GenServer&#10;    require Logger&#10;    def start_link do&#10;        GenServer.start_link(__MODULE__, [], name: &#123;:global, __MODULE__&#125;)&#10;    end&#10;    def add(x,y) do&#10;        GenServer.call(&#123;:global, __MODULE__&#125;, &#123;:cal, x, y&#125;)&#10;    end&#10;    def handle_call(&#123;:cal, x, y&#125;, _from, state) do&#10;        &#123;:reply, x + y, state&#125;&#10;    end&#10;end</span><br></pre></td></tr></table></figure>
-<p>编译和运行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mix compile&#10;$ iex --sname -pa _build/dev/lib/distro/ebin/ --app distro&#10;iex(abc@44adb2a6d305)1&#62;</span><br></pre></td></tr></table></figure>
-<h2 id="应用程序分布">应用程序分布</h2><p>本节阐述了如何把一个应用程序分布到多个节点上</p>
-<p>假设应用程序运行在3个节点上, 名称分别为<code>a</code>, <code>b</code>, <code>c</code>. 创建三个配置文件如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch config/a.config&#10;touch config/b.config&#10;touch config/c.config</span><br></pre></td></tr></table></figure>
-<p>配置文件中有3个重要的键值对.</p>
-<p><code>sync_nodes_timeout</code> -<br><code>sync_nodes_mandatory</code> -<br><code>distributed</code> -</p>
-<p>a.config</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;kernel,&#10;&#9;[&#10;&#9;    &#123;&#10;&#9;        distributed,&#10;&#9;        [&#123;&#10;&#9;            &#39;distro&#39;, 5000, [&#10;&#9;                &#39;abc@tom-thumbs-mbp&#39;,&#10;&#9;                &#123;&#39;bcd@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;&#125;&#10;&#9;            ]&#10;            &#125;]&#10;        &#125;,&#10;        &#123;sync_nodes_mandatory, [&#39;bcd@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;]&#125;,&#10;        &#123;sync_nodes_timeout, 30000&#125;&#10;    ]&#10;&#125;].</span><br></pre></td></tr></table></figure>
-<p>b.config</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;kernel,&#10;[&#10;    &#123;&#10;        distributed,&#10;        [&#10;            &#123;distro,5000, [&#10;                &#39;abc@tom-thumbs-mbp&#39;,&#10;                &#123;&#39;bcd@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;&#125;&#10;                ]&#10;            &#125;&#10;        ]&#10;    &#125;,&#10;    &#123;sync_nodes_mandatory, [&#39;abc@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;]&#125;,&#10;    &#123;sync_nodes_timeout, 30000&#125;&#10;]&#125;].</span><br></pre></td></tr></table></figure>
-<p>c.config</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;kernel,&#10;&#9;[&#10;&#9;    &#123;&#10;&#9;        distributed, [&#10;&#9;        &#123;&#10;&#9;            distro,5000, [&#10;&#9;                &#39;abc@tom-thumbs-mbp&#39;,&#10;&#9;                &#123;&#39;bcd@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;&#125;&#10;&#9;            ]&#10;            &#125;&#10;        ]&#125;,&#10;        &#123;sync_nodes_mandatory, [&#39;abc@tom-thumbs-mbp&#39;, &#39;bcd@tom-thumbs-mbp&#39;]&#125;,&#10;        &#123;sync_nodes_timeout, 30000&#125;&#10;    ]&#10;&#125;].</span><br></pre></td></tr></table></figure>
-<p>在不同的终端自动全部3个节点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ iex &#8211;sname a -pa _build/dev/lib/distro/ebin/ &#8211;app distro &#8211;erl &#34;-config config/a&#34;&#10;$ iex &#8211;sname b -pa _build/dev/lib/distro/ebin/ &#8211;app distro &#8211;erl &#34;-config config/b&#34;&#10;$ iex &#8211;sname c -pa _build/dev/lib/distro/ebin/ &#8211;app distro &#8211;erl &#34;-config config/c&#34;</span><br></pre></td></tr></table></figure>
-<h2 id="参考资料">参考资料</h2><ol>
-<li>Elixir Application Failover/Takeover<br><a href="https://erlangcentral.org/topic/elixir-application-failovertakeover/" target="_blank" rel="external">https://erlangcentral.org/topic/elixir-application-failovertakeover/</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-  
-  <div class="categories">
-    <a href="/categories/Elixir/">Elixir</a>
-  </div>
-
-        
-  
-  <div class="tags">
-    <a href="/tags/Elixir/">Elixir</a>
-  </div>
-
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-<!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-thread-key="2014/11/20/elixir-failover-and-takeover/" data-title="故障转移和接管" data-url="http://developerworks.github.io/2014/11/20/elixir-failover-and-takeover/"></div>
-<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-    var duoshuoQuery = {short_name:"developerworks"};
-    (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-            || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-</script>
-<!-- 多说公共JS代码 end -->
-</div>
+  <div class="clearfix"></div>
+</nav></div>
     </div>
     <aside id="sidebar" class="alignright">
   
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a>
+      </li>
     
       <li>
         <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
@@ -226,10 +140,6 @@
     
       <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
-      </li>
-    
-      <li>
-        <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
       </li>
     
   </ul>

@@ -96,11 +96,11 @@
     <header>
       
         <!--<div class="icon"></div>-->
-        <time datetime="2014-11-19T18:10:29.000Z"><a href="/2014/11/20/elixir-failover-and-takeover/">2014-11-20</a></time>
+        <time datetime="2014-11-20T09:46:57.000Z"><a href="/2014/11/20/elixir-distributed-tasks-and-configuration/">2014-11-20</a></time>
       
       
   
-    <h1 class="title"><a href="/2014/11/20/elixir-failover-and-takeover/">故障转移和接管</a></h1>
+    <h1 class="title"><a href="/2014/11/20/elixir-distributed-tasks-and-configuration/">分布式任务和配置</a></h1>
   
 
     </header>
@@ -111,32 +111,28 @@
         
 
 
-        <p>Elixir 可以运行在主/从, 故障转移/接管模式下. 要使Elixir应用程序能够执行故障转移/接管, Elixir应用程序必须是一个OTP应用程序.</p>
-<p>下面来创建一个包含Supervisor的Elixir项目</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix new distro --sup</span><br></pre></td></tr></table></figure>
-<p>修改<code>distro.ex</code>添加<code>logger</code>模块. 以记录当触发故障转移/接管操作时的日志记录.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule Distro do&#10;  use Application&#10;  require Logger&#10;  #See http://elixir-lang.org/docs/stable/elixir/Application.html&#10;  #for more information on OTP Applications&#10;  def start(_type, _args) do&#10;    import Supervisor.Spec, warn: false&#10;    Logger.info(&#34;Distro application in #&#123;inspect _type&#125; mode&#34;)&#10;    children = [&#10;      #Define workers and child supervisors to be supervised&#10;      worker(Distro.DistroCal, [])&#10;    ]&#10;    #See http://elixir-lang.org/docs/stable/elixir/Supervisor.html&#10;    #for other strategies and supported options&#10;    opts = [strategy: :one_for_one, name: Distro.Supervisor]&#10;    Supervisor.start_link(children, opts)&#10;  end&#10;end</span><br></pre></td></tr></table></figure>
-<p><code>DistroCal</code>位于<code>distro</code>子目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir lib/distro&#10;$ touch lib/distro/distro_cal.ex</span><br></pre></td></tr></table></figure>
-<p><code>DistroCal</code>是一个<code>GenServer</code>: 它使用全局名称注册, 假设其运行在集群中的一个节点上, 全局注册让我们不用考虑其实际的运行位置, 只需要提供注册名称就可以访问.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule Distro.DistroCal do&#10;    use GenServer&#10;    require Logger&#10;    def start_link do&#10;        GenServer.start_link(__MODULE__, [], name: &#123;:global, __MODULE__&#125;)&#10;    end&#10;    def add(x,y) do&#10;        GenServer.call(&#123;:global, __MODULE__&#125;, &#123;:cal, x, y&#125;)&#10;    end&#10;    def handle_call(&#123;:cal, x, y&#125;, _from, state) do&#10;        &#123;:reply, x + y, state&#125;&#10;    end&#10;end</span><br></pre></td></tr></table></figure>
-<p>编译和运行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mix compile&#10;$ iex --sname -pa _build/dev/lib/distro/ebin/ --app distro&#10;iex(abc@44adb2a6d305)1&#62;</span><br></pre></td></tr></table></figure>
-<h2 id="应用程序分布">应用程序分布</h2><p>本节阐述了如何把一个应用程序分布到多个节点上</p>
-<p>假设应用程序运行在3个节点上, 名称分别为<code>a</code>, <code>b</code>, <code>c</code>. 创建三个配置文件如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch config/a.config&#10;touch config/b.config&#10;touch config/c.config</span><br></pre></td></tr></table></figure>
-<p>配置文件中有3个重要的键值对.</p>
-<p><code>sync_nodes_timeout</code> -<br><code>sync_nodes_mandatory</code> -<br><code>distributed</code> -</p>
-<p>a.config</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;kernel,&#10;&#9;[&#10;&#9;    &#123;&#10;&#9;        distributed,&#10;&#9;        [&#123;&#10;&#9;            &#39;distro&#39;, 5000, [&#10;&#9;                &#39;abc@tom-thumbs-mbp&#39;,&#10;&#9;                &#123;&#39;bcd@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;&#125;&#10;&#9;            ]&#10;            &#125;]&#10;        &#125;,&#10;        &#123;sync_nodes_mandatory, [&#39;bcd@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;]&#125;,&#10;        &#123;sync_nodes_timeout, 30000&#125;&#10;    ]&#10;&#125;].</span><br></pre></td></tr></table></figure>
-<p>b.config</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;kernel,&#10;[&#10;    &#123;&#10;        distributed,&#10;        [&#10;            &#123;distro,5000, [&#10;                &#39;abc@tom-thumbs-mbp&#39;,&#10;                &#123;&#39;bcd@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;&#125;&#10;                ]&#10;            &#125;&#10;        ]&#10;    &#125;,&#10;    &#123;sync_nodes_mandatory, [&#39;abc@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;]&#125;,&#10;    &#123;sync_nodes_timeout, 30000&#125;&#10;]&#125;].</span><br></pre></td></tr></table></figure>
-<p>c.config</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;kernel,&#10;&#9;[&#10;&#9;    &#123;&#10;&#9;        distributed, [&#10;&#9;        &#123;&#10;&#9;            distro,5000, [&#10;&#9;                &#39;abc@tom-thumbs-mbp&#39;,&#10;&#9;                &#123;&#39;bcd@tom-thumbs-mbp&#39;, &#39;def@tom-thumbs-mbp&#39;&#125;&#10;&#9;            ]&#10;            &#125;&#10;        ]&#125;,&#10;        &#123;sync_nodes_mandatory, [&#39;abc@tom-thumbs-mbp&#39;, &#39;bcd@tom-thumbs-mbp&#39;]&#125;,&#10;        &#123;sync_nodes_timeout, 30000&#125;&#10;    ]&#10;&#125;].</span><br></pre></td></tr></table></figure>
-<p>在不同的终端自动全部3个节点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ iex &#8211;sname a -pa _build/dev/lib/distro/ebin/ &#8211;app distro &#8211;erl &#34;-config config/a&#34;&#10;$ iex &#8211;sname b -pa _build/dev/lib/distro/ebin/ &#8211;app distro &#8211;erl &#34;-config config/b&#34;&#10;$ iex &#8211;sname c -pa _build/dev/lib/distro/ebin/ &#8211;app distro &#8211;erl &#34;-config config/c&#34;</span><br></pre></td></tr></table></figure>
+        <p>启动节点A, 并定义一个模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@c87c9967219c:~# iex --sname A&#10;iex(foo@c87c9967219c)1&#62; defmodule Hell do&#10;...(foo@c87c9967219c)1&#62;   def world, do: IO.puts &#34;hello world&#34;&#10;...(foo@c87c9967219c)1&#62; end</span><br></pre></td></tr></table></figure>
+<p>启动节点C,并在节点C上Spawn一个在节点A上运行的进程, 并放回消息到C节点的终端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@c87c9967219c:~# iex --sname C&#10;iex(bar@c87c9967219c)1&#62; Node.spawn_link :&#34;foo@c87c9967219c&#34;, fn -&#62; Hello.world end&#10;hello world&#10;#PID&#60;9010.79.0&#62;</span><br></pre></td></tr></table></figure>
+<p>在节点C上定义要执行的代码, 并在A上运行, 然后把运行结果返回给C</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iex&#62; Node.spawn_link :&#34;A@c87c9967219c&#34;, fn -&#62; Hello.world end</span><br></pre></td></tr></table></figure>
+<p>收发消息:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iex(B@c87c9967219c)1&#62; pid = Node.spawn_link :&#34;A@c87c9967219c&#34;, fn -&#62;&#10;...(B@c87c9967219c)1&#62;   receive do&#10;...(B@c87c9967219c)1&#62;     &#123;:ping, client&#125; -&#62;&#10;...(B@c87c9967219c)1&#62;       send client, :pong&#10;...(B@c87c9967219c)1&#62;   end&#10;...(B@c87c9967219c)1&#62; end&#10;#PID&#60;8005.65.0&#62;&#10;iex(B@c87c9967219c)2&#62; send pid, &#123;:ping, self&#125;&#10;&#123;:ping, #PID&#60;0.60.0&#62;&#125;&#10;iex(B@c87c9967219c)3&#62; flush&#10;:pong&#10;:ok</span><br></pre></td></tr></table></figure>
+<p>每次我们想要执行分布式计算的时候, 我们可以通过<code>Node.spawn_link/2</code>在其他节点上<code>spawn</code>一个进程, 但是我们应该避免在 supervision 树的外部去spawn子进程.</p>
+<p>对于<code>Node.spawn_link2</code>, 有更好的替代</p>
+<ul>
+<li><p>可以使用<code>:rpc</code>模块执行远程节点上的函数, 比如:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># &#22312;A@c87c9967219c&#33410;&#28857;&#19978;, &#25191;&#34892;Hello&#27169;&#22359;&#30340;:world&#20989;&#25968;, &#27809;&#26377;&#21442;&#25968;&#10;:rpc.call(:&#34;A@c87c9967219c&#34;, Hello, :world, [])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过<a href="http://elixir-lang.org/docs/master/elixir/GenServer.html#call/3" target="_blank" rel="external">GenServer API</a>请求运行在其他节点上的服务器, 比如:</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GenServer.call(&#123;name, node&#125;, arg)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可以使用任务,任务可以在本地或远程节点上Spawn进程</p>
+</li>
+</ul>
 <h2 id="参考资料">参考资料</h2><ol>
-<li>Elixir Application Failover/Takeover<br><a href="https://erlangcentral.org/topic/elixir-application-failovertakeover/" target="_blank" rel="external">https://erlangcentral.org/topic/elixir-application-failovertakeover/</a></li>
+<li>Distributed tasks and configuration<br><a href="http://elixir-lang.org/getting_started/mix_otp/10.html" target="_blank" rel="external">http://elixir-lang.org/getting_started/mix_otp/10.html</a></li>
 </ol>
 
       
@@ -1857,6 +1853,10 @@ max_active__</span>|<span class="string">_</span>|<span class="string">_______</
   <ul class="entry">
     
       <li>
+        <a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a>
+      </li>
+    
+      <li>
         <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
       </li>
     
@@ -1890,10 +1890,6 @@ max_active__</span>|<span class="string">_</span>|<span class="string">_______</
     
       <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
-      </li>
-    
-      <li>
-        <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
       </li>
     
   </ul>

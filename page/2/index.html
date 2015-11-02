@@ -96,6 +96,55 @@
     <header>
       
         <!--<div class="icon"></div>-->
+        <time datetime="2015-03-11T05:34:42.000Z"><a href="/2015/03/11/thrift-ex/">2015-03-11</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/11/thrift-ex/">thrift_ex</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>如果用mix构建Erlang项目, 使用<code>mix thrift</code>从<code>.thrift</code>文件生成Erlang代码. 生成的代码保存在<code>src/gen-erl</code>目录中. 还可以在<code>lib/ex_gen</code>生成Elixir包装.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
         <time datetime="2015-02-26T10:13:36.000Z"><a href="/2015/02/26/ejabberd-joins-the-elixir-revolution/">2015-02-26</a></time>
       
       
@@ -1500,66 +1549,6 @@ otherwise.</span>
 
 
 
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-12-29T12:15:28.000Z"><a href="/2014/12/29/ejabberd-using-mix-to-compile-ejabberd-module/">2014-12-29</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/12/29/ejabberd-using-mix-to-compile-ejabberd-module/">使用Elixir Mix编译Ejabberd模块</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p>本文是基于Github上的一个项目的实践, 该项目包含了Ejabberd 14.07的头文件, 直接把开发好的模块放在<code>src</code>目录下,并执行:</p>
-<p>克隆项目:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># git clone https://github.com/scrogson/ejabberd_dev.git&#10;Cloning into &#39;ejabberd_dev&#39;...&#10;remote: Counting objects: 39, done.&#10;remote: Total 39 (delta 0), reused 0 (delta 0)&#10;Unpacking objects: 100% (39/39), done.&#10;Checking connectivity... done.</span><br></pre></td></tr></table></figure>
-<p>进入项目目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd ejabberd_dev</span><br></pre></td></tr></table></figure>
-<p>编译:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix do deps.get, compile</span><br></pre></td></tr></table></figure>
-<p>即可编译模块, 编译的Beam文件生成到<code>_build</code>目录中.</p>
-<h2 id="TODO:">TODO:</h2><ul>
-<li>开发一个Elixir Mix任务,把编译好的Beam文件复制到Ejabberd的部署目录</li>
-<li>开发一个Elixir Mix任务, 用于更新Ejabberd新版本的头文件到<code>ejabberd_dev</code>项目目录</li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
 
 <nav id="pagination">
   
@@ -1576,6 +1565,10 @@ otherwise.</span>
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a>
+      </li>
     
       <li>
         <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
@@ -1611,10 +1604,6 @@ otherwise.</span>
     
       <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
-      </li>
-    
-      <li>
-        <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
       </li>
     
   </ul>

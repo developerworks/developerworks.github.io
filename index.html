@@ -96,6 +96,84 @@
     <header>
       
         <!--<div class="icon"></div>-->
+        <time datetime="2015-11-01T18:10:29.000Z"><a href="/2015/11/02/elixir-failover-and-takeover/">2015-11-02</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <p>2015-11-02 更新</p>
+<p>Elixir 可以运行在主/从, 故障转移/接管模式下. 要使Elixir应用程序能够执行故障转移/接管, Elixir应用程序必须是一个OTP应用程序.</p>
+<p>下面来创建一个包含Supervisor的Elixir项目</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mix new distro --sup</span><br></pre></td></tr></table></figure>
+<p>修改<code>distro.ex</code>添加<code>logger</code>模块. 以记录当触发故障转移/接管操作时的日志记录.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Distro</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Application</span></span><br><span class="line">  require <span class="constant">Logger</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">start</span></span>(type, <span class="constant">_args)</span> <span class="keyword">do</span></span><br><span class="line">    import <span class="constant">Supervisor.Spec,</span> <span class="symbol">warn:</span> <span class="keyword">false</span></span><br><span class="line">    <span class="constant">Logger.</span>info(<span class="string">"Distro application in <span class="subst">#&#123;inspect type&#125;</span> mode"</span>)</span><br><span class="line">    children = [</span><br><span class="line">      worker(<span class="constant">Distro.Worker,</span> [])</span><br><span class="line">    ]</span><br><span class="line">    opts = [<span class="symbol">strategy:</span> <span class="symbol">:one_for_one</span>, <span class="symbol">name:</span> <span class="constant">Distro.Supervisor]</span></span><br><span class="line">    <span class="constant">Supervisor.</span>start_link(children, opts)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p><code>Distro.Worker</code>是一个<code>GenServer</code>: 它使用全局名称注册, 假设其运行在集群中的一个节点上, 全局注册让我们不用考虑其实际的运行位置, 只需要提供注册名称就可以访问.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule Distro.Worker do&#10;  use GenServer&#10;  require Logger&#10;  def start_link do&#10;    GenServer.start_link(__MODULE__, [], name: &#123;:global, __MODULE__&#125;)&#10;  end&#10;  def init([]) do&#10;    &#123;:ok, [], 1000&#125;&#10;  end&#10;  def handle_info(:timeout, state) do&#10;    Logger.debug &#34;timeout&#34;&#10;    &#123;:noreply, state, 1000&#125;&#10;  end&#10;end</span><br></pre></td></tr></table></figure>
+<p>编译</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mix compile</span><br></pre></td></tr></table></figure>
+<h2 id="应用程序分布">应用程序分布</h2><p>本节阐述了如何把一个应用程序分布到多个节点上</p>
+<p>假设应用程序运行在3个节点上, 名称分别为<code>abc</code>, <code>bcd</code>, <code>def</code>. 创建三个配置文件如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch config/abc.config&#10;touch config/bcd.config&#10;touch config/def.config</span><br></pre></td></tr></table></figure>
+<p>配置文件中有3个重要的键值对.</p>
+<p>abc.config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#10;  &#123;logger,[&#123;console,[&#123;format,&#60;&#60;&#34;$date $time $metadata[$level] $message\n&#34;&#62;&#62;&#125;]&#125;]&#125;,&#10;  &#123;kernel,&#10;    [&#123;distributed, [&#123;&#39;distro&#39;, 5000, [&#39;abc@192.168.8.104&#39;, &#123;&#39;bcd@192.168.8.104&#39;, &#39;def@192.168.8.104&#39;&#125;]&#125;]&#125;,&#10;     &#123;sync_nodes_mandatory, [&#39;bcd@192.168.8.104&#39;, &#39;def@192.168.8.104&#39;]&#125;,&#10;     &#123;sync_nodes_timeout, 30000&#125;&#10;]&#125;].</span><br></pre></td></tr></table></figure>
+<p>bcd.config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#10;  &#123;logger,[&#123;console,[&#123;format,&#60;&#60;&#34;$date $time $metadata[$level] $message\n&#34;&#62;&#62;&#125;]&#125;]&#125;,&#10;  &#123;kernel,&#10;    [&#123;distributed, [&#123;distro,5000, [&#39;abc@192.168.8.104&#39;, &#123;&#39;bcd@192.168.8.104&#39;, &#39;def@192.168.8.104&#39;&#125;]&#125;]&#125;,&#10;     &#123;sync_nodes_mandatory, [&#39;abc@192.168.8.104&#39;, &#39;def@192.168.8.104&#39;]&#125;,&#10;     &#123;sync_nodes_timeout, 30000&#125;&#10;]&#125;].</span><br></pre></td></tr></table></figure>
+<p>def.config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#10;  &#123;logger,[&#123;console,[&#123;format,&#60;&#60;&#34;$date $time $metadata[$level] $message\n&#34;&#62;&#62;&#125;]&#125;]&#125;,&#10;  &#123;kernel,&#10;    [&#123;distributed, [&#123;distro,5000, [&#39;abc@192.168.8.104&#39;, &#123;&#39;bcd@192.168.8.104&#39;, &#39;def@192.168.8.104&#39;&#125;]&#125;]&#125;,&#10;     &#123;sync_nodes_mandatory, [&#39;abc@192.168.8.104&#39;, &#39;bcd@192.168.8.104&#39;]&#125;,&#10;     &#123;sync_nodes_timeout, 30000&#125;&#10;]&#125;].</span><br></pre></td></tr></table></figure>
+<p>在不同的终端自动全部3个节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iex --name abc@192.168.8.104 -pa _build/dev/lib/distro/ebin/ --app distro --erl &#34;-config config/abc&#34;&#10;iex --name bcd@192.168.8.104 -pa _build/dev/lib/distro/ebin/ --app distro --erl &#34;-config config/bcd&#34;&#10;iex --name def@192.168.8.104 -pa _build/dev/lib/distro/ebin/ --app distro --erl &#34;-config config/def&#34;</span><br></pre></td></tr></table></figure>
+<h2 id="验证步骤">验证步骤</h2><ol>
+<li>终止(Ctrl+C两次)节点<code>abc@192.168.8.104</code>后,5秒内会在节点<code>bcd@192.168.8.104</code>上重启应用</li>
+<li>再次启动节点<code>abc@192.168.8.104</code>后,应用在<code>bcd@192.168.8.104</code>上停止, 应用被恢复后的<code>abc@192.168.8.104</code>节点接管(Takeover)</li>
+</ol>
+<h2 id="参考资料">参考资料</h2><ol>
+<li>Elixir Application Failover/Takeover <a href="https://erlangcentral.org/topic/elixir-application-failovertakeover/" target="_blank" rel="external">https://erlangcentral.org/topic/elixir-application-failovertakeover/</a></li>
+<li>源码仓库: <a href="https://github.com/developerworks/distro" target="_blank" rel="external">https://github.com/developerworks/distro</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
         <time datetime="2015-09-17T01:15:34.000Z"><a href="/2015/09/17/ejabberd-with-elixir-mix/">2015-09-17</a></time>
       
       
@@ -1378,55 +1456,6 @@
 
 
 
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2015-03-11T05:34:42.000Z"><a href="/2015/03/11/thrift-ex/">2015-03-11</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/03/11/thrift-ex/">thrift_ex</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p>如果用mix构建Erlang项目, 使用<code>mix thrift</code>从<code>.thrift</code>文件生成Erlang代码. 生成的代码保存在<code>src/gen-erl</code>目录中. 还可以在<code>lib/ex_gen</code>生成Elixir包装.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
 
 <nav id="pagination">
   
@@ -1441,6 +1470,10 @@
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a>
+      </li>
     
       <li>
         <a href="/2015/09/17/ejabberd-with-elixir-mix/">用Elixir Mix构建Ejabberd发行包</a>
@@ -1476,10 +1509,6 @@
     
       <li>
         <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
-      </li>
-    
-      <li>
-        <a href="/2015/05/07/xmpp-xep-0279-server-ip-check/">服务器IP检查</a>
       </li>
     
   </ul>
