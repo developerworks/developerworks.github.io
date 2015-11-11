@@ -96,6 +96,106 @@
     <header>
       
         <!--<div class="icon"></div>-->
+        <time datetime="2015-03-12T10:16:24.000Z"><a href="/2015/03/12/ejabberd-benchmark-with-tsung/">2015-03-12</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/12/ejabberd-benchmark-with-tsung/">使用Tsung对Ejabberd进行性能测试</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+
+
+        
+
+
+        <h2 id="测试环境">测试环境</h2><ul>
+<li><p>操作系统:</p>
+<p>  <code>Ubuntu Server 14.04</code></p>
+</li>
+<li><p>Erlang版本</p>
+<p>  <code>OTP 17.4</code></p>
+</li>
+<li><p>Ejabberd版本</p>
+<p>  <code>15.02</code></p>
+</li>
+</ul>
+<h2 id="依赖包">依赖包</h2><p>安装生成报告需要的<code>gnuplot</code>软件包和<code>Template.pm</code> Perl模块.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install -y gnuplot&#10;apt-get install -y templatetoolkit-perl</span><br></pre></td></tr></table></figure>
+<h2 id="命令行">命令行</h2><h2 id="编写配置文件">编写配置文件</h2><h2 id="生成报告">生成报告</h2><p><code>tsung</code> 会在你的Home目录<code>~/.tsung/log</code>中生成测试报告, 进入到报告目录执行 <code>/usr/lib/tsung/bin/tsung_stats.pl</code> 可在报告目录下生成HTML格式的统计信息, 可用浏览器打开查看.</p>
+<p>例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@scm:cd ~/.tsung/log/20150312-1407&#10;root@scm:/usr/lib/tsung/bin/tsung_stats.pl&#10;root@scm:~/.tsung/log/20150312-1746# ll&#10;drwxr-xr-x 2 root root     4096 Mar 12 20:28 data/&#10;-rw-r--r-- 1 root root    13720 Mar 12 20:32 gnuplot.log&#10;drwxr-xr-x 2 root root     4096 Mar 12 20:28 gnuplot_scripts/&#10;-rw-r--r-- 1 root root     7166 Mar 12 20:32 graph.html&#10;drwxr-xr-x 2 root root     4096 Mar 12 20:28 images/&#10;-rw-r--r-- 1 root root     1388 Mar 12 17:46 jabber_register.xml&#10;-rw-r--r-- 1 root root  1011724 Mar 12 17:51 match.log&#10;-rw-r--r-- 1 root root     8169 Mar 12 20:32 report.html&#10;-rw-r--r-- 1 root root 23789099 Mar 12 17:51 tsung_controller@scm.log&#10;-rw-r--r-- 1 root root    20601 Mar 12 17:51 tsung.log</span><br></pre></td></tr></table></figure>
+<h2 id="用多个虚拟IP增大并发量">用多个虚拟IP增大并发量</h2><p>设置临时虚拟IP(重启后消失)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth1:0 192.168.8.35 netmask 255.255.255.0 up&#10;ifconfig eth1:1 192.168.8.36 netmask 255.255.255.0 up&#10;ifconfig eth1:2 192.168.8.37 netmask 255.255.255.0 up</span><br></pre></td></tr></table></figure>
+<p><a href="http://tsung.erlang-projects.org/user_manual/conf-client-server.html#advanced-setup" target="_blank" rel="external">http://tsung.erlang-projects.org/user_manual/conf-client-server.html#advanced-setup</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">clients</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"louxor"</span> <span class="attribute">weight</span>=<span class="value">"1"</span> <span class="attribute">maxusers</span>=<span class="value">"800"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ip</span> <span class="attribute">value</span>=<span class="value">"10.9.195.12"</span>&gt;</span><span class="tag">&lt;/<span class="title">ip</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ip</span> <span class="attribute">value</span>=<span class="value">"10.9.195.13"</span>&gt;</span><span class="tag">&lt;/<span class="title">ip</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">client</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"memphis"</span> <span class="attribute">weight</span>=<span class="value">"3"</span> <span class="attribute">maxusers</span>=<span class="value">"600"</span> <span class="attribute">cpu</span>=<span class="value">"2"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">clients</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">servers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">server</span> <span class="attribute">host</span>=<span class="value">"10.9.195.1"</span> <span class="attribute">port</span>=<span class="value">"8080"</span> <span class="attribute">type</span>=<span class="value">"tcp"</span>&gt;</span><span class="tag">&lt;/<span class="title">server</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">servers</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>多个虚拟IP可以用于模拟多个机器. 这在负载均衡器使用客户端IP把流量分布到集群中的服务器上时特别有用. 在<code>tsung 1.1.1</code>中IP不再是强制要求了.</p>
+<p>在<code>1.4.0</code>中, 可以使用<code>&lt;ip scan=&quot;yes&quot; value=&quot;eth0&quot;/&gt;</code>扫描给定接口的所有IP别名(此例中为<code>eth0</code>)</p>
+<blockquote>
+<p>Even if an Erlang VM is now able to handle several CPUs (erlang SMP), benchmarks shows that it’s more efficient to use one VM per CPU (with SMP disabled) for tsung clients. Only the controller node is using SMP erlang. Therefore, <strong>cpu should be equal to the number of cores of your nodes</strong>. If you prefer to use erlang SMP, add the <code>-s</code> option when starting tsung (and don’t set <code>cpu</code> in the config file).</p>
+</blockquote>
+<p>默认, 负载均匀分地布在所有CPU上(默认每客户端一个CPU). 权重(weight)参数(整数)可用于分布客户端机器的负载比例.</p>
+<p>例如, 如果一个客户端具有权重为1,其他客户端有权重为2, 那么后者启动的用户数为前者的两倍(比例将为1/3和2/3), 在先前的例子中, 第二个客户端又2个CPU,权重为3, 每CPU的权重为1.5</p>
+<h2 id="分布式测试">分布式测试</h2><p><img src="/assets/ejabberd/distributed-test.jpg" alt="分布式测试"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;client host=&#34;t1&#34; cpu=&#34;8&#34; maxusers=&#34;100000&#34;&#62;&#60;/client&#62;&#10;&#60;client host=&#34;t2&#34; cpu=&#34;8&#34; maxusers=&#34;100000&#34;&#62;&#60;/client&#62;&#10;&#60;client host=&#34;t3&#34; cpu=&#34;8&#34; maxusers=&#34;100000&#34;&#62;&#60;/client&#62;</span><br></pre></td></tr></table></figure>
+<p><a href="http://my.oschina.net/jielucky/blog/168320" target="_blank" rel="external">http://my.oschina.net/jielucky/blog/168320</a></p>
+<h2 id="分布式测试的关键">分布式测试的关键</h2><ul>
+<li>相同的Erlang Cookie</li>
+<li>控制器主机(Master)能够无密码登陆到(Slave)机器上, Master/Slave的机器必须都要安装Tsung</li>
+<li>配置文件中的<code>&lt;client host=&quot;hostname&quot;&gt;</code>, 其中属性<code>host</code>必须是名称而不能是IP地址, 因此要么在<code>/etc/hosts</code>添加相应的解析条目, 要么直接使用DNS</li>
+</ul>
+<h2 id="关于后端使用MySQL数据库的情况">关于后端使用MySQL数据库的情况</h2><ul>
+<li>把<code>users</code>表调整为MEMORY引擎</li>
+<li>修改<code>s2c_shaper</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shaper:&#10;  normal: 10000&#10;  fast: 50000</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c2s_shaper:&#10;  admin: none&#10;  all: fast</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listen:&#10;  -&#10;    port: 5222&#10;    module: ejabberd_c2s&#10;    max_stanza_size: 65536&#10;    shaper: c2s_shaper&#10;    access: c2s&#10;    zlib: true</span><br></pre></td></tr></table></figure>
+<h1 id="参考资料">参考资料</h1><ol>
+<li><a href="http://tsung.erlang-projects.org/user_manual/reports.html" target="_blank" rel="external">http://tsung.erlang-projects.org/user_manual/reports.html</a></li>
+<li><a href="http://blog.chinaunix.net/uid-13189580-id-3049461.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-13189580-id-3049461.html</a></li>
+<li><a href="http://my.oschina.net/jielucky/blog/168320" target="_blank" rel="external">http://my.oschina.net/jielucky/blog/168320</a></li>
+<li><a href="http://stackoverflow.com/questions/23011544/simulating-online-user-in-ejabberd-with-tsung" target="_blank" rel="external">http://stackoverflow.com/questions/23011544/simulating-online-user-in-ejabberd-with-tsung</a></li>
+<li><a href="http://www.quora.com/Ejabberd-load-test-with-tsung" target="_blank" rel="external">http://www.quora.com/Ejabberd-load-test-with-tsung</a></li>
+<li><a href="http://vidorsolutions.blogspot.jp/2010/12/load-testing-ejabberd-xmpp-server-with.html" target="_blank" rel="external">http://vidorsolutions.blogspot.jp/2010/12/load-testing-ejabberd-xmpp-server-with.html</a></li>
+<li><a href="https://pdincau.wordpress.com/2010/08/01/testing-your-xmpp-external-component-using-tsung-and-ejabberd-part-2/" target="_blank" rel="external">https://pdincau.wordpress.com/2010/08/01/testing-your-xmpp-external-component-using-tsung-and-ejabberd-part-2/</a></li>
+<li><a href="http://cryolite.iteye.com/blog/378758" target="_blank" rel="external">http://cryolite.iteye.com/blog/378758</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
         <time datetime="2015-03-11T05:34:42.000Z"><a href="/2015/03/11/thrift-ex/">2015-03-11</a></time>
       
       
@@ -1459,96 +1559,6 @@ otherwise.</span>
 
 
 
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-12-31T19:04:01.000Z"><a href="/2015/01/01/elixir-how-to-parsing-xml/">2015-01-01</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/01/01/elixir-how-to-parsing-xml/">Elixir 解析XML的几个坑</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p>在Elixir 1.0.2中解析XML文档的时候,最开始是参考的<a href="http://elixirsips.com/episodes/028_parsing_xml.html" target="_blank" rel="external">这个视频</a>, 总之在Google的搜索结果中掉进了无数多个坑后,终于爬出来了.</p>
-<p>创建一个项目, 本文所述所有内容都是在文件<code>test/xml_parsing_test.exs</code>文件中完成, 并通过<code>mix test</code>执行测试用例:</p>
-<pre><code>root<span class="variable">@c87c9967219c</span><span class="symbol">:~</span><span class="comment"># mix new xml_parsing</span>
-* creating <span class="constant">README</span>.md
-* creating .gitignore
-* creating mix.exs
-* creating config
-* creating config/config.exs
-* creating <span class="class"><span class="keyword">lib</span></span>
-* creating <span class="class"><span class="keyword">lib</span>/<span class="title">xml_parsing</span>.<span class="title">ex</span></span>
-* creating test
-* creating test/test_helper.exs
-* creating test/xml_parsing_test.exs
-
-<span class="constant">Your</span> mix project was created successfully.
-<span class="constant">You</span> can use mix to compile it, test it, and <span class="symbol">more:</span>
-
-    cd xml_parsing
-    mix test
-
-<span class="constant">Run</span> <span class="string">`mix help`</span> <span class="keyword">for</span> more commands.
-</code></pre><p>把我拉出来的是下面这篇<a href="http://erlangcentral.org/wiki/index.php?title=Elixir_and_XML" target="_blank" rel="external">Wiki</a>, 视频中的代码有几个问题:</p>
-<ul>
-<li><code>defrecord</code>关键字废弃了,必须用<code>Record.defrecord</code></li>
-<li><p><code>Record.defrecord</code>不能定义在模块的外面了,必须定义在模块内部, 比如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule XmlParsingTest do&#10;    use ExUnit.Case&#10;    require Record&#10;    Record.defrecord :xmlElement, Record.extract(:xmlElement, from_lib: &#34;xmerl/include/xmerl.hrl&#34;)&#10;    Record.defrecord :xmlText, Record.extract(:xmlText, from_lib: &#34;xmerl/include/xmerl.hrl&#34;)&#10;    ...&#10;end</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>获取节点值的方式变了</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test &#34;Test parsing xml document OLD&#34; do&#10;    &#123;xml, _rest&#125;        = :xmerl_scan.string(:binary.bin_to_list(sample_xml))&#10;    [ title_element ]   = Enum.first(:xmerl_xpath.string(&#39;/blog/title&#39;, xml)).value&#10;    [ title_text ]      = title_element.content&#10;    title               = title_text.value&#10;    assert title == &#39;Using xmerl module to parse xml document in elixir&#39;&#10;end&#10;# &#23545;&#27604;&#19978;&#19979;&#20004;&#20010;&#27979;&#35797;&#26041;&#27861;&#30340;&#21306;&#21035;&#10;test &#34;Test parsing xml document NEW&#34; do&#10;    &#123;document, _&#125; = :xmerl_scan.string(String.to_char_list(sample_xml))&#10;    [element] = :xmerl_xpath.string(&#39;/blog/title/text()&#39;, document)&#10;    assert xmlText(element, :value)  == &#39;Using xmerl module to parse xml document in elixir&#39;&#10;end</span><br></pre></td></tr></table></figure>
-<p>对比上面的代码, 我们通过<code>Record.defrecord</code>定义记录, 该记录是从Erlang的xmerl库中提取的(调用<code>Record.extract</code>), 该记录将作为测试模块的一个函数,我们可以通过下面的方法验证:</p>
-<p>运行<code>iex</code>进入Elixir Shell, 并声明模块:</p>
-<p><img src="http://developerworks.github.io/assets/elixir/671C1BC4-418A-4B67-9A35-5B0DDCA3E293.png" alt="导入xmerl模块的记录为Elixir模块函数"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test &#34;Test parsing xml document&#34; do&#10;    # &#35299;&#26512;XML&#25991;&#26723;&#10;    &#123;document, _&#125; = :xmerl_scan.string(String.to_char_list(sample_xml))&#10;    # XPATH&#26597;&#35810;&#10;    [element] = :xmerl_xpath.string(&#39;/blog/title/text()&#39;, document)&#10;    # &#26029;&#35328;&#10;    assert xmlText(element, :value)  == &#39;Using xmerl module to parse xml document in elixir&#39;&#10;end</span><br></pre></td></tr></table></figure>
-<h2 id="完整的代码">完整的代码</h2><p><a href="https://gist.github.com/94ce9976fc52e04e572a" target="_blank" rel="external">https://gist.github.com/94ce9976fc52e04e572a</a></p>
-<h2 id="完整的项目代码">完整的项目代码</h2><p><a href="https://github.com/developerworks/xml_parsing" target="_blank" rel="external">https://github.com/developerworks/xml_parsing</a></p>
-<h2 id="参考资料">参考资料</h2><ol>
-<li>ELIXIR AND XML<br><a href="http://erlangcentral.org/wiki/index.php?title=Elixir_and_XML" target="_blank" rel="external">http://erlangcentral.org/wiki/index.php?title=Elixir_and_XML</a></li>
-<li>028: Parsing XML<br><a href="http://elixirsips.com/episodes/028_parsing_xml.html" target="_blank" rel="external">http://elixirsips.com/episodes/028_parsing_xml.html</a></li>
-<li>常用的XML文档解析模块<br><a href="https://github.com/h4cc/awesome-elixir#xml" target="_blank" rel="external">https://github.com/h4cc/awesome-elixir#xml</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
 
 <nav id="pagination">
   
@@ -1565,6 +1575,10 @@ otherwise.</span>
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/11/ejabberd-http-module/">开发一个Ejabberd HTTP模块</a>
+      </li>
     
       <li>
         <a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a>
@@ -1600,10 +1614,6 @@ otherwise.</span>
     
       <li>
         <a href="/2015/05/17/html5-battery-status/">HTML5获取电池状态</a>
-      </li>
-    
-      <li>
-        <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
       </li>
     
   </ul>

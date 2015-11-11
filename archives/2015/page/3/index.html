@@ -4,15 +4,13 @@
 <head>
   <meta charset="utf-8">
   
-  <title>开发一个Ejabberd HTTP模块 | 元气糯米团子的Coding Blog</title>
+  <title>第 3 页 | 归档：2015 | 元气糯米团子的Coding Blog</title>
   <meta name="author" content="zhiqiang he">
-  
-  <meta name="description" content="如何开发一个Ejabberd模块, 本文基于一个实例演示了如何开发一个Ejabberd模块, 以及模块的基本结构.">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="开发一个Ejabberd HTTP模块"/>
+  
   <meta property="og:site_name" content="元气糯米团子的Coding Blog"/>
 
   
@@ -79,103 +77,36 @@
 
 <div id="content" class="inner">
     <div id="main-col" class="alignleft">
-        <div id="wrapper"><article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
+        <div id="wrapper"><div class="archive">
     
-      <img src="">
+    <article class="post">
+        <div class="post-content">
+            <!--<div class="icon"></div>-->
+            <time datetime="2014-12-31T19:04:01.000Z" style="font-size: 12px;">2015-01-01</time>
+            
+            <span class="title" style="font-size: 20px;"><a href="/2015/01/01/elixir-how-to-parsing-xml/">Elixir 解析XML的几个坑</a></span>
+            
+        </div>
+    </article>
     
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
 </div>
+<nav id="pagination">
   
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-09-18T13:17:42.000Z"><a href="/2014/09/18/ejabberd-http-module/">2014-09-18</a></time>
-      
-      
+    <a href="/archives/2015/page/2/" class="alignleft prev">上一页</a>
   
-    <h1 class="title">开发一个Ejabberd HTTP模块</h1>
   
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p>如何开发一个Ejabberd模块, 本文基于一个实例演示了如何开发一个Ejabberd模块, 以及模块的基本结构.</p>
-<a id="more"></a>
-<h2 id="基本模块结构">基本模块结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% Module name (has to match with the filename)&#10;-module(mod_custom).&#10;%% Module author&#10;-author(&#39;Gregor Uhlenheuer&#39;).&#10;%% Module version&#10;-vsn(&#39;1.0&#39;).&#10;%% Debug flag&#10;-define(EJABBERD_DEBUG, true).&#10;%% Implement the OTP gen_mod behavior&#10;-behavior(gen_mod).&#10;%% Module exports&#10;-export([start/2, stop/1, process/2]).&#10;%%&#10;%% INCLUDES&#10;%%&#10;%% base ejabberd headers&#10;-include(&#34;ejabberd.hrl&#34;).&#10;%% ejabberd compatibility functions&#10;-include(&#34;jlib.hrl&#34;).&#10;%% ejabberd HTTP headers&#10;-include(&#34;web/ejabberd_http.hrl&#34;).&#10;%% initialization function&#10;start(_Host, _Opts) -&#62;&#10;    ok.&#10;%% function on module unload&#10;stop(_Host) -&#62;&#10;    ok.&#10;%% process any request to &#34;/sockets&#34;&#10;process([&#34;sockets&#34;], _Request) -&#62;&#10;    % FIXME: implementation goes here&#10;    &#34;Not implemented yet&#34;;&#10;%% process all remaining requests&#10;process(_Page, _Request) -&#62;&#10;    % FIXME: implementation goes here&#10;    &#34;Fallback result&#34;.</span><br></pre></td></tr></table></figure>
-<h2 id="编译模块">编译模块</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erlc -I ../ejabberd/src \&#10;     -I /lib64/ejabberd/include \&#10;     -pa ../ejabberd/src \&#10;     mod_custom.erl</span><br></pre></td></tr></table></figure>
-<p>模块的<code>.beam</code>文件需要放在ejabberd的<code>ebin</code>目录下</p>
-<h2 id="配置模块">配置模块</h2><ul>
-<li>在主配置文件中添加模块配置</li>
-</ul>
-<p>原先的主配置文件中配置为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;5280, ejabberd_http, [http_poll, web_admin]&#125;</span><br></pre></td></tr></table></figure></p>
-<p>修改后的为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% this will probably look like this&#10;&#123;5280, ejabberd_http, [http_poll, web_admin,&#10;        &#123;request_handlers, [&#10;            % your request handler will respond to anything like:&#10;            % http://example.com:5280/custom/&#10;            &#123;[&#34;custom&#34;], mod_custom&#125;&#10;        ]&#125;&#10;    ]&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="修订">修订</h2><ul>
-<li><p>2014-09-27</p>
-<ul>
-<li>模块编译<br>模块文件放到<code>$EJABBERD_SOURCE/src</code>目录下,然后<code>make &amp;&amp; make install &amp;&amp; ejabberdctl restart</code></li>
-<li>模块配置<br><code>YAML</code>格式的配置方式(<code>ejabberd 13.10</code>以后)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-&#10;    port: 5280&#10;    module: ejabberd_http&#10;    request_handlers:&#10;      &#34;custom&#34;: mod_custom %% http://example.com:5280/custom/</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>2015-03-17</p>
-<ul>
-<li>自定义模块可以放在在<code>$EJABBERD_SOURCE/src/modules</code>子目录下, <code>modules</code>子目录名称可以任意取名</li>
-<li>Ejabberd的配置文件在13.x后修改为使用YAML格式,上述HTTP模块的配置修改为如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-&#10;  port: 5280&#10;  module: ejabberd_http&#10;    request_handlers:&#10;      &#34;/custom&#34;: mod_custom&#10;  web_admin: true&#10;  http_poll: true</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="参考资料">参考资料</h2><ol>
-<li><a href="http://uhlenheuer.net/posts/2013-01-16-writing_an_ejabberd_module.html" target="_blank" rel="external">http://uhlenheuer.net/posts/2013-01-16-writing_an_ejabberd_module.html</a></li>
-<li><a href="http://sacharya.com/writing-ejabberd-modules/" target="_blank" rel="external">http://sacharya.com/writing-ejabberd-modules/</a></li>
-<li><a href="http://jasonrowe.com/2011/12/30/ejabberd-offline-messages" target="_blank" rel="external">http://jasonrowe.com/2011/12/30/ejabberd-offline-messages</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-  
-  <div class="categories">
-    <a href="/categories/Ejabberd/">Ejabberd</a>
-  </div>
-
-        
-  
-  <div class="tags">
-    <a href="/tags/XMPP/">XMPP</a>, <a href="/tags/ejabberd/">ejabberd</a>
-  </div>
-
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-</div>
+  <div class="clearfix"></div>
+</nav></div>
     </div>
     <aside id="sidebar" class="alignright">
   
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/11/ejabberd-http-module/">开发一个Ejabberd HTTP模块</a>
+      </li>
     
       <li>
         <a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a>
@@ -211,10 +142,6 @@
     
       <li>
         <a href="/2015/05/17/html5-battery-status/">HTML5获取电池状态</a>
-      </li>
-    
-      <li>
-        <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
       </li>
     
   </ul>

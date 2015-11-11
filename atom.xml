@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Tansform information as knowledges, extract and purify as thoughts]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://developerworks.github.io/"/>
-  <updated>2015-11-02T12:11:44.000Z</updated>
+  <updated>2015-11-11T05:55:24.000Z</updated>
   <id>http://developerworks.github.io/</id>
   
   <author>
@@ -15,11 +15,81 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[开发一个Ejabberd HTTP模块]]></title>
+    <link href="http://developerworks.github.io/2015/11/11/ejabberd-http-module/"/>
+    <id>http://developerworks.github.io/2015/11/11/ejabberd-http-module/</id>
+    <published>2015-11-11T05:44:58.000Z</published>
+    <updated>2015-11-11T05:55:24.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="概述">概述</h2><p>如何开发一个Ejabberd模块, 本文基于一个实例演示了如何开发一个Ejabberd模块, 以及模块的基本结构.</p>
+<p>HTTP模块的核心函数是<code>process(Paths,Requst)</code>处理函数, 接受一个路径列表, 和一个请求作为参数. 返回值为一个三元组<code>{ResponseCode, ResponseHeaders, ResponseBody}</code>, 分别表示响应码, 响应头和响应体. 其中:</p>
+<ol>
+<li><code>ResponseCode</code>为一个整数值, 例如<code>200</code></li>
+<li><code>ResponseHeaders</code>为一个二元组列表, 例如<code>[{&lt;&lt;&quot;Content-Type&quot;&gt;&gt;, &lt;&lt;&quot;text/html; charset=utf-8&quot;&gt;&gt;}]</code></li>
+<li><code>ResponseBody</code>为一个类似<code>&lt;&lt;&quot;Content&quot;&gt;&gt;</code>二进制字符串</li>
+</ol>
+<p>具体细节可参考<code>ejabberd_http.erl</code>模块的<code>make_xhtml_output/4</code>函数.</p>
+<a id="more"></a>
+<h2 id="基本模块结构">基本模块结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% Module name (has to match with the filename)&#10;-module(mod_custom).&#10;%% Module author&#10;-author(&#39;Gregor Uhlenheuer&#39;).&#10;%% Module version&#10;-vsn(&#39;1.0&#39;).&#10;%% Debug flag&#10;-define(EJABBERD_DEBUG, true).&#10;%% Implement the OTP gen_mod behavior&#10;-behavior(gen_mod).&#10;%% Module exports&#10;-export([start/2, stop/1, process/2]).&#10;%%&#10;%% INCLUDES&#10;%%&#10;%% base ejabberd headers&#10;-include(&#34;ejabberd.hrl&#34;).&#10;%% ejabberd compatibility functions&#10;-include(&#34;jlib.hrl&#34;).&#10;%% ejabberd HTTP headers&#10;-include(&#34;web/ejabberd_http.hrl&#34;).&#10;%% initialization function&#10;start(_Host, _Opts) -&#62;&#10;    ok.&#10;%% function on module unload&#10;stop(_Host) -&#62;&#10;    ok.&#10;%% process any request to &#34;/sockets&#34;&#10;process([&#34;sockets&#34;], _Request) -&#62;&#10;    % FIXME: implementation goes here&#10;    &#34;Not implemented yet&#34;;&#10;%% process all remaining requests&#10;process(_Page, _Request) -&#62;&#10;    % FIXME: implementation goes here&#10;    &#34;Fallback result&#34;.</span><br></pre></td></tr></table></figure>
+<h2 id="编译模块">编译模块</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erlc -I ../ejabberd/src \&#10;     -I /lib64/ejabberd/include \&#10;     -pa ../ejabberd/src \&#10;     mod_custom.erl</span><br></pre></td></tr></table></figure>
+<p>模块的<code>.beam</code>文件需要放在ejabberd的<code>ebin</code>目录下</p>
+<h2 id="配置模块">配置模块</h2><ul>
+<li>在主配置文件中添加模块配置</li>
+</ul>
+<p>原先的主配置文件中配置为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;5280, ejabberd_http, [http_poll, web_admin]&#125;</span><br></pre></td></tr></table></figure></p>
+<p>修改后的为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% this will probably look like this&#10;&#123;5280, ejabberd_http, [http_poll, web_admin,&#10;        &#123;request_handlers, [&#10;            % your request handler will respond to anything like:&#10;            % http://example.com:5280/custom/&#10;            &#123;[&#34;custom&#34;], mod_custom&#125;&#10;        ]&#125;&#10;    ]&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="修订">修订</h2><ul>
+<li><p>2014-09-27</p>
+<ul>
+<li>模块编译<br>模块文件放到<code>$EJABBERD_SOURCE/src</code>目录下,然后<code>make &amp;&amp; make install &amp;&amp; ejabberdctl restart</code></li>
+<li>模块配置<br><code>YAML</code>格式的配置方式(<code>ejabberd 13.10</code>以后)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-&#10;    port: 5280&#10;    module: ejabberd_http&#10;    request_handlers:&#10;      &#34;custom&#34;: mod_custom %% http://example.com:5280/custom/</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>2015-03-17</p>
+<ul>
+<li>自定义模块可以放在在<code>$EJABBERD_SOURCE/src/modules</code>子目录下, <code>modules</code>子目录名称可以任意取名</li>
+<li>Ejabberd的配置文件在13.x后修改为使用YAML格式,上述HTTP模块的配置修改为如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-&#10;  port: 5280&#10;  module: ejabberd_http&#10;    request_handlers:&#10;      &#34;/custom&#34;: mod_custom&#10;  web_admin: true&#10;  http_poll: true</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>2015-11-11</p>
+<ul>
+<li>增加概述部分,说明HTTP模块的<code>process/4</code>函数接受的参数和返回值.</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="http://uhlenheuer.net/posts/2013-01-16-writing_an_ejabberd_module.html" target="_blank" rel="external">http://uhlenheuer.net/posts/2013-01-16-writing_an_ejabberd_module.html</a></li>
+<li><a href="http://sacharya.com/writing-ejabberd-modules/" target="_blank" rel="external">http://sacharya.com/writing-ejabberd-modules/</a></li>
+<li><a href="http://jasonrowe.com/2011/12/30/ejabberd-offline-messages" target="_blank" rel="external">http://jasonrowe.com/2011/12/30/ejabberd-offline-messages</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="概述">概述</h2><p>如何开发一个Ejabberd模块, 本文基于一个实例演示了如何开发一个Ejabberd模块, 以及模块的基本结构.</p>
+<p>HTTP模块的核心函数是<code>process(Paths,Requst)</code>处理函数, 接受一个路径列表, 和一个请求作为参数. 返回值为一个三元组<code>{ResponseCode, ResponseHeaders, ResponseBody}</code>, 分别表示响应码, 响应头和响应体. 其中:</p>
+<ol>
+<li><code>ResponseCode</code>为一个整数值, 例如<code>200</code></li>
+<li><code>ResponseHeaders</code>为一个二元组列表, 例如<code>[{&lt;&lt;&quot;Content-Type&quot;&gt;&gt;, &lt;&lt;&quot;text/html; charset=utf-8&quot;&gt;&gt;}]</code></li>
+<li><code>ResponseBody</code>为一个类似<code>&lt;&lt;&quot;Content&quot;&gt;&gt;</code>二进制字符串</li>
+</ol>
+<p>具体细节可参考<code>ejabberd_http.erl</code>模块的<code>make_xhtml_output/4</code>函数.</p>]]>
+    
+    </summary>
+    
+      <category term="XMPP" scheme="http://developerworks.github.io/tags/XMPP/"/>
+    
+      <category term="ejabberd" scheme="http://developerworks.github.io/tags/ejabberd/"/>
+    
+      <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[故障转移和接管]]></title>
     <link href="http://developerworks.github.io/2015/11/02/elixir-failover-and-takeover/"/>
     <id>http://developerworks.github.io/2015/11/02/elixir-failover-and-takeover/</id>
     <published>2015-11-01T18:10:29.000Z</published>
-    <updated>2015-11-02T12:11:44.000Z</updated>
+    <updated>2015-11-02T12:13:43.000Z</updated>
     <content type="html"><![CDATA[<p>2015-11-02 更新</p>
 <p>Elixir 可以运行在主/从, 故障转移/接管模式下. 要使Elixir应用程序能够执行故障转移/接管, Elixir应用程序必须是一个OTP应用程序.</p>
 <p>下面来创建一个包含Supervisor的Elixir项目</p>
@@ -27,7 +97,7 @@
 <p>修改<code>distro.ex</code>添加<code>logger</code>模块. 以记录当触发故障转移/接管操作时的日志记录.</p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Distro</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">Application</span></span><br><span class="line">  require <span class="constant">Logger</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">start</span></span>(type, <span class="constant">_args)</span> <span class="keyword">do</span></span><br><span class="line">    import <span class="constant">Supervisor.Spec,</span> <span class="symbol">warn:</span> <span class="keyword">false</span></span><br><span class="line">    <span class="constant">Logger.</span>info(<span class="string">"Distro application in <span class="subst">#&#123;inspect type&#125;</span> mode"</span>)</span><br><span class="line">    children = [</span><br><span class="line">      worker(<span class="constant">Distro.Worker,</span> [])</span><br><span class="line">    ]</span><br><span class="line">    opts = [<span class="symbol">strategy:</span> <span class="symbol">:one_for_one</span>, <span class="symbol">name:</span> <span class="constant">Distro.Supervisor]</span></span><br><span class="line">    <span class="constant">Supervisor.</span>start_link(children, opts)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p><code>Distro.Worker</code>是一个<code>GenServer</code>: 它使用全局名称注册, 假设其运行在集群中的一个节点上, 全局注册让我们不用考虑其实际的运行位置, 只需要提供注册名称就可以访问.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defmodule Distro.Worker do&#10;  use GenServer&#10;  require Logger&#10;  def start_link do&#10;    GenServer.start_link(__MODULE__, [], name: &#123;:global, __MODULE__&#125;)&#10;  end&#10;  def init([]) do&#10;    &#123;:ok, [], 1000&#125;&#10;  end&#10;  def handle_info(:timeout, state) do&#10;    Logger.debug &#34;timeout&#34;&#10;    &#123;:noreply, state, 1000&#125;&#10;  end&#10;end</span><br></pre></td></tr></table></figure>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Distro</span></span>.<span class="constant">Worker </span><span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> <span class="constant">GenServer</span></span><br><span class="line">  require <span class="constant">Logger</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">start_link</span></span> <span class="keyword">do</span></span><br><span class="line">    <span class="constant">GenServer.</span>start_link(<span class="constant">__MODULE__,</span> [], <span class="symbol">name:</span> &#123;<span class="symbol">:global</span>, <span class="constant">__MODULE__&#125;</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">init</span></span>([]) <span class="keyword">do</span></span><br><span class="line">    &#123;<span class="symbol">:ok</span>, [], <span class="number">1000</span>&#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handle_info</span></span>(<span class="symbol">:timeout</span>, state) <span class="keyword">do</span></span><br><span class="line">    <span class="constant">Logger.</span>debug <span class="string">"timeout"</span></span><br><span class="line">    &#123;<span class="symbol">:noreply</span>, state, <span class="number">1000</span>&#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p>编译</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mix compile</span><br></pre></td></tr></table></figure>
 <h2 id="应用程序分布">应用程序分布</h2><p>本节阐述了如何把一个应用程序分布到多个节点上</p>
@@ -734,80 +804,6 @@
     </summary>
     
       <category term="Performance" scheme="http://developerworks.github.io/tags/Performance/"/>
-    
-      <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[使用Tsung对Ejabberd进行性能测试]]></title>
-    <link href="http://developerworks.github.io/2015/03/12/ejabberd-benchmark-with-tsung/"/>
-    <id>http://developerworks.github.io/2015/03/12/ejabberd-benchmark-with-tsung/</id>
-    <published>2015-03-12T10:16:24.000Z</published>
-    <updated>2015-03-20T17:14:38.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="测试环境">测试环境</h2><ul>
-<li><p>操作系统:</p>
-<p>  <code>Ubuntu Server 14.04</code></p>
-</li>
-<li><p>Erlang版本</p>
-<p>  <code>OTP 17.4</code></p>
-</li>
-<li><p>Ejabberd版本</p>
-<p>  <code>15.02</code></p>
-</li>
-</ul>
-<h2 id="依赖包">依赖包</h2><p>安装生成报告需要的<code>gnuplot</code>软件包和<code>Template.pm</code> Perl模块.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install -y gnuplot&#10;apt-get install -y templatetoolkit-perl</span><br></pre></td></tr></table></figure>
-<h2 id="命令行">命令行</h2><h2 id="编写配置文件">编写配置文件</h2><h2 id="生成报告">生成报告</h2><p><code>tsung</code> 会在你的Home目录<code>~/.tsung/log</code>中生成测试报告, 进入到报告目录执行 <code>/usr/lib/tsung/bin/tsung_stats.pl</code> 可在报告目录下生成HTML格式的统计信息, 可用浏览器打开查看.</p>
-<p>例如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@scm:cd ~/.tsung/log/20150312-1407&#10;root@scm:/usr/lib/tsung/bin/tsung_stats.pl&#10;root@scm:~/.tsung/log/20150312-1746# ll&#10;drwxr-xr-x 2 root root     4096 Mar 12 20:28 data/&#10;-rw-r--r-- 1 root root    13720 Mar 12 20:32 gnuplot.log&#10;drwxr-xr-x 2 root root     4096 Mar 12 20:28 gnuplot_scripts/&#10;-rw-r--r-- 1 root root     7166 Mar 12 20:32 graph.html&#10;drwxr-xr-x 2 root root     4096 Mar 12 20:28 images/&#10;-rw-r--r-- 1 root root     1388 Mar 12 17:46 jabber_register.xml&#10;-rw-r--r-- 1 root root  1011724 Mar 12 17:51 match.log&#10;-rw-r--r-- 1 root root     8169 Mar 12 20:32 report.html&#10;-rw-r--r-- 1 root root 23789099 Mar 12 17:51 tsung_controller@scm.log&#10;-rw-r--r-- 1 root root    20601 Mar 12 17:51 tsung.log</span><br></pre></td></tr></table></figure>
-<h2 id="用多个虚拟IP增大并发量">用多个虚拟IP增大并发量</h2><p>设置临时虚拟IP(重启后消失)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig eth1:0 192.168.8.35 netmask 255.255.255.0 up&#10;ifconfig eth1:1 192.168.8.36 netmask 255.255.255.0 up&#10;ifconfig eth1:2 192.168.8.37 netmask 255.255.255.0 up</span><br></pre></td></tr></table></figure>
-<p><a href="http://tsung.erlang-projects.org/user_manual/conf-client-server.html#advanced-setup" target="_blank" rel="external">http://tsung.erlang-projects.org/user_manual/conf-client-server.html#advanced-setup</a></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">clients</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"louxor"</span> <span class="attribute">weight</span>=<span class="value">"1"</span> <span class="attribute">maxusers</span>=<span class="value">"800"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ip</span> <span class="attribute">value</span>=<span class="value">"10.9.195.12"</span>&gt;</span><span class="tag">&lt;/<span class="title">ip</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">ip</span> <span class="attribute">value</span>=<span class="value">"10.9.195.13"</span>&gt;</span><span class="tag">&lt;/<span class="title">ip</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">client</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">client</span> <span class="attribute">host</span>=<span class="value">"memphis"</span> <span class="attribute">weight</span>=<span class="value">"3"</span> <span class="attribute">maxusers</span>=<span class="value">"600"</span> <span class="attribute">cpu</span>=<span class="value">"2"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">clients</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">servers</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">server</span> <span class="attribute">host</span>=<span class="value">"10.9.195.1"</span> <span class="attribute">port</span>=<span class="value">"8080"</span> <span class="attribute">type</span>=<span class="value">"tcp"</span>&gt;</span><span class="tag">&lt;/<span class="title">server</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">servers</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>多个虚拟IP可以用于模拟多个机器. 这在负载均衡器使用客户端IP把流量分布到集群中的服务器上时特别有用. 在<code>tsung 1.1.1</code>中IP不再是强制要求了.</p>
-<p>在<code>1.4.0</code>中, 可以使用<code>&lt;ip scan=&quot;yes&quot; value=&quot;eth0&quot;/&gt;</code>扫描给定接口的所有IP别名(此例中为<code>eth0</code>)</p>
-<blockquote>
-<p>Even if an Erlang VM is now able to handle several CPUs (erlang SMP), benchmarks shows that it’s more efficient to use one VM per CPU (with SMP disabled) for tsung clients. Only the controller node is using SMP erlang. Therefore, <strong>cpu should be equal to the number of cores of your nodes</strong>. If you prefer to use erlang SMP, add the <code>-s</code> option when starting tsung (and don’t set <code>cpu</code> in the config file).</p>
-</blockquote>
-<p>默认, 负载均匀分地布在所有CPU上(默认每客户端一个CPU). 权重(weight)参数(整数)可用于分布客户端机器的负载比例.</p>
-<p>例如, 如果一个客户端具有权重为1,其他客户端有权重为2, 那么后者启动的用户数为前者的两倍(比例将为1/3和2/3), 在先前的例子中, 第二个客户端又2个CPU,权重为3, 每CPU的权重为1.5</p>
-<h2 id="分布式测试">分布式测试</h2><p><img src="/assets/ejabberd/distributed-test.jpg" alt="分布式测试"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;client host=&#34;t1&#34; cpu=&#34;8&#34; maxusers=&#34;100000&#34;&#62;&#60;/client&#62;&#10;&#60;client host=&#34;t2&#34; cpu=&#34;8&#34; maxusers=&#34;100000&#34;&#62;&#60;/client&#62;&#10;&#60;client host=&#34;t3&#34; cpu=&#34;8&#34; maxusers=&#34;100000&#34;&#62;&#60;/client&#62;</span><br></pre></td></tr></table></figure>
-<p><a href="http://my.oschina.net/jielucky/blog/168320" target="_blank" rel="external">http://my.oschina.net/jielucky/blog/168320</a></p>
-<h2 id="分布式测试的关键">分布式测试的关键</h2><ul>
-<li>相同的Erlang Cookie</li>
-<li>控制器主机(Master)能够无密码登陆到(Slave)机器上, Master/Slave的机器必须都要安装Tsung</li>
-<li>配置文件中的<code>&lt;client host=&quot;hostname&quot;&gt;</code>, 其中属性<code>host</code>必须是名称而不能是IP地址, 因此要么在<code>/etc/hosts</code>添加相应的解析条目, 要么直接使用DNS</li>
-</ul>
-<h2 id="关于后端使用MySQL数据库的情况">关于后端使用MySQL数据库的情况</h2><ul>
-<li>把<code>users</code>表调整为MEMORY引擎</li>
-<li>修改<code>s2c_shaper</code></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shaper:&#10;  normal: 10000&#10;  fast: 50000</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c2s_shaper:&#10;  admin: none&#10;  all: fast</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listen:&#10;  -&#10;    port: 5222&#10;    module: ejabberd_c2s&#10;    max_stanza_size: 65536&#10;    shaper: c2s_shaper&#10;    access: c2s&#10;    zlib: true</span><br></pre></td></tr></table></figure>
-<h1 id="参考资料">参考资料</h1><ol>
-<li><a href="http://tsung.erlang-projects.org/user_manual/reports.html" target="_blank" rel="external">http://tsung.erlang-projects.org/user_manual/reports.html</a></li>
-<li><a href="http://blog.chinaunix.net/uid-13189580-id-3049461.html" target="_blank" rel="external">http://blog.chinaunix.net/uid-13189580-id-3049461.html</a></li>
-<li><a href="http://my.oschina.net/jielucky/blog/168320" target="_blank" rel="external">http://my.oschina.net/jielucky/blog/168320</a></li>
-<li><a href="http://stackoverflow.com/questions/23011544/simulating-online-user-in-ejabberd-with-tsung" target="_blank" rel="external">http://stackoverflow.com/questions/23011544/simulating-online-user-in-ejabberd-with-tsung</a></li>
-<li><a href="http://www.quora.com/Ejabberd-load-test-with-tsung" target="_blank" rel="external">http://www.quora.com/Ejabberd-load-test-with-tsung</a></li>
-<li><a href="http://vidorsolutions.blogspot.jp/2010/12/load-testing-ejabberd-xmpp-server-with.html" target="_blank" rel="external">http://vidorsolutions.blogspot.jp/2010/12/load-testing-ejabberd-xmpp-server-with.html</a></li>
-<li><a href="https://pdincau.wordpress.com/2010/08/01/testing-your-xmpp-external-component-using-tsung-and-ejabberd-part-2/" target="_blank" rel="external">https://pdincau.wordpress.com/2010/08/01/testing-your-xmpp-external-component-using-tsung-and-ejabberd-part-2/</a></li>
-<li><a href="http://cryolite.iteye.com/blog/378758" target="_blank" rel="external">http://cryolite.iteye.com/blog/378758</a></li>
-</ol>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="测试环境">测试环境</h2><ul>
-<li><p>操作系统:</p>
-<p>  <code>Ubuntu Server 14.04</code></p>
-</li>
-<li><p>Erlang版本</p>
-<p>  <code>OTP 17.4</code><]]>
-    </summary>
-    
-      <category term="Tsung" scheme="http://developerworks.github.io/tags/Tsung/"/>
     
       <category term="Ejabberd" scheme="http://developerworks.github.io/categories/Ejabberd/"/>
     

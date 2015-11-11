@@ -96,6 +96,99 @@
     <header>
       
         <!--<div class="icon"></div>-->
+        <time datetime="2014-11-02T06:59:55.000Z"><a href="/2014/11/02/elixir-create-command-line-utility-with-elixir-and-mix/">2014-11-02</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/02/elixir-create-command-line-utility-with-elixir-and-mix/">使用Mix创建命令行工具</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="注意">注意</h2><p>网上的很多文档中的说明都使用了<code>mix escriptize</code>命令用于生成命令行工具, 在最新的Elixir版本中被改为<code>mix escript.build</code>, 请注意!</p>
+<h2 id="用Mix创建一个项目骨架">用Mix创建一个项目骨架</h2><p><code>mix</code>是一个Elixir自身支持的项目管理工具, 支持的功能有:</p>
+<ul>
+<li>创建基本项目目录结构</li>
+<li>管理依赖</li>
+<li>编译</li>
+<li>发布</li>
+</ul>
+<p>下面我们使用mix来创建一个命令行工具的项目目录</p>
+<pre><code>mix <span class="keyword">new</span> commandlinetools
+<span class="keyword">cd</span> commandlinetools
+</code></pre><p>项目创建好以后, 编辑项目目录下的<code>mix.exs</code>项目描述文件, 在<code>project</code>函数内添加<code>escript</code>配置,并添加<code>escript</code>函数,如下:</p>
+<pre><code><span class="function"><span class="keyword">def</span> <span class="title">project</span></span> <span class="keyword">do</span>
+  [<span class="symbol">app:</span> <span class="symbol">:commandlinetools</span>,
+   <span class="symbol">version:</span> <span class="string">"0.0.1"</span>,
+   <span class="symbol">elixir:</span> <span class="string">"~&gt; 1.0"</span>,
+   <span class="symbol">deps:</span> deps,
+   <span class="symbol">escript:</span> escript
+   ]
+<span class="keyword">end</span>
+<span class="function"><span class="keyword">def</span> <span class="title">escript</span></span> <span class="keyword">do</span>
+  [<span class="symbol">main_module:</span> <span class="constant">Commandlinetools]</span>
+<span class="keyword">end</span>
+</code></pre><p><code>main_module</code> 选项指定了命令行工具的入口模块, 该模块必须实现一个<code>main/1</code>函数, 打开<code>lib/commandlinetools.ex</code>, 实现<code>main/1</code>函数</p>
+<pre><code><span class="class"><span class="keyword">defmodule</span> <span class="title">Commandlinetools</span></span> <span class="keyword">do</span>
+    <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args) <span class="keyword">do</span>
+        <span class="constant">IO.</span>puts(<span class="string">"命令行工具main函数实现"</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</code></pre><p>编译,生成可执行程序</p>
+<pre><code>root<span class="variable">@0b85dcd174f2</span><span class="symbol">:~/ejabberd/elixir/commandlinetools</span><span class="comment"># mix escript.build</span>
+<span class="class"><span class="keyword">lib</span>/<span class="title">commandlinetools</span>.<span class="title">ex</span>:2: <span class="title">warning</span>: <span class="title">variable</span> <span class="title">args</span> <span class="title">is</span> <span class="title">unused</span></span>
+<span class="constant">Compiled</span> <span class="class"><span class="keyword">lib</span>/<span class="title">commandlinetools</span>.<span class="title">ex</span></span>
+<span class="constant">Generated</span> commandlinetools.app
+<span class="constant">Consolidated</span> <span class="constant">List</span>.<span class="constant">Chars</span>
+<span class="constant">Consolidated</span> <span class="constant">Range</span>.<span class="constant">Iterator</span>
+<span class="constant">Consolidated</span> <span class="constant">String</span>.<span class="constant">Chars</span>
+<span class="constant">Consolidated</span> <span class="constant">Enumerable</span>
+<span class="constant">Consolidated</span> <span class="constant">Access</span>
+<span class="constant">Consolidated</span> <span class="constant">Inspect</span>
+<span class="constant">Consolidated</span> <span class="constant">Collectable</span>
+<span class="constant">Consolidated</span> protocols written to _build/dev/consolidated
+<span class="constant">Generated</span> escript commandlinetools <span class="keyword">with</span> <span class="constant">MIX_ENV</span>=dev
+</code></pre><p>运行</p>
+<pre><code>root<span class="variable">@0b85dcd174f2</span><span class="symbol">:~/ejabberd/elixir/commandlinetools</span><span class="comment"># ./commandlinetools</span>
+命令行工具main函数实现
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/11/02/elixir-create-command-line-utility-with-elixir-and-mix/#more" class="more-link">阅读全文</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  <article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <!--<div class="icon"></div>-->
         <time datetime="2014-11-01T15:28:15.000Z"><a href="/2014/11/01/elixir-deps/">2014-11-01</a></time>
       
       
@@ -1540,77 +1633,6 @@ XMPP Client
 
 
 
-  <article class="post">
-  
-    <div class="gallery">
-  <div class="photoset">
-    
-      <img src="">
-    
-  </div>
-  <div class="control">
-    <div class="prev"></div>
-    <div class="next"></div>
-  </div>
-</div>
-  
-  <div class="post-content">
-    <header>
-      
-        <!--<div class="icon"></div>-->
-        <time datetime="2014-10-04T10:25:55.000Z"><a href="/2014/10/04/erlang-universal-binary-format/">2014-10-04</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/04/erlang-universal-binary-format/">Erlang通用二进制格式</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-
-
-        
-
-
-        <p><code>UBF</code>是一个让Erlang和外部世界交互的一个框架. 文档和相应的开源库基于<code>Joe Armstrong</code>最初的<code>UBF</code>站点和代码,增加了MIT许可文件,增加了大量的增强和改进.</p>
-<p><code>UBF</code>是一个跨网络转换和描述复杂数据结构的语言. 它包括三个部分:</p>
-<ul>
-<li>UBF(a) 是一个<code>语言中性的</code>数据描述格式, 粗略地等同于具有良好格式的XML.</li>
-<li>UBF(b) 是一个描述性的编程语言, 它用于描述<code>UBF(a)</code>中的类型, 以及客户端和服务器之间的协议.</li>
-<li>UBF(c) 是一个在UBF客户端和UBF服务器之间使用的低级协议(meta-level).</li>
-</ul>
-<p><code>UBF</code>设计用于生产级别的部署和要求<code>24x7x365</code>可靠性的电信级系统.</p>
-<h2 id="什么是语言中性?">什么是语言中性?</h2><p>这是相对于<code>语言独立的</code>二进制格式而言, 它的实现是与特定的语言相关的, 支持的格式定义语言如下:</p>
-<ul>
-<li>thrift</li>
-<li>redis</li>
-<li>jsonrpc</li>
-<li>eep8</li>
-<li>bertrpc</li>
-<li>abnf</li>
-</ul>
-<p>可以在<a href="https://github.com/ubf/ubf" target="_blank" rel="external">项目首页</a>看到多种格式的实现.</p>
-<h2 id="参考资料">参考资料</h2><ol>
-<li>Erlang Universal Binary Format? Anyone using it?<br><a href="http://stackoverflow.com/questions/4731449/erlang-universal-binary-format-anyone-using-it" target="_blank" rel="external">http://stackoverflow.com/questions/4731449/erlang-universal-binary-format-anyone-using-it</a></li>
-<li>项目地址<br><a href="https://github.com/ubf/ubf" target="_blank" rel="external">https://github.com/ubf/ubf</a></li>
-<li>UBF用户指南<br><a href="http://ubf.github.io/ubf/ubf-user-guide.en.html" target="_blank" rel="external">http://ubf.github.io/ubf/ubf-user-guide.en.html</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
 
 <nav id="pagination">
   
@@ -1627,6 +1649,10 @@ XMPP Client
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2015/11/11/ejabberd-http-module/">开发一个Ejabberd HTTP模块</a>
+      </li>
     
       <li>
         <a href="/2015/11/02/elixir-failover-and-takeover/">故障转移和接管</a>
@@ -1662,10 +1688,6 @@ XMPP Client
     
       <li>
         <a href="/2015/05/17/html5-battery-status/">HTML5获取电池状态</a>
-      </li>
-    
-      <li>
-        <a href="/2015/05/10/ejabberd-mam-module-how-to-use/">如何使用Ejabberd消息归档模块</a>
       </li>
     
   </ul>

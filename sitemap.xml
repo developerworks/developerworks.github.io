@@ -2,8 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://developerworks.github.io/2015/11/11/ejabberd-http-module/</loc>
+    <lastmod>2015-11-11T05:55:24.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2015/11/02/elixir-failover-and-takeover/</loc>
-    <lastmod>2015-11-02T12:11:44.000Z</lastmod>
+    <lastmod>2015-11-02T12:13:43.000Z</lastmod>
   </url>
   
   <url>
@@ -112,11 +117,6 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/18/ejabberd-http-module/</loc>
-    <lastmod>2015-03-17T14:43:42.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://developerworks.github.io/2014/09/18/ejabberd-modules-presence-storms/</loc>
     <lastmod>2015-03-17T14:27:35.000Z</lastmod>
   </url>
@@ -187,6 +187,11 @@
   </url>
   
   <url>
+    <loc>http://developerworks.github.io/2014/09/24/xmpp-xep-0095-stream-initiation/</loc>
+    <lastmod>2015-03-12T19:27:44.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2014/09/15/xmpp-addressing/</loc>
     <lastmod>2015-03-12T19:27:44.000Z</lastmod>
   </url>
@@ -198,11 +203,6 @@
   
   <url>
     <loc>http://developerworks.github.io/2014/09/22/xmpp-xep-0065-socks5-bytestreams/</loc>
-    <lastmod>2015-03-12T19:27:44.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/24/xmpp-xep-0095-stream-initiation/</loc>
     <lastmod>2015-03-12T19:27:44.000Z</lastmod>
   </url>
   
