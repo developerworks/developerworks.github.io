@@ -106,6 +106,11 @@
     </header>
     <div class="entry">
       
+
+
+        
+
+
         <h2 id="概述">概述</h2><p>如何开发一个Ejabberd模块, 本文基于一个实例演示了如何开发一个Ejabberd模块, 以及模块的基本结构.</p>
 <p>HTTP模块的核心函数是<code>process(Paths,Requst)</code>处理函数, 接受一个路径列表, 和一个请求作为参数. 返回值为一个三元组<code>{ResponseCode, ResponseHeaders, ResponseBody}</code>, 分别表示响应码, 响应头和响应体. 其中:</p>
 <ol>
@@ -114,14 +119,43 @@
 <li><code>ResponseBody</code>为一个类似<code>&lt;&lt;&quot;Content&quot;&gt;&gt;</code>二进制字符串</li>
 </ol>
 <p>具体细节可参考<code>ejabberd_http.erl</code>模块的<code>make_xhtml_output/4</code>函数.</p>
+<p>下面是一个<code>process/4</code>函数的例子, 该函数用于获取当前在线用户数, 支持跨域资源共享(CORS):</p>
+<p>process(_LocalPath, _Request) -&gt;<br>    ConnectedUsersNumber = ejabberd_sm:connected_users_number(),<br>    Json = jiffy:encode({[<br>        {connected_users_number, ConnectedUsersNumber}<br>    ]}),<br>    {200, [<br>      {&lt;&lt;”Access-Control-Allow-Origin”&gt;&gt;,   <a href="&lt;&quot;http://updategf.cdniptv.cqwin.com&quot;">&lt;&quot;http://updategf.cdniptv.cqwin.com&quot;</a>&gt;},<br>      {&lt;&lt;”Access-Control-Allow-Headers”&gt;&gt;,  &lt;&lt;”Content-Type,X-Requested-With”&gt;&gt;},<br>      {&lt;&lt;”Content-Type”&gt;&gt;,                  &lt;&lt;”application/json; charset=utf-8”&gt;&gt;}<br>    ], Json}.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#22312;&#32447;&#29992;&#25143;&#25968;&#20063;&#21487;&#36890;&#36807;`ejabberdctl connected_users_number`&#33719;&#21462;.&#10;&#10;&#60;!-- more --&#62;&#10;&#10;## &#22522;&#26412;&#27169;&#22359;&#32467;&#26500;</span><br></pre></td></tr></table></figure></p>
+<p>%% Module name (has to match with the filename)<br>-module(mod_custom).<br>%% Module author<br>-author(‘Gregor Uhlenheuer’).<br>%% Module version<br>-vsn(‘1.0’).<br>%% Debug flag<br>-define(EJABBERD_DEBUG, true).<br>%% Implement the OTP gen_mod behavior<br>-behavior(gen_mod).<br>%% Module exports<br>-export([start/2, stop/1, process/2]).<br>%%<br>%% INCLUDES<br>%%<br>%% base ejabberd headers<br>-include(“ejabberd.hrl”).<br>%% ejabberd compatibility functions<br>-include(“jlib.hrl”).<br>%% ejabberd HTTP headers<br>-include(“web/ejabberd_http.hrl”).<br>%% initialization function<br>start(_Host, _Opts) -&gt;<br>    ok.<br>%% function on module unload<br>stop(_Host) -&gt;<br>    ok.<br>%% process any request to “/sockets”<br>process([“sockets”], _Request) -&gt;<br>    % FIXME: implementation goes here<br>    “Not implemented yet”;<br>%% process all remaining requests<br>process(_Page, _Request) -&gt;<br>    % FIXME: implementation goes here<br>    “Fallback result”.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#10;## &#32534;&#35793;&#27169;&#22359;</span><br></pre></td></tr></table></figure></p>
+<p>erlc -I ../ejabberd/src \<br>     -I /lib64/ejabberd/include \<br>     -pa ../ejabberd/src \<br>     mod_custom.erl<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#27169;&#22359;&#30340;`.beam`&#25991;&#20214;&#38656;&#35201;&#25918;&#22312;ejabberd&#30340;`ebin`&#30446;&#24405;&#19979;&#10;&#10;## &#37197;&#32622;&#27169;&#22359;&#10;&#10;- &#22312;&#20027;&#37197;&#32622;&#25991;&#20214;&#20013;&#28155;&#21152;&#27169;&#22359;&#37197;&#32622;&#10;&#10;&#21407;&#20808;&#30340;&#20027;&#37197;&#32622;&#25991;&#20214;&#20013;&#37197;&#32622;&#20026;</span><br></pre></td></tr></table></figure></p>
+<p>{5280, ejabberd_http, [http_poll, web_admin]}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#20462;&#25913;&#21518;&#30340;&#20026;</span><br></pre></td></tr></table></figure></p>
+<p>% this will probably look like this<br>{5280, ejabberd_http, [http_poll, web_admin,<br>        {request_handlers, [<br>            % your request handler will respond to anything like:<br>            % <a href="http://example.com:5280/custom/" target="_blank" rel="external">http://example.com:5280/custom/</a><br>            {[“custom”], mod_custom}<br>        ]}<br>    ]}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;## &#20462;&#35746;&#10;&#10;- 2014-09-27&#10;    - &#27169;&#22359;&#32534;&#35793;&#10;    &#27169;&#22359;&#25991;&#20214;&#25918;&#21040;`$EJABBERD_SOURCE/src`&#30446;&#24405;&#19979;,&#28982;&#21518;`make &#38;&#38; make install &#38;&#38; ejabberdctl restart`&#10;    - &#27169;&#22359;&#37197;&#32622;&#10;    `YAML`&#26684;&#24335;&#30340;&#37197;&#32622;&#26041;&#24335;(`ejabberd 13.10`&#20197;&#21518;)</span><br></pre></td></tr></table></figure></p>
+<pre><code>-
+    port: 5280
+    module: ejabberd_http
+    request_handlers:
+      "custom": mod_custom %% http://example.com:5280/custom/
+<span class="comment"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;- 2015-03-17&#10;    - &#33258;&#23450;&#20041;&#27169;&#22359;&#21487;&#20197;&#25918;&#22312;&#22312;`$EJABBERD_SOURCE/src/modules`&#23376;&#30446;&#24405;&#19979;, `modules`&#23376;&#30446;&#24405;&#21517;&#31216;&#21487;&#20197;&#20219;&#24847;&#21462;&#21517;&#10;    - Ejabberd&#30340;&#37197;&#32622;&#25991;&#20214;&#22312;13.x&#21518;&#20462;&#25913;&#20026;&#20351;&#29992;YAML&#26684;&#24335;,&#19978;&#36848;HTTP&#27169;&#22359;&#30340;&#37197;&#32622;&#20462;&#25913;&#20026;&#22914;&#19979;:</span><br></pre></td></tr></table></figure></span>
+
+  -
+    port: 5280
+    module: ejabberd_http
+      request_handlers:
+        "/custom": mod_custom
+    web_admin: true
+    http_poll: true
+```
+</code></pre><ul>
+<li>2015-11-11<ul>
+<li>增加概述部分,说明HTTP模块的<code>process/4</code>函数接受的参数和返回值.</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="http://uhlenheuer.net/posts/2013-01-16-writing_an_ejabberd_module.html" target="_blank" rel="external">http://uhlenheuer.net/posts/2013-01-16-writing_an_ejabberd_module.html</a></li>
+<li><a href="http://sacharya.com/writing-ejabberd-modules/" target="_blank" rel="external">http://sacharya.com/writing-ejabberd-modules/</a></li>
+<li><a href="http://jasonrowe.com/2011/12/30/ejabberd-offline-messages" target="_blank" rel="external">http://jasonrowe.com/2011/12/30/ejabberd-offline-messages</a></li>
+</ol>
+
       
     </div>
     <footer>
       
-        
-          <div class="alignleft">
-            <a href="/2015/11/11/ejabberd-http-module/#more" class="more-link">阅读全文</a>
-          </div>
         
         
       

@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Tansform information as knowledges, extract and purify as thoughts]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://developerworks.github.io/"/>
-  <updated>2015-11-11T05:55:24.000Z</updated>
+  <updated>2015-11-12T12:26:59.000Z</updated>
   <id>http://developerworks.github.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://developerworks.github.io/2015/11/11/ejabberd-http-module/"/>
     <id>http://developerworks.github.io/2015/11/11/ejabberd-http-module/</id>
     <published>2015-11-11T05:44:58.000Z</published>
-    <updated>2015-11-11T05:55:24.000Z</updated>
+    <updated>2015-11-12T12:26:59.000Z</updated>
     <content type="html"><![CDATA[<h2 id="概述">概述</h2><p>如何开发一个Ejabberd模块, 本文基于一个实例演示了如何开发一个Ejabberd模块, 以及模块的基本结构.</p>
 <p>HTTP模块的核心函数是<code>process(Paths,Requst)</code>处理函数, 接受一个路径列表, 和一个请求作为参数. 返回值为一个三元组<code>{ResponseCode, ResponseHeaders, ResponseBody}</code>, 分别表示响应码, 响应头和响应体. 其中:</p>
 <ol>
@@ -28,32 +28,29 @@
 <li><code>ResponseBody</code>为一个类似<code>&lt;&lt;&quot;Content&quot;&gt;&gt;</code>二进制字符串</li>
 </ol>
 <p>具体细节可参考<code>ejabberd_http.erl</code>模块的<code>make_xhtml_output/4</code>函数.</p>
-<a id="more"></a>
-<h2 id="基本模块结构">基本模块结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% Module name (has to match with the filename)&#10;-module(mod_custom).&#10;%% Module author&#10;-author(&#39;Gregor Uhlenheuer&#39;).&#10;%% Module version&#10;-vsn(&#39;1.0&#39;).&#10;%% Debug flag&#10;-define(EJABBERD_DEBUG, true).&#10;%% Implement the OTP gen_mod behavior&#10;-behavior(gen_mod).&#10;%% Module exports&#10;-export([start/2, stop/1, process/2]).&#10;%%&#10;%% INCLUDES&#10;%%&#10;%% base ejabberd headers&#10;-include(&#34;ejabberd.hrl&#34;).&#10;%% ejabberd compatibility functions&#10;-include(&#34;jlib.hrl&#34;).&#10;%% ejabberd HTTP headers&#10;-include(&#34;web/ejabberd_http.hrl&#34;).&#10;%% initialization function&#10;start(_Host, _Opts) -&#62;&#10;    ok.&#10;%% function on module unload&#10;stop(_Host) -&#62;&#10;    ok.&#10;%% process any request to &#34;/sockets&#34;&#10;process([&#34;sockets&#34;], _Request) -&#62;&#10;    % FIXME: implementation goes here&#10;    &#34;Not implemented yet&#34;;&#10;%% process all remaining requests&#10;process(_Page, _Request) -&#62;&#10;    % FIXME: implementation goes here&#10;    &#34;Fallback result&#34;.</span><br></pre></td></tr></table></figure>
-<h2 id="编译模块">编译模块</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">erlc -I ../ejabberd/src \&#10;     -I /lib64/ejabberd/include \&#10;     -pa ../ejabberd/src \&#10;     mod_custom.erl</span><br></pre></td></tr></table></figure>
-<p>模块的<code>.beam</code>文件需要放在ejabberd的<code>ebin</code>目录下</p>
-<h2 id="配置模块">配置模块</h2><ul>
-<li>在主配置文件中添加模块配置</li>
-</ul>
-<p>原先的主配置文件中配置为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;5280, ejabberd_http, [http_poll, web_admin]&#125;</span><br></pre></td></tr></table></figure></p>
-<p>修改后的为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% this will probably look like this&#10;&#123;5280, ejabberd_http, [http_poll, web_admin,&#10;        &#123;request_handlers, [&#10;            % your request handler will respond to anything like:&#10;            % http://example.com:5280/custom/&#10;            &#123;[&#34;custom&#34;], mod_custom&#125;&#10;        ]&#125;&#10;    ]&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="修订">修订</h2><ul>
-<li><p>2014-09-27</p>
-<ul>
-<li>模块编译<br>模块文件放到<code>$EJABBERD_SOURCE/src</code>目录下,然后<code>make &amp;&amp; make install &amp;&amp; ejabberdctl restart</code></li>
-<li>模块配置<br><code>YAML</code>格式的配置方式(<code>ejabberd 13.10</code>以后)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-&#10;    port: 5280&#10;    module: ejabberd_http&#10;    request_handlers:&#10;      &#34;custom&#34;: mod_custom %% http://example.com:5280/custom/</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>2015-03-17</p>
-<ul>
-<li>自定义模块可以放在在<code>$EJABBERD_SOURCE/src/modules</code>子目录下, <code>modules</code>子目录名称可以任意取名</li>
-<li>Ejabberd的配置文件在13.x后修改为使用YAML格式,上述HTTP模块的配置修改为如下:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-&#10;  port: 5280&#10;  module: ejabberd_http&#10;    request_handlers:&#10;      &#34;/custom&#34;: mod_custom&#10;  web_admin: true&#10;  http_poll: true</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-<li><p>2015-11-11</p>
-<ul>
+<p>下面是一个<code>process/4</code>函数的例子, 该函数用于获取当前在线用户数, 支持跨域资源共享(CORS):</p>
+<p>process(_LocalPath, _Request) -&gt;<br>    ConnectedUsersNumber = ejabberd_sm:connected_users_number(),<br>    Json = jiffy:encode({[<br>        {connected_users_number, ConnectedUsersNumber}<br>    ]}),<br>    {200, [<br>      {&lt;&lt;”Access-Control-Allow-Origin”&gt;&gt;,   <a href="&lt;&quot;http://updategf.cdniptv.cqwin.com&quot;">&lt;&quot;http://updategf.cdniptv.cqwin.com&quot;</a>&gt;},<br>      {&lt;&lt;”Access-Control-Allow-Headers”&gt;&gt;,  &lt;&lt;”Content-Type,X-Requested-With”&gt;&gt;},<br>      {&lt;&lt;”Content-Type”&gt;&gt;,                  &lt;&lt;”application/json; charset=utf-8”&gt;&gt;}<br>    ], Json}.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#22312;&#32447;&#29992;&#25143;&#25968;&#20063;&#21487;&#36890;&#36807;`ejabberdctl connected_users_number`&#33719;&#21462;.&#10;&#10;&#60;!-- more --&#62;&#10;&#10;## &#22522;&#26412;&#27169;&#22359;&#32467;&#26500;</span><br></pre></td></tr></table></figure></p>
+<p>%% Module name (has to match with the filename)<br>-module(mod_custom).<br>%% Module author<br>-author(‘Gregor Uhlenheuer’).<br>%% Module version<br>-vsn(‘1.0’).<br>%% Debug flag<br>-define(EJABBERD_DEBUG, true).<br>%% Implement the OTP gen_mod behavior<br>-behavior(gen_mod).<br>%% Module exports<br>-export([start/2, stop/1, process/2]).<br>%%<br>%% INCLUDES<br>%%<br>%% base ejabberd headers<br>-include(“ejabberd.hrl”).<br>%% ejabberd compatibility functions<br>-include(“jlib.hrl”).<br>%% ejabberd HTTP headers<br>-include(“web/ejabberd_http.hrl”).<br>%% initialization function<br>start(_Host, _Opts) -&gt;<br>    ok.<br>%% function on module unload<br>stop(_Host) -&gt;<br>    ok.<br>%% process any request to “/sockets”<br>process([“sockets”], _Request) -&gt;<br>    % FIXME: implementation goes here<br>    “Not implemented yet”;<br>%% process all remaining requests<br>process(_Page, _Request) -&gt;<br>    % FIXME: implementation goes here<br>    “Fallback result”.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#10;## &#32534;&#35793;&#27169;&#22359;</span><br></pre></td></tr></table></figure></p>
+<p>erlc -I ../ejabberd/src \<br>     -I /lib64/ejabberd/include \<br>     -pa ../ejabberd/src \<br>     mod_custom.erl<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#27169;&#22359;&#30340;`.beam`&#25991;&#20214;&#38656;&#35201;&#25918;&#22312;ejabberd&#30340;`ebin`&#30446;&#24405;&#19979;&#10;&#10;## &#37197;&#32622;&#27169;&#22359;&#10;&#10;- &#22312;&#20027;&#37197;&#32622;&#25991;&#20214;&#20013;&#28155;&#21152;&#27169;&#22359;&#37197;&#32622;&#10;&#10;&#21407;&#20808;&#30340;&#20027;&#37197;&#32622;&#25991;&#20214;&#20013;&#37197;&#32622;&#20026;</span><br></pre></td></tr></table></figure></p>
+<p>{5280, ejabberd_http, [http_poll, web_admin]}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#20462;&#25913;&#21518;&#30340;&#20026;</span><br></pre></td></tr></table></figure></p>
+<p>% this will probably look like this<br>{5280, ejabberd_http, [http_poll, web_admin,<br>        {request_handlers, [<br>            % your request handler will respond to anything like:<br>            % <a href="http://example.com:5280/custom/" target="_blank" rel="external">http://example.com:5280/custom/</a><br>            {[“custom”], mod_custom}<br>        ]}<br>    ]}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;## &#20462;&#35746;&#10;&#10;- 2014-09-27&#10;    - &#27169;&#22359;&#32534;&#35793;&#10;    &#27169;&#22359;&#25991;&#20214;&#25918;&#21040;`$EJABBERD_SOURCE/src`&#30446;&#24405;&#19979;,&#28982;&#21518;`make &#38;&#38; make install &#38;&#38; ejabberdctl restart`&#10;    - &#27169;&#22359;&#37197;&#32622;&#10;    `YAML`&#26684;&#24335;&#30340;&#37197;&#32622;&#26041;&#24335;(`ejabberd 13.10`&#20197;&#21518;)</span><br></pre></td></tr></table></figure></p>
+<pre><code>-
+    port: 5280
+    module: ejabberd_http
+    request_handlers:
+      "custom": mod_custom %% http://example.com:5280/custom/
+<span class="comment"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;- 2015-03-17&#10;    - &#33258;&#23450;&#20041;&#27169;&#22359;&#21487;&#20197;&#25918;&#22312;&#22312;`$EJABBERD_SOURCE/src/modules`&#23376;&#30446;&#24405;&#19979;, `modules`&#23376;&#30446;&#24405;&#21517;&#31216;&#21487;&#20197;&#20219;&#24847;&#21462;&#21517;&#10;    - Ejabberd&#30340;&#37197;&#32622;&#25991;&#20214;&#22312;13.x&#21518;&#20462;&#25913;&#20026;&#20351;&#29992;YAML&#26684;&#24335;,&#19978;&#36848;HTTP&#27169;&#22359;&#30340;&#37197;&#32622;&#20462;&#25913;&#20026;&#22914;&#19979;:</span><br></pre></td></tr></table></figure></span>
+
+  -
+    port: 5280
+    module: ejabberd_http
+      request_handlers:
+        "/custom": mod_custom
+    web_admin: true
+    http_poll: true
+```
+</code></pre><ul>
+<li>2015-11-11<ul>
 <li>增加概述部分,说明HTTP模块的<code>process/4</code>函数接受的参数和返回值.</li>
 </ul>
 </li>
@@ -66,14 +63,7 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<h2 id="概述">概述</h2><p>如何开发一个Ejabberd模块, 本文基于一个实例演示了如何开发一个Ejabberd模块, 以及模块的基本结构.</p>
-<p>HTTP模块的核心函数是<code>process(Paths,Requst)</code>处理函数, 接受一个路径列表, 和一个请求作为参数. 返回值为一个三元组<code>{ResponseCode, ResponseHeaders, ResponseBody}</code>, 分别表示响应码, 响应头和响应体. 其中:</p>
-<ol>
-<li><code>ResponseCode</code>为一个整数值, 例如<code>200</code></li>
-<li><code>ResponseHeaders</code>为一个二元组列表, 例如<code>[{&lt;&lt;&quot;Content-Type&quot;&gt;&gt;, &lt;&lt;&quot;text/html; charset=utf-8&quot;&gt;&gt;}]</code></li>
-<li><code>ResponseBody</code>为一个类似<code>&lt;&lt;&quot;Content&quot;&gt;&gt;</code>二进制字符串</li>
-</ol>
-<p>具体细节可参考<code>ejabberd_http.erl</code>模块的<code>make_xhtml_output/4</code>函数.</p>]]>
-    
+<p>HTTP模块的核心函数是<code>process(Paths,Requst)</code>处理函数, 接]]>
     </summary>
     
       <category term="XMPP" scheme="http://developerworks.github.io/tags/XMPP/"/>
