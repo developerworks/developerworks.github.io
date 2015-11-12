@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://developerworks.github.io/2014/09/23/ejabberd-debugging/</loc>
+    <lastmod>2015-11-12T12:18:13.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2015/11/11/ejabberd-http-module/</loc>
     <lastmod>2015-11-11T05:55:24.000Z</lastmod>
   </url>
@@ -142,12 +147,12 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/assets/ejabberd/report.html</loc>
+    <loc>http://developerworks.github.io/assets/ejabberd/graph.html</loc>
     <lastmod>2015-03-13T14:18:50.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/assets/ejabberd/graph.html</loc>
+    <loc>http://developerworks.github.io/assets/ejabberd/report.html</loc>
     <lastmod>2015-03-13T14:18:50.000Z</lastmod>
   </url>
   
@@ -187,12 +192,12 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/24/xmpp-xep-0095-stream-initiation/</loc>
+    <loc>http://developerworks.github.io/2014/09/15/xmpp-addressing/</loc>
     <lastmod>2015-03-12T19:27:44.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/15/xmpp-addressing/</loc>
+    <loc>http://developerworks.github.io/2014/09/24/xmpp-xep-0095-stream-initiation/</loc>
     <lastmod>2015-03-12T19:27:44.000Z</lastmod>
   </url>
   
@@ -212,11 +217,6 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/27/ejabberd-c2s-basic/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://developerworks.github.io/2014/09/29/ejabberd-modules-pitfalls/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
@@ -232,17 +232,17 @@
   </url>
   
   <url>
+    <loc>http://developerworks.github.io/2014/09/22/xmpp-xep-0047-in-bind-bytestreams/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://developerworks.github.io/2014/09/26/ejabberd-modules-development-deep/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/12/18/ejabberd-stream-management-for-mobile-3g-network/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/14/xmpp-client-libraries/</loc>
+    <loc>http://developerworks.github.io/2014/09/25/ejabberd-modules-a-simple-echo-service/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -252,17 +252,17 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/22/xmpp-xep-0047-in-bind-bytestreams/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/15/xmpp-basic/</loc>
+    <loc>http://developerworks.github.io/2014/09/14/xmpp-client-libraries/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://developerworks.github.io/2014/09/29/ejabberd-route-table/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/16/xmpp-connection-managers/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -277,17 +277,7 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/23/ejabberd-debugging/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2014/09/16/xmpp-connection-managers/</loc>
-    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://developerworks.github.io/2015/02/13/ejabberd-escalus/</loc>
+    <loc>http://developerworks.github.io/2014/12/18/ejabberd-stream-management-for-mobile-3g-network/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -297,7 +287,17 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/09/25/ejabberd-modules-a-simple-echo-service/</loc>
+    <loc>http://developerworks.github.io/2015/02/13/ejabberd-escalus/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/10/03/strophejs-plugins-register/</loc>
+    <lastmod>2015-03-12T19:26:38.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://developerworks.github.io/2014/09/15/xmpp-basic/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
@@ -317,7 +317,7 @@
   </url>
   
   <url>
-    <loc>http://developerworks.github.io/2014/10/03/strophejs-plugins-register/</loc>
+    <loc>http://developerworks.github.io/2014/09/27/ejabberd-c2s-basic/</loc>
     <lastmod>2015-03-12T19:26:38.000Z</lastmod>
   </url>
   
