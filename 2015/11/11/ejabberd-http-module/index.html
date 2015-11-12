@@ -11,12 +11,12 @@
 HTTP模块的核心函数是process(Paths,Requst)处理函数, 接受一个路径列表, 和一个请求作为参数. 返回值为一个三元组{ResponseCode, ResponseHeaders, ResponseBody}, 分别表示响应码, 响应头和响应体. 其中:
 
 ResponseCode为一个整数值, 例如200
-ResponseHeaders为一个二元组列表, 例如[{&amp;lt;&amp;lt;&amp;quot;Content-Type&amp;quot;&amp;gt;&amp;gt;, &amp;lt;&amp;lt;&amp;quot;text/html; charset=utf-8&amp;quot;&amp;gt;&amp;gt;}]
-ResponseBody为一个类似&amp;lt;&amp;lt;&amp;quot;Content&amp;quot;&amp;gt;&amp;gt;二进制字符串
+ResponseHeaders为一个二元组列表, 例如[{&amp;lt;&amp;lt;&amp;quot;Content-Type&amp;quot;&amp;gt;&amp;gt;, &amp;lt;&amp;lt;&amp;quot;text/html; charset=utf-8&amp;quot;&amp;gt;&amp;gt;}],表示要设置的HTTP响应头信息.
+ResponseBody为一个类似&amp;lt;&amp;lt;&amp;quot;Content&amp;quot;&amp;gt;&amp;gt;二进制字符串, 返回给客户端的实际内容.
 
 具体细节可参考ejabberd_http.erl模块的make_xhtml_output/4函数.
 下面是一个process/4函数的例子, 该函数用于获取当前在线用户数, 支持跨域资源共享(CORS):
-12345678910process(_LocalPath, _Request) -&amp;gt;    ConnectedUsersNumber = ejabberd_sm:connected_users_number(),    Json = jiffy:encode(&amp;#123;[        &amp;#123;connected_users_number, ConnectedUsersNumber&amp;#125;    ]&amp;#125;),    &amp;#123;200, [      &amp;#123;&amp;lt;&amp;lt;&quot;Access-Control-Allow-Origin&quot;&amp;gt;&amp;gt;,   &amp;lt;&amp;lt;&quot;http://www.example.com&quot;&amp;gt;&amp;gt;&amp;#125;,      &amp;#123;&amp;lt;&amp;lt;&quot;Access-Control-Allow-Headers&quot;&amp;gt;&amp;gt;,  &amp;lt;&amp;lt;&quot;Content-Type,X-Requested-With&quot;&amp;gt;&amp;gt;&amp;#125;,      &amp;#123;&amp;lt;&amp;lt;&quot;Content-Type&quot;&amp;gt;&amp;gt;,                  &amp;lt;&amp;lt;&quot;application/json; charset=utf-8&quot;&amp;gt;&amp;gt;&amp;#125;    ], Json&amp;#125;.
+12345678910process(_LocalPath, _Request) -&amp;gt;  ConnectedUsersNumber = ejabberd_sm:connected_users_number(),  Json = jiffy:encode(&amp;#123;[    &amp;#123;connected_users_number, ConnectedUsersNumber&amp;#125;  ]&amp;#125;),  &amp;#123;200, [    &amp;#123;&amp;lt;&amp;lt;&quot;Access-Control-Allow-Origin&quot;&amp;gt;&amp;gt;,   &amp;lt;&amp;lt;&quot;http://www.example.com&quot;&amp;gt;&amp;gt;&amp;#125;,    &amp;#123;&amp;lt;&amp;lt;&quot;Access-Control-Allow-Headers&quot;&amp;gt;&amp;gt;,  &amp;lt;&amp;lt;&quot;Content-Type,X-Requested-With&quot;&amp;gt;&amp;gt;&amp;#125;,    &amp;#123;&amp;lt;&amp;lt;&quot;Content-Type&quot;&amp;gt;&amp;gt;,                  &amp;lt;&amp;lt;&quot;application/json; charset=utf-8&quot;&amp;gt;&amp;gt;&amp;#125;  ], Json&amp;#125;.
 在线用户数也可通过ejabberdctl connected_users_number获取.">
   
   
@@ -126,12 +126,12 @@ ResponseBody为一个类似&amp;lt;&amp;lt;&amp;quot;Content&amp;quot;&amp;gt;&a
 <p>HTTP模块的核心函数是<code>process(Paths,Requst)</code>处理函数, 接受一个路径列表, 和一个请求作为参数. 返回值为一个三元组<code>{ResponseCode, ResponseHeaders, ResponseBody}</code>, 分别表示响应码, 响应头和响应体. 其中:</p>
 <ol>
 <li><code>ResponseCode</code>为一个整数值, 例如<code>200</code></li>
-<li><code>ResponseHeaders</code>为一个二元组列表, 例如<code>[{&lt;&lt;&quot;Content-Type&quot;&gt;&gt;, &lt;&lt;&quot;text/html; charset=utf-8&quot;&gt;&gt;}]</code></li>
-<li><code>ResponseBody</code>为一个类似<code>&lt;&lt;&quot;Content&quot;&gt;&gt;</code>二进制字符串</li>
+<li><code>ResponseHeaders</code>为一个二元组列表, 例如<code>[{&lt;&lt;&quot;Content-Type&quot;&gt;&gt;, &lt;&lt;&quot;text/html; charset=utf-8&quot;&gt;&gt;}]</code>,表示要设置的HTTP响应头信息.</li>
+<li><code>ResponseBody</code>为一个类似<code>&lt;&lt;&quot;Content&quot;&gt;&gt;</code>二进制字符串, 返回给客户端的实际内容.</li>
 </ol>
 <p>具体细节可参考<code>ejabberd_http.erl</code>模块的<code>make_xhtml_output/4</code>函数.</p>
 <p>下面是一个<code>process/4</code>函数的例子, 该函数用于获取当前在线用户数, 支持跨域资源共享(CORS):</p>
-<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">process</span><span class="params">(<span class="variable">_LocalPath</span>, <span class="variable">_Request</span>)</span> -&gt;</span></span><br><span class="line">    <span class="variable">ConnectedUsersNumber</span> = <span class="function_name">ejabberd_sm:connected_users_number</span>(),</span><br><span class="line">    <span class="variable">Json</span> = <span class="function_name">jiffy:encode</span>(<span class="tuple">&#123;[</span><br><span class="line">        <span class="tuple">&#123;connected_users_number, <span class="variable">ConnectedUsersNumber</span>&#125;</span></span><br><span class="line">    ]&#125;</span>),</span><br><span class="line">    <span class="tuple">&#123;<span class="number">200</span>, [</span><br><span class="line">      <span class="tuple">&#123;&lt;&lt;<span class="string">"Access-Control-Allow-Origin"</span>&gt;&gt;,   &lt;&lt;<span class="string">"http://www.example.com"</span>&gt;&gt;&#125;</span>,</span><br><span class="line">      <span class="tuple">&#123;&lt;&lt;<span class="string">"Access-Control-Allow-Headers"</span>&gt;&gt;,  &lt;&lt;<span class="string">"Content-Type,X-Requested-With"</span>&gt;&gt;&#125;</span>,</span><br><span class="line">      <span class="tuple">&#123;&lt;&lt;<span class="string">"Content-Type"</span>&gt;&gt;,                  &lt;&lt;<span class="string">"application/json; charset=utf-8"</span>&gt;&gt;&#125;</span></span><br><span class="line">    ], <span class="variable">Json</span>&#125;</span>.</span><br></pre></td></tr></table></figure>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">process</span><span class="params">(<span class="variable">_LocalPath</span>, <span class="variable">_Request</span>)</span> -&gt;</span></span><br><span class="line">  <span class="variable">ConnectedUsersNumber</span> = <span class="function_name">ejabberd_sm:connected_users_number</span>(),</span><br><span class="line">  <span class="variable">Json</span> = <span class="function_name">jiffy:encode</span>(<span class="tuple">&#123;[</span><br><span class="line">    <span class="tuple">&#123;connected_users_number, <span class="variable">ConnectedUsersNumber</span>&#125;</span></span><br><span class="line">  ]&#125;</span>),</span><br><span class="line">  <span class="tuple">&#123;<span class="number">200</span>, [</span><br><span class="line">    <span class="tuple">&#123;&lt;&lt;<span class="string">"Access-Control-Allow-Origin"</span>&gt;&gt;,   &lt;&lt;<span class="string">"http://www.example.com"</span>&gt;&gt;&#125;</span>,</span><br><span class="line">    <span class="tuple">&#123;&lt;&lt;<span class="string">"Access-Control-Allow-Headers"</span>&gt;&gt;,  &lt;&lt;<span class="string">"Content-Type,X-Requested-With"</span>&gt;&gt;&#125;</span>,</span><br><span class="line">    <span class="tuple">&#123;&lt;&lt;<span class="string">"Content-Type"</span>&gt;&gt;,                  &lt;&lt;<span class="string">"application/json; charset=utf-8"</span>&gt;&gt;&#125;</span></span><br><span class="line">  ], <span class="variable">Json</span>&#125;</span>.</span><br></pre></td></tr></table></figure>
 <p>在线用户数也可通过<code>ejabberdctl connected_users_number</code>获取.</p>
 <a id="more"></a>
 <h2 id="基本模块结构">基本模块结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%% Module name (has to match with the filename)&#10;-module(mod_custom).&#10;%% Module author&#10;-author(&#39;Gregor Uhlenheuer&#39;).&#10;%% Module version&#10;-vsn(&#39;1.0&#39;).&#10;%% Debug flag&#10;-define(EJABBERD_DEBUG, true).&#10;%% Implement the OTP gen_mod behavior&#10;-behavior(gen_mod).&#10;%% Module exports&#10;-export([start/2, stop/1, process/2]).&#10;%%&#10;%% INCLUDES&#10;%%&#10;%% base ejabberd headers&#10;-include(&#34;ejabberd.hrl&#34;).&#10;%% ejabberd compatibility functions&#10;-include(&#34;jlib.hrl&#34;).&#10;%% ejabberd HTTP headers&#10;-include(&#34;web/ejabberd_http.hrl&#34;).&#10;%% initialization function&#10;start(_Host, _Opts) -&#62;&#10;    ok.&#10;%% function on module unload&#10;stop(_Host) -&#62;&#10;    ok.&#10;%% process any request to &#34;/sockets&#34;&#10;process([&#34;sockets&#34;], _Request) -&#62;&#10;    % FIXME: implementation goes here&#10;    &#34;Not implemented yet&#34;;&#10;%% process all remaining requests&#10;process(_Page, _Request) -&#62;&#10;    % FIXME: implementation goes here&#10;    &#34;Fallback result&#34;.</span><br></pre></td></tr></table></figure>
@@ -142,6 +142,10 @@ ResponseBody为一个类似&amp;lt;&amp;lt;&amp;quot;Content&amp;quot;&amp;gt;&a
 </ul>
 <p>原先的主配置文件中配置为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;5280, ejabberd_http, [http_poll, web_admin]&#125;</span><br></pre></td></tr></table></figure></p>
 <p>修改后的为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% this will probably look like this&#10;&#123;5280, ejabberd_http, [http_poll, web_admin,&#10;        &#123;request_handlers, [&#10;            % your request handler will respond to anything like:&#10;            % http://example.com:5280/custom/&#10;            &#123;[&#34;custom&#34;], mod_custom&#125;&#10;        ]&#125;&#10;    ]&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="模块的在线更新">模块的在线更新</h2><p>当我们修改了模块的代码时,如何跟新模块代码而不用重启Ejabberd服务器呢?</p>
+<p>ejabberdctl 命令提供了一个<code>update</code>子命令, 如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ejabberdctl update mod_name</span><br></pre></td></tr></table></figure>
+<p>执行上述命令行即可动态跟新模块代码. </p>
 <h2 id="修订">修订</h2><ul>
 <li><p>2014-09-27</p>
 <ul>
@@ -162,8 +166,12 @@ ResponseBody为一个类似&amp;lt;&amp;lt;&amp;quot;Content&amp;quot;&amp;gt;&a
 <li>增加概述部分,说明HTTP模块的<code>process/4</code>函数接受的参数和返回值.</li>
 </ul>
 </li>
+<li>2015-11-12<ul>
+<li>增加动态Hot swap模块的方式<h2 id="参考资料">参考资料</h2></li>
 </ul>
-<h2 id="参考资料">参考资料</h2><ol>
+</li>
+</ul>
+<ol>
 <li><a href="http://uhlenheuer.net/posts/2013-01-16-writing_an_ejabberd_module.html" target="_blank" rel="external">http://uhlenheuer.net/posts/2013-01-16-writing_an_ejabberd_module.html</a></li>
 <li><a href="http://sacharya.com/writing-ejabberd-modules/" target="_blank" rel="external">http://sacharya.com/writing-ejabberd-modules/</a></li>
 <li><a href="http://jasonrowe.com/2011/12/30/ejabberd-offline-messages" target="_blank" rel="external">http://jasonrowe.com/2011/12/30/ejabberd-offline-messages</a></li>
