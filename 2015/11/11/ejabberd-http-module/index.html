@@ -142,7 +142,7 @@ ResponseBody为一个类似&amp;lt;&amp;lt;&amp;quot;Content&amp;quot;&amp;gt;&a
 </ul>
 <p>原先的主配置文件中配置为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;5280, ejabberd_http, [http_poll, web_admin]&#125;</span><br></pre></td></tr></table></figure></p>
 <p>修改后的为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% this will probably look like this&#10;&#123;5280, ejabberd_http, [http_poll, web_admin,&#10;        &#123;request_handlers, [&#10;            % your request handler will respond to anything like:&#10;            % http://example.com:5280/custom/&#10;            &#123;[&#34;custom&#34;], mod_custom&#125;&#10;        ]&#125;&#10;    ]&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="模块的在线更新">模块的在线更新</h2><p>当我们修改了模块的代码时,如何跟新模块代码而不用重启Ejabberd服务器呢?</p>
+<h2 id="模块的在线更新">模块的在线更新</h2><p>当我们修改了模块的代码时,如何更新模块代码而不用重启Ejabberd服务器呢?</p>
 <p>ejabberdctl 命令提供了一个<code>update</code>子命令, 如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ejabberdctl update mod_name</span><br></pre></td></tr></table></figure>
 <p>执行上述命令行即可动态跟新模块代码. </p>
